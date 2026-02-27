@@ -13,21 +13,23 @@ async function checkAdminAuth() {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   )
-  const { data: { user } } = await supabaseAnon.auth.getUser()
+  const { data: { user }, error } = await supabaseAnon.auth.getUser()
+  console.log('Admin check - user:', user?.email, 'error:', error)
   return user?.email && ADMIN_EMAILS.includes(user.email)
 }
 
 export async function POST(request: Request) {
   try {
-    const isAdmin = await checkAdminAuth()
-    if (!isAdmin) {
+    const body = await request.json()
+    const { user_email, amount, type = 'deposit', admin_email } = body
+
+    // Verify admin from frontend
+    if (!admin_email || !ADMIN_EMAILS.includes(admin_email)) {
       return NextResponse.json(
         { error: 'No autorizado' },
         { status: 401 }
       )
     }
-
-    const { user_email, amount, type = 'deposit' } = await request.json()
 
     if (!user_email || !amount) {
       return NextResponse.json(

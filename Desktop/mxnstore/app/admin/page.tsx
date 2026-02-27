@@ -20,12 +20,14 @@ export default function AdminPage() {
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null)
   const [isAuthorized, setIsAuthorized] = useState(false)
   const [checkingAuth, setCheckingAuth] = useState(true)
+  const [currentUserEmail, setCurrentUserEmail] = useState('')
 
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (user?.email && ADMIN_EMAILS.includes(user.email)) {
         setIsAuthorized(true)
+        setCurrentUserEmail(user.email)
       }
       setCheckingAuth(false)
     }
@@ -67,7 +69,8 @@ export default function AdminPage() {
         body: JSON.stringify({ 
           user_email: email, 
           amount: parseInt(amount),
-          type: 'deposit'
+          type: 'deposit',
+          admin_email: currentUserEmail
         })
       })
 
