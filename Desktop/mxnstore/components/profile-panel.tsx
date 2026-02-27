@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { User, Settings, Mail, Bell, Check, LogIn, LogOut, Coins } from "lucide-react";
+import Image from "next/image";
 import {
   Sheet,
   SheetTrigger,
@@ -134,7 +135,13 @@ export function ProfilePanel() {
           <div className="flex flex-col gap-2 rounded-xl border border-yellow-500/50 bg-yellow-500/10 p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Coins className="h-5 w-5 text-yellow-500" />
+                <Image
+                  src="/logomxnpoints.png"
+                  alt="MxN Points"
+                  width={24}
+                  height={24}
+                  className="rounded"
+                />
                 <span className="text-sm font-medium text-foreground">MxN Points</span>
               </div>
               <span className="text-2xl font-bold text-yellow-500">{vbucksBalance}</span>

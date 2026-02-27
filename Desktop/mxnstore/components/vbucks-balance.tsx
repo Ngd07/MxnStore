@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
 import { Coins, RefreshCw } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -40,7 +41,13 @@ export function VbucksBalance() {
     <div className="flex items-center justify-between rounded-xl border border-yellow-500/50 bg-yellow-500/10 px-4 py-2">
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-2">
-          <Coins className="h-5 w-5 text-yellow-500" />
+          <Image
+            src="/logomxnpoints.png"
+            alt="MxN Points"
+            width={24}
+            height={24}
+            className="rounded"
+          />
           <span className="text-sm font-medium text-foreground">MxN Points</span>
           <span className="text-lg font-bold text-yellow-500">{vbucksBalance}</span>
         </div>

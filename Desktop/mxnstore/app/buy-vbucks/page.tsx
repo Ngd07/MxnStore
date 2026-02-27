@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Coins, ArrowLeft, Copy, Check, MessageCircle } from 'lucide-react'
+import Image from 'next/image'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -90,8 +91,14 @@ export default function BuyVbucksPage() {
 
       <main className="mx-auto max-w-4xl px-4 py-8">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-yellow-500/20 mb-4">
-            <Coins className="h-8 w-8 text-yellow-500" />
+          <div className="inline-flex items-center justify-center w-16 h-16 mb-4">
+            <Image
+              src="/logomxnpoints.png"
+              alt="MxN Points"
+              width={64}
+              height={64}
+              className="rounded-lg"
+            />
           </div>
           <h2 className="text-2xl font-bold text-foreground">Elige tu paquete</h2>
           <p className="text-muted-foreground mt-2">
