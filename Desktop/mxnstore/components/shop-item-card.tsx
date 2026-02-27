@@ -187,21 +187,29 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
   const borderColor = rarityBorders[rarity] || "border-zinc-500/50";
   const isDiscounted = entry.finalPrice < entry.regularPrice;
 
+  const fetchBalance = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    setUser(user);
+    if (user) {
+      const { data } = await supabase
+        .from('profiles')
+        .select('vbucks_balance')
+        .eq('id', user.id)
+        .single();
+      if (data) setVbucksBalance(data.vbucks_balance);
+    }
+  };
+
   useEffect(() => {
-    const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-      if (user) {
-        const { data } = await supabase
-          .from('profiles')
-          .select('vbucks_balance')
-          .eq('id', user.id)
-          .single();
-        if (data) setVbucksBalance(data.vbucks_balance);
-      }
-    };
-    checkUser();
+    fetchBalance();
   }, []);
+
+  // Refresh balance when dialog opens
+  useEffect(() => {
+    if (showDialog) {
+      fetchBalance();
+    }
+  }, [showDialog]);
 
   const handleRedeem = async () => {
     if (!fortniteUsername.trim()) {
