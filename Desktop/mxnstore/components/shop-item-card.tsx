@@ -337,8 +337,6 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
                   {entry.finalPrice.toLocaleString()} MxN
                 </span>
               )}
-                </span>
-              )}
             </div>
             <span className="text-[10px] text-muted-foreground pl-[22px]">
               {"$"}{(entry.finalPrice * MXN_TO_USD).toFixed(2)} USD
