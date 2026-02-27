@@ -74,7 +74,7 @@ export default function AdminPage() {
       const data = await res.json()
 
       if (res.ok) {
-        setMessage({ type: 'success', text: `Se agregaron ${amount} V-Bucks a ${email}` })
+        setMessage({ type: 'success', text: `Se agregaron ${amount} MxN Points a ${email}` })
         setEmail('')
         setAmount('')
       } else {
@@ -96,7 +96,7 @@ export default function AdminPage() {
           </div>
           <div>
             <h1 className="text-2xl font-bold text-foreground">Admin Panel</h1>
-            <p className="text-muted-foreground">Agregar V-Bucks a usuarios</p>
+            <p className="text-muted-foreground">Agregar MxN Points a usuarios</p>
           </div>
         </div>
 
@@ -104,10 +104,10 @@ export default function AdminPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <UserPlus className="h-5 w-5" />
-              Agregar V-Bucks
+              Agregar MxN Points
             </CardTitle>
             <CardDescription>
-              Ingresa el email del usuario y la cantidad de V-Bucks
+              Ingresa el email del usuario y la cantidad de MxN Points
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -125,7 +125,7 @@ export default function AdminPage() {
 
             <div>
               <label className="text-sm font-medium text-foreground mb-1 block">
-                Cantidad de V-Bucks
+                Cantidad de MxN Points
               </label>
               <Input
                 type="number"
@@ -154,7 +154,7 @@ export default function AdminPage() {
               disabled={loading || !email || !amount}
               className="w-full bg-yellow-600 hover:bg-yellow-700"
             >
-              {loading ? 'Agregando...' : 'Agregar V-Bucks'}
+              {loading ? 'Agregando...' : 'Agregar MxN Points'}
             </Button>
           </CardContent>
         </Card>
