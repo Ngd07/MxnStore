@@ -315,8 +315,6 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
             <span className="text-[10px] font-bold text-white">V-Bucks: {entry.finalPrice}</span>
           </div>
         </div>
-          )}
-        </div>
 
         {/* Info section */}
         <div className="flex flex-1 flex-col gap-1 p-3">
