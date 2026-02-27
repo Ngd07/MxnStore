@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS public.transactions (
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.profiles (id, email, vbucks_balance)
+  INSERT INTO public.profiles (id, email, mxn_points)
   VALUES (NEW.id, NEW.email, 0);
   RETURN NEW;
 END;

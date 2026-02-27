@@ -44,10 +44,10 @@ export function ProfilePanel() {
       if (user) {
         const { data } = await supabase
           .from('profiles')
-          .select('vbucks_balance')
+          .select('mxn_points')
           .eq('id', user.id)
           .single();
-        if (data) setVbucksBalance(data.vbucks_balance);
+        if (data) setVbucksBalance(data.mxn_points);
       }
       setLoading(false);
     };

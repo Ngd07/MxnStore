@@ -64,7 +64,7 @@ export async function POST(request: Request) {
     // Buscar usuario por email
     const { data: users } = await supabase
       .from('profiles')
-      .select('id, email, vbucks_balance')
+      .select('id, email, mxn_points')
       .ilike('email', user_email)
 
     if (!users || users.length === 0) {
@@ -76,13 +76,13 @@ export async function POST(request: Request) {
 
     const user = users[0]
     const newBalance = type === 'deposit' 
-      ? user.vbucks_balance + amount 
-      : Math.max(0, user.vbucks_balance - amount)
+      ? user.mxn_points + amount 
+      : Math.max(0, user.mxn_points - amount)
 
     // Actualizar balance
     const { data: profile, error } = await supabase
       .from('profiles')
-      .update({ vbucks_balance: newBalance })
+      .update({ mxn_points: newBalance })
       .eq('id', user.id)
       .select()
       .single()
@@ -140,7 +140,7 @@ export async function GET(request: Request) {
       return NextResponse.json({ balance: 0 })
     }
 
-    return NextResponse.json({ balance: profiles[0].vbucks_balance })
+    return NextResponse.json({ balance: profiles[0].mxn_points })
   } catch (error) {
     return NextResponse.json({ balance: 0 })
   }

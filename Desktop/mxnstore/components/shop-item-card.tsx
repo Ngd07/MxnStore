@@ -195,11 +195,11 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
     if (user) {
       const { data } = await supabase
         .from('profiles')
-        .select('vbucks_balance')
+        .select('mxn_points')
         .eq('id', user.id)
         .single();
       if (data) {
-        setVbucksBalance(data.vbucks_balance);
+        setVbucksBalance(data.mxn_points);
       }
     }
     setBalanceLoading(false);
@@ -231,7 +231,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
     if (user) {
       const { error } = await supabase
         .from('profiles')
-        .update({ vbucks_balance: vbucksBalance - price })
+        .update({ mxn_points: vbucksBalance - price })
         .eq('id', user.id);
       
       if (error) {
