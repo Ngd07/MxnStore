@@ -297,6 +297,20 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
               <span className="text-3xl font-bold opacity-30">?</span>
             </div>
           )}
+          
+          {/* Price badge */}
+          <div className="absolute top-2 right-2 flex items-center gap-1 rounded-full bg-black/70 px-2 py-1">
+            <Image
+              src="/logomxnpoints.png"
+              alt="MxN"
+              width={14}
+              height={14}
+              className="rounded"
+            />
+            <span className="text-xs font-bold text-white">{entry.finalPrice}</span>
+          </div>
+        </div>
+          )}
         </div>
 
         {/* Info section */}
