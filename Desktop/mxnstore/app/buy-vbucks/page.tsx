@@ -12,10 +12,10 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 const PACKAGES = [
-  { vbucks: 1000, price: 8.99, popular: false },
-  { vbucks: 2800, price: 22.99, popular: true },
-  { vbucks: 5000, price: 37.99, popular: false },
-  { vbucks: 10000, price: 69.99, popular: false },
+  { mxn: 1000, price: 8.99, popular: false },
+  { mxn: 2800, price: 22.99, popular: true },
+  { mxn: 5000, price: 37.99, popular: false },
+  { mxn: 10000, price: 69.99, popular: false },
 ]
 
 export default function BuyVbucksPage() {
@@ -42,7 +42,7 @@ export default function BuyVbucksPage() {
   }
 
   const handlePaymentConfirm = async () => {
-    alert('¡Gracias por tu compra! Envíanos el comprobante por WhatsApp y te acreditaremos los V-Bucks en pocos minutos.')
+    alert('¡Gracias por tu compra! Envíanos el comprobante por WhatsApp y te acreditaremos los MxN Points en pocos minutos.')
   }
 
   if (loading) {
@@ -59,7 +59,7 @@ export default function BuyVbucksPage() {
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
             <CardTitle>Debes iniciar sesión</CardTitle>
-            <CardDescription>Para comprar V-Bucks necesitas una cuenta</CardDescription>
+            <CardDescription>Para comprar MxN Points necesitas una cuenta</CardDescription>
           </CardHeader>
           <CardContent>
             <Button onClick={() => router.push('/login')} className="w-full">
@@ -83,7 +83,7 @@ export default function BuyVbucksPage() {
             <ArrowLeft className="h-4 w-4" />
             Volver
           </button>
-          <h1 className="text-lg font-bold text-foreground">Comprar V-Bucks</h1>
+          <h1 className="text-lg font-bold text-foreground">Comprar MxN Points</h1>
           <div className="w-16"></div>
         </div>
       </header>
@@ -95,7 +95,7 @@ export default function BuyVbucksPage() {
           </div>
           <h2 className="text-2xl font-bold text-foreground">Elige tu paquete</h2>
           <p className="text-muted-foreground mt-2">
-            Compra V-Bucks y canjea las skins que quieras
+            Compra MxN Points y canjea las skins que quieras
           </p>
         </div>
 
@@ -103,9 +103,9 @@ export default function BuyVbucksPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {PACKAGES.map((pkg) => (
             <Card 
-              key={pkg.vbucks}
+              key={pkg.mxn}
               className={`cursor-pointer transition-all hover:scale-105 ${
-                selectedPackage?.vbucks === pkg.vbucks 
+                selectedPackage?.mxn === pkg.mxn 
                   ? 'border-yellow-500 ring-2 ring-yellow-500' 
                   : ''
               } ${pkg.popular ? 'border-yellow-500/50' : ''}`}
@@ -117,8 +117,8 @@ export default function BuyVbucksPage() {
                 </div>
               )}
               <CardContent className="pt-6 text-center">
-                <div className="text-3xl font-bold text-yellow-500 mb-1">{pkg.vbucks}</div>
-                <div className="text-sm text-muted-foreground mb-4">V-Bucks</div>
+                <div className="text-3xl font-bold text-yellow-500 mb-1">{pkg.mxn}</div>
+                <div className="text-sm text-muted-foreground mb-4">MxN Points</div>
                 <div className="text-2xl font-bold text-foreground">${pkg.price}</div>
               </CardContent>
             </Card>
@@ -161,7 +161,7 @@ export default function BuyVbucksPage() {
 
               <div className="bg-yellow-500/10 border border-yellow-500/30 p-4 rounded-lg">
                 <p className="text-sm text-yellow-500 font-medium">
-                  ⚠️ Envía el comprobante de pago por WhatsApp para acreditar los V-Bucks
+                  ⚠️ Envía el comprobante de pago por WhatsApp para acreditar los MxN Points
                 </p>
               </div>
 
@@ -176,7 +176,7 @@ export default function BuyVbucksPage() {
               </a>
 
               <p className="text-xs text-muted-foreground text-center">
-                Una vez acreditado el pago, los V-Bucks se sumarán automáticamente a tu cuenta
+                Una vez acreditado el pago, los MxN Points se sumarán automáticamente a tu cuenta
               </p>
             </CardContent>
           </Card>
