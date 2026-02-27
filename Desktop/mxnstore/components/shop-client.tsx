@@ -11,6 +11,7 @@ import { ProfilePanel } from "@/components/profile-panel";
 import { VbucksBalance } from "@/components/vbucks-balance";
 import type { ShopData, ShopEntry } from "@/lib/types";
 import { RefreshCw, Store } from "lucide-react";
+import Image from "next/image";
 import { useI18n } from "@/lib/i18n";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -139,10 +140,16 @@ export function ShopClient() {
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
-            <Store className="h-6 w-6 text-primary" />
+            <Image
+              src="/placeholder-logo.png"
+              alt="MxNStore"
+              width={40}
+              height={40}
+              className="rounded-lg"
+            />
             <div>
               <h1 className="text-lg font-bold text-foreground">
-                {t("shop.title")}
+                MxNStore
               </h1>
               {formattedDate && (
                 <p className="text-xs text-muted-foreground capitalize">

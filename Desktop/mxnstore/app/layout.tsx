@@ -7,7 +7,7 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Tienda de Fortnite - Item Shop',
+  title: 'MxNStore - Tienda de Fortnite',
   description: 'Mira todos los items disponibles en la tienda de Fortnite con sus precios en V-Bucks. Actualizado diariamente.',
   generator: 'v0.app',
   icons: {
