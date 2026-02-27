@@ -111,7 +111,7 @@ export default function BuyVbucksPage() {
           {PACKAGES.map((pkg) => (
             <Card 
               key={pkg.mxn}
-              className={`cursor-pointer transition-all hover:scale-105 ${
+              className={`relative cursor-pointer transition-all hover:scale-105 ${
                 selectedPackage?.mxn === pkg.mxn 
                   ? 'border-yellow-500 ring-2 ring-yellow-500' 
                   : ''
@@ -119,14 +119,23 @@ export default function BuyVbucksPage() {
               onClick={() => setSelectedPackage(pkg)}
             >
               {pkg.popular && (
-                <div className="bg-yellow-500 text-black text-xs font-bold py-1 text-center rounded-t-lg">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full z-10">
                   POPULAR
                 </div>
               )}
-              <CardContent className="pt-6 text-center">
-                <div className="text-3xl font-bold text-yellow-500 mb-1">{pkg.mxn}</div>
-                <div className="text-sm text-muted-foreground mb-4">MxN Points</div>
-                <div className="text-2xl font-bold text-foreground">${pkg.price}</div>
+              <CardContent className="pt-8 text-center">
+                <div className="flex items-center justify-center gap-2 mb-1">
+                  <Image
+                    src="/logomxnpoints.png"
+                    alt="MxN Points"
+                    width={32}
+                    height={32}
+                    className="rounded"
+                  />
+                </div>
+                <div className="text-3xl font-bold text-yellow-500">{pkg.mxn}</div>
+                <div className="text-sm text-muted-foreground">MxN Points</div>
+                <div className="text-2xl font-bold text-foreground mt-2">${pkg.price}</div>
               </CardContent>
             </Card>
           ))}
