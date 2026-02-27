@@ -173,6 +173,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
   const [redeemMessage, setRedeemMessage] = useState("");
   const [vbucksBalance, setVbucksBalance] = useState(0);
   const [user, setUser] = useState<any>(null);
+  const [balanceLoading, setBalanceLoading] = useState(false);
   const { t } = useI18n();
   
   const image = getItemImage(entry);
@@ -188,6 +189,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
   const isDiscounted = entry.finalPrice < entry.regularPrice;
 
   const fetchBalance = async () => {
+    setBalanceLoading(true);
     const { data: { user } } = await supabase.auth.getUser();
     setUser(user);
     if (user) {
@@ -196,8 +198,11 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
         .select('vbucks_balance')
         .eq('id', user.id)
         .single();
-      if (data) setVbucksBalance(data.vbucks_balance);
+      if (data) {
+        setVbucksBalance(data.vbucks_balance);
+      }
     }
+    setBalanceLoading(false);
   };
 
   useEffect(() => {
@@ -380,9 +385,15 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
                 <span className="font-bold text-foreground">{price.toLocaleString()} MxN Points</span>
               </div>
               {isLoggedIn && (
-                <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                  <Coins className="h-4 w-4 text-yellow-500" />
-                  Tu saldo: <span className="font-bold text-yellow-500">{vbucksBalance} MxN Points</span>
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Image
+                    src="/logomxnpoints.png"
+                    alt="MxN Points"
+                    width={20}
+                    height={20}
+                    className="rounded"
+                  />
+                  Tu saldo: <span className="font-bold text-yellow-500">{balanceLoading ? '...' : vbucksBalance} MxN Points</span>
                 </div>
               )}
             </div>
