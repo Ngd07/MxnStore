@@ -49,10 +49,6 @@ export async function POST(request: Request) {
         { status: 401 }
       )
     }
-      )
-    }
-      )
-    }
 
     if (!user_email || !amount) {
       return NextResponse.json(
