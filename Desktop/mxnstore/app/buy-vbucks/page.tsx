@@ -124,12 +124,12 @@ export default function BuyVbucksPage() {
                 </div>
               )}
               <CardContent className="pt-8 text-center">
-                <div className="flex items-center justify-center gap-2 mb-1">
+                <div className="flex items-center justify-center gap-2 mb-2">
                   <Image
                     src="/logomxnpoints.png"
                     alt="MxN Points"
-                    width={32}
-                    height={32}
+                    width={40}
+                    height={40}
                     className="rounded"
                   />
                 </div>
