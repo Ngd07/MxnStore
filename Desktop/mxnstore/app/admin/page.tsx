@@ -25,7 +25,10 @@ export default function AdminPage() {
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { user } } = await supabase.auth.getUser()
-      if (user?.email && ADMIN_EMAILS.includes(user.email)) {
+      console.log('User logged in:', user?.email)
+      const userEmail = user?.email?.toLowerCase()
+      const adminList = ADMIN_EMAILS.map(e => e.toLowerCase())
+      if (userEmail && adminList.includes(userEmail)) {
         setIsAuthorized(true)
         setCurrentUserEmail(user.email)
       }
