@@ -304,8 +304,8 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
           <div className="mt-auto flex flex-col gap-0.5 pt-2">
             <div className="flex items-center gap-1.5">
               <Image
-                src={vbuckIcon}
-                alt="V-Bucks"
+                src="/logomxnpoints.png"
+                alt="MxN Points"
                 width={16}
                 height={16}
                 className="flex-shrink-0"
@@ -315,13 +315,15 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
                   <span className="text-xs text-muted-foreground line-through">
                     {entry.regularPrice.toLocaleString()}
                   </span>
-                  <span className="text-sm font-bold text-accent">
+                  <span className="text-sm font-bold text-yellow-500">
                     {entry.finalPrice.toLocaleString()}
                   </span>
                 </div>
               ) : (
-                <span className="text-sm font-bold text-foreground">
-                  {entry.finalPrice.toLocaleString()}
+                <span className="text-sm font-bold text-yellow-500">
+                  {entry.finalPrice.toLocaleString()} MxN
+                </span>
+              )}
                 </span>
               )}
             </div>
