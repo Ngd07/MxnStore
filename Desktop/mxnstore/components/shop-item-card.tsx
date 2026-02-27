@@ -309,6 +309,11 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
             />
             <span className="text-xs font-bold text-white">{entry.finalPrice}</span>
           </div>
+          
+          {/* V-Bucks price badge */}
+          <div className="absolute top-2 left-2 flex items-center gap-1 rounded-full bg-blue-600/80 px-2 py-1">
+            <span className="text-[10px] font-bold text-white">V-Bucks: {entry.finalPrice}</span>
+          </div>
         </div>
           )}
         </div>
