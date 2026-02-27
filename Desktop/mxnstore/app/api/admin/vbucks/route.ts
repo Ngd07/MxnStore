@@ -23,11 +23,16 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { user_email, amount, type = 'deposit', admin_email } = body
 
+    console.log('Received request - admin_email:', admin_email, 'user_email:', user_email, 'amount:', amount)
+    
     // Verify admin from frontend
     if (!admin_email || !ADMIN_EMAILS.includes(admin_email)) {
+      console.log('Admin not authorized:', admin_email)
       return NextResponse.json(
-        { error: 'No autorizado' },
+        { error: 'No autorizado', received: admin_email },
         { status: 401 }
+      )
+    }
       )
     }
 

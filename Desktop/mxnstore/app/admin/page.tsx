@@ -63,6 +63,7 @@ export default function AdminPage() {
     setMessage(null)
 
     try {
+      console.log('Sending request with admin_email:', currentUserEmail)
       const res = await fetch('/api/admin/vbucks', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
