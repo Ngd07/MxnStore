@@ -382,7 +382,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
               {isLoggedIn && (
                 <div className="flex items-center gap-1 text-sm text-muted-foreground">
                   <Coins className="h-4 w-4 text-yellow-500" />
-                  Tu saldo: <span className="font-bold text-yellow-500">{vbucksBalance} MxN</span>
+                  Tu saldo: <span className="font-bold text-yellow-500">{vbucksBalance} MxN Points</span>
                 </div>
               )}
             </div>
