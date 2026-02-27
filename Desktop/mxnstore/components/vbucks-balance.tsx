@@ -38,10 +38,13 @@ export function VbucksBalance() {
 
   return (
     <div className="flex items-center justify-between rounded-xl border border-yellow-500/50 bg-yellow-500/10 px-4 py-2">
-      <div className="flex items-center gap-2">
-        <Coins className="h-5 w-5 text-yellow-500" />
-        <span className="text-sm font-medium text-foreground">Vbucks</span>
-        <span className="text-lg font-bold text-yellow-500">{vbucksBalance}</span>
+      <div className="flex flex-col gap-1">
+        <div className="flex items-center gap-2">
+          <Coins className="h-5 w-5 text-yellow-500" />
+          <span className="text-sm font-medium text-foreground">MxN Points</span>
+          <span className="text-lg font-bold text-yellow-500">{vbucksBalance}</span>
+        </div>
+        <span className="text-xs text-muted-foreground">1 MxN Points = 1 V-Bucks</span>
       </div>
       <button
         onClick={() => router.push('/buy-vbucks')}

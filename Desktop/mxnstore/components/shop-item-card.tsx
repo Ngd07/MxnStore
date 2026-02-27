@@ -209,7 +209,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
       return;
     }
     if (vbucksBalance < price) {
-      setRedeemMessage("No tienes suficientes V-Bucks");
+      setRedeemMessage("No tienes suficientes MxN Points");
       return;
     }
     setRedeemMessage("Canjeando...");
@@ -352,16 +352,16 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
               <div className="flex items-center gap-2">
                 <Image
                   src={vbuckIcon}
-                  alt="V-Bucks"
+                  alt="MxN Points"
                   width={24}
                   height={24}
                 />
-                <span className="font-bold text-foreground">{price.toLocaleString()} V-Bucks</span>
+                <span className="font-bold text-foreground">{price.toLocaleString()} MxN Points</span>
               </div>
               {isLoggedIn && (
                 <div className="flex items-center gap-1 text-sm text-muted-foreground">
                   <Coins className="h-4 w-4 text-yellow-500" />
-                  Tu saldo: <span className="font-bold text-yellow-500">{vbucksBalance}</span>
+                  Tu saldo: <span className="font-bold text-yellow-500">{vbucksBalance} MxN</span>
                 </div>
               )}
             </div>
@@ -400,7 +400,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
                 className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50"
               >
                 <Gift className="mr-2 h-4 w-4" />
-                Canjear {price.toLocaleString()} V-Bucks
+                Canjear {price.toLocaleString()} MxN Points
               </Button>
             ) : (
               <Button

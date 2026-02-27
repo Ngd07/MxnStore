@@ -131,12 +131,15 @@ export function ProfilePanel() {
 
         <div className="flex flex-col gap-6 px-4 pb-6">
           {/* V-Bucks Balance */}
-          <div className="flex items-center justify-between rounded-xl border border-yellow-500/50 bg-yellow-500/10 p-4">
-            <div className="flex items-center gap-2">
-              <Coins className="h-5 w-5 text-yellow-500" />
-              <span className="text-sm font-medium text-foreground">V-Bucks</span>
+          <div className="flex flex-col gap-2 rounded-xl border border-yellow-500/50 bg-yellow-500/10 p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Coins className="h-5 w-5 text-yellow-500" />
+                <span className="text-sm font-medium text-foreground">MxN Points</span>
+              </div>
+              <span className="text-2xl font-bold text-yellow-500">{vbucksBalance}</span>
             </div>
-            <span className="text-2xl font-bold text-yellow-500">{vbucksBalance}</span>
+            <span className="text-xs text-muted-foreground">1 MxN Points = 1 V-Bucks</span>
           </div>
 
           {/* Email section */}
