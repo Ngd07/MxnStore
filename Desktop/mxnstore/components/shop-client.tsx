@@ -141,11 +141,11 @@ export function ShopClient() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
             <Image
-              src="/placeholder-logo.png"
+              src="/logo.png"
               alt="MxNStore"
               width={40}
               height={40}
-              className="rounded-lg"
+              className="rounded-lg object-cover"
             />
             <div>
               <h1 className="text-lg font-bold text-foreground">
