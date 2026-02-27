@@ -214,7 +214,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
     }
     setRedeemMessage("Canjeando...");
     
-    // Deduct V-Bucks from balance
+    // Deduct MxN Points from balance
     if (user) {
       const { error } = await supabase
         .from('profiles')
@@ -225,6 +225,17 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
         setRedeemMessage("Error al canjear. Intenta de nuevo.");
         return;
       }
+
+      // Save transaction
+      await supabase.from('transactions').insert({
+        user_id: user.id,
+        type: 'redeem',
+        amount: price,
+        skin_name: name,
+        skin_price: price,
+        fortnite_username: fortniteUsername,
+        status: 'pending'
+      });
     }
     
     setRedeemMessage("¡Canjeado exitosamente! Te contactaremos en WhatsApp");

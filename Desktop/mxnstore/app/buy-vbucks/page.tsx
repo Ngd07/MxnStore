@@ -43,7 +43,19 @@ export default function BuyVbucksPage() {
   }
 
   const handlePaymentConfirm = async () => {
-    alert('¡Gracias por tu compra! Envíanos el comprobante por WhatsApp y te acreditaremos los MxN Points en pocos minutos.')
+    if (!selectedPackage || !user) return
+
+    try {
+      await supabase.from('transactions').insert({
+        user_id: user.id,
+        type: 'purchase',
+        amount: selectedPackage.mxn,
+        status: 'pending'
+      })
+      alert('¡Gracias por tu compra! Envíanos el comprobante por WhatsApp y te acreditaremos los MxN Points en pocos minutos.')
+    } catch (error) {
+      alert('¡Gracias por tu compra! Envíanos el comprobante por WhatsApp y te acreditaremos los MxN Points en pocos minutos.')
+    }
   }
 
   if (loading) {

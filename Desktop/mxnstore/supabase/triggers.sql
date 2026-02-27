@@ -1,3 +1,16 @@
+-- Tabla de transacciones
+CREATE TABLE IF NOT EXISTS public.transactions (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) NOT NULL,
+  type VARCHAR(50) NOT NULL, -- 'purchase' o 'redeem'
+  amount INTEGER DEFAULT 0,
+  skin_name VARCHAR(255),
+  skin_price INTEGER,
+  fortnite_username VARCHAR(255),
+  status VARCHAR(50) DEFAULT 'pending', -- 'pending', 'completed', 'cancelled'
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
 -- Función para crear perfil automáticamente al registrarse
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
