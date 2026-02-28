@@ -276,9 +276,6 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
     } catch (txErr) {
       console.error('Transaction error:', txErr);
     }
-    } catch (txErr) {
-      console.error('Transaction error:', txErr);
-    }
     
     setRedeemMessage("¡Canjeado exitosamente! Te contactaremos en WhatsApp");
     setVbucksBalance(vbucksBalance - price);
