@@ -13,14 +13,13 @@ export function VbucksBalance() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const init = async () => {
-      // Get session directly - faster than getUser()
+    // Check session immediately
+    const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       
       if (session?.user) {
         setUser(session.user);
         
-        // Fetch balance
         const { data } = await supabase
           .from('profiles')
           .select('mxn_points')
@@ -35,7 +34,7 @@ export function VbucksBalance() {
       setLoading(false);
     };
 
-    init();
+    checkSession();
   }, []);
 
   if (loading) {
