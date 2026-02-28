@@ -240,15 +240,22 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
       }
 
       // Save transaction
-      await supabase.from('transactions').insert({
-        user_id: user.id,
-        type: 'redeem',
-        amount: price,
-        skin_name: name,
-        skin_price: price,
-        fortnite_username: fortniteUsername,
-        status: 'pending'
-      });
+      try {
+        const { error: txError } = await supabase.from('transactions').insert({
+          user_id: user.id,
+          type: 'redeem',
+          amount: price,
+          skin_name: name,
+          skin_price: price,
+          fortnite_username: fortniteUsername,
+          status: 'pending'
+        });
+        if (txError) {
+          console.error('Error saving transaction:', txError);
+        }
+      } catch (txErr) {
+        console.error('Transaction error:', txErr);
+      }
     }
     
     setRedeemMessage("¡Canjeado exitosamente! Te contactaremos en WhatsApp");
