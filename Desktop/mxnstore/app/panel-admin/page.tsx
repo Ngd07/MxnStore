@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Coins, UserPlus, Check, AlertCircle, Lock, Loader2, History, Gift, ShoppingCart } from 'lucide-react'
+import { Coins, UserPlus, Check, AlertCircle, Lock, Loader2, History, Gift, ShoppingCart, MessageCircle } from 'lucide-react'
 import { createClient } from '@supabase/supabase-js'
 import Image from 'next/image'
 
@@ -31,7 +31,7 @@ interface Transaction {
 }
 
 export default function AdminPanelPage() {
-  const [activeTab, setActiveTab] = useState<'add-points' | 'transactions'>('add-points')
+  const [activeTab, setActiveTab] = useState<'add-points' | 'transactions' | 'chats'>('add-points')
   const [userEmail, setUserEmail] = useState('')
   const [targetEmail, setTargetEmail] = useState('')
   const [amount, setAmount] = useState('')
@@ -191,6 +191,13 @@ export default function AdminPanelPage() {
             <History className="inline-block mr-2 h-4 w-4" />
             Transacciones
           </button>
+          <a
+            href="/admin/chats"
+            className="px-4 py-2 rounded-lg font-medium transition-colors bg-green-500 text-white hover:bg-green-600 flex items-center gap-2"
+          >
+            <MessageCircle className="h-4 w-4" />
+            Chats
+          </a>
         </div>
 
         {/* Add Points Tab */}

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { User, Settings, Mail, Bell, Check, LogIn, LogOut, Coins } from "lucide-react";
+import { User, Settings, Mail, Bell, Check, LogIn, LogOut, Coins, MessageCircle } from "lucide-react";
 import Image from "next/image";
 import {
   Sheet,
@@ -148,6 +148,15 @@ export function ProfilePanel() {
             </div>
             <span className="text-xs text-muted-foreground">1 MxN Points = 1 V-Bucks</span>
           </div>
+
+          {/* Chat Button */}
+          <button
+            onClick={() => router.push('/chat')}
+            className="flex items-center justify-center gap-2 rounded-xl border border-blue-500/50 bg-blue-500/10 p-4 hover:bg-blue-500/20 transition-colors"
+          >
+            <MessageCircle className="h-5 w-5 text-blue-500" />
+            <span className="text-sm font-medium text-foreground">Chatear con soporte</span>
+          </button>
 
           {/* Email section */}
           <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
