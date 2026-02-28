@@ -5,8 +5,9 @@ import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
-import { Loader2, Send, Lock, MessageCircle, Users, ShoppingBag } from 'lucide-react'
+import { Loader2, Send, Lock, MessageCircle, Users, ShoppingBag, ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 const ADMIN_EMAILS = ['nleonelli0@gmail.com', 'juancruzgc10@gmail.com']
 
@@ -270,6 +271,12 @@ export default function AdminChatsPage() {
     <div className="min-h-screen bg-background p-4">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center gap-3 mb-6">
+          <Link
+            href="/panel-admin"
+            className="p-2 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors"
+          >
+            <ArrowLeft className="h-5 w-5 text-foreground" />
+          </Link>
           <Image
             src="/logomxnpoints.png"
             alt="MxN"
