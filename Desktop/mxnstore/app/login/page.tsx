@@ -27,14 +27,18 @@ export default function LoginPage() {
   }, [router])
 
   const handleLogin = async () => {
-    const { error } = await supabase.auth.signInWithOAuth({
+    console.log('Starting OAuth login...')
+    const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback`,
       },
     })
     if (error) {
-      console.error(error)
+      console.error('OAuth error:', error)
+      alert('Error: ' + error.message)
+    } else {
+      console.log('OAuth data:', data)
     }
   }
 

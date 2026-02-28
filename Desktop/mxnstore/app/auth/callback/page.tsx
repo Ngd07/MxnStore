@@ -15,6 +15,8 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleAuth = async () => {
       try {
+        console.log('Checking auth...')
+        
         const { data: { session }, error: sessionError } = await supabase.auth.getSession()
         
         if (sessionError) {
@@ -23,8 +25,9 @@ export default function AuthCallback() {
           return
         }
 
+        console.log('Session:', session)
+
         if (session) {
-          console.log('Session found, redirecting...')
           router.push('/')
           router.refresh()
           return
