@@ -17,6 +17,8 @@ import { Input } from "@/components/ui/input";
 import { Coins, Gift, User } from "lucide-react";
 import { supabase } from '@/lib/supabase'
 
+const MXN_TO_USD = 0.0045;
+
 interface ShopItemCardProps {
   entry: ShopEntry;
   vbuckIcon: string;
