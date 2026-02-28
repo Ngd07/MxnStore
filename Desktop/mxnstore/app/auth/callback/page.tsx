@@ -1,12 +1,8 @@
 'use client'
 
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@/lib/supabase'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export default function AuthCallback() {
   const router = useRouter()
@@ -16,6 +12,7 @@ export default function AuthCallback() {
     const handleAuth = async () => {
       try {
         console.log('Checking auth...')
+        console.log('URL:', window.location.href)
         
         const { data: { session }, error: sessionError } = await supabase.auth.getSession()
         
@@ -28,6 +25,7 @@ export default function AuthCallback() {
         console.log('Session:', session)
 
         if (session) {
+          console.log('Redirecting to home...')
           router.push('/')
           router.refresh()
           return
@@ -43,9 +41,10 @@ export default function AuthCallback() {
 
         setTimeout(() => {
           if (!session) {
+            console.log('No session after timeout, going to login')
             router.push('/login')
           }
-        }, 3000)
+        }, 5000)
 
         return () => {
           subscription.unsubscribe()
