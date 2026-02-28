@@ -10,7 +10,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { ProfilePanel } from "@/components/profile-panel";
 import { VbucksBalance } from "@/components/vbucks-balance";
 import type { ShopData, ShopEntry } from "@/lib/types";
-import { RefreshCw, Store } from "lucide-react";
+import { Store } from "lucide-react";
 import Image from "next/image";
 import { useI18n } from "@/lib/i18n";
 
@@ -160,14 +160,6 @@ export function ShopClient() {
           </div>
           <div className="flex items-center gap-2">
             <LanguageSwitcher />
-            <button
-              onClick={() => mutate()}
-              className="flex items-center gap-1.5 rounded-lg bg-secondary px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-secondary/80"
-              aria-label={t("shop.refresh")}
-            >
-              <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? "animate-spin" : ""}`} />
-              <span className="hidden sm:inline">{t("shop.refresh")}</span>
-            </button>
             <ProfilePanel />
           </div>
         </div>
