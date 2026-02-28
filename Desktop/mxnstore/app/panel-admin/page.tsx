@@ -178,6 +178,16 @@ export default function AdminPanelPage() {
             </Button>
           </CardContent>
         </Card>
+
+        {/* Link to Transactions */}
+        <div className="mt-6 text-center">
+          <a 
+            href="/admin/transactions" 
+            className="inline-flex items-center gap-2 text-blue-500 hover:text-blue-700 underline"
+          >
+            Ver historial de transacciones
+          </a>
+        </div>
       </div>
     </div>
   )
