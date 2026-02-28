@@ -6,7 +6,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
 const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
-const ADMIN_EMAILS = ['tiendafnstore@gmail.com', 'nleonelli0@gmail.com', 'juancruzgc10@gmail.com']
+const ADMIN_EMAILS = ['nleonelli0@gmail.com', 'juancruzgc10@gmail.com']
 
 async function checkAdminAuth() {
   const supabaseAnon = createClient(
@@ -29,7 +29,6 @@ export async function POST(request: Request) {
     // TODO: Enable proper admin check after testing
     /*
     const isValidAdmin = admin_email && (
-      admin_email.toLowerCase() === 'tiendafnstore@gmail.com' ||
       admin_email.toLowerCase() === 'nleonelli0@gmail.com' ||
       admin_email.toLowerCase() === 'juancruzgc10@gmail.com'
     )

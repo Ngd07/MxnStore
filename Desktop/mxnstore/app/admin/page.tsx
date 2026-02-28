@@ -11,7 +11,7 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-const ADMIN_EMAILS = ['tiendafnstore@gmail.com', 'nleonelli0@gmail.com', 'juancruzgc10@gmail.com']
+const ADMIN_EMAILS = ['nleonelli0@gmail.com', 'juancruzgc10@gmail.com']
 
 export default function AdminPage() {
   const [email, setEmail] = useState('')

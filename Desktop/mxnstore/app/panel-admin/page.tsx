@@ -13,7 +13,6 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 const ADMIN_EMAILS = [
-  'tiendafnstore@gmail.com',
   'nleonelli0@gmail.com',
   'juancruzgc10@gmail.com'
 ]

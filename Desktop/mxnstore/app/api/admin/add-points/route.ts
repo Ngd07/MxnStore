@@ -7,7 +7,6 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
 const ADMIN_EMAILS = [
-  'tiendafnstore@gmail.com',
   'nleonelli0@gmail.com',
   'juancruzgc10@gmail.com'
 ]
