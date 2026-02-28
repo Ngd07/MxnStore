@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { User, Settings, Mail, Bell, Check, LogIn, LogOut, Coins, MessageCircle } from "lucide-react";
+import { User, Settings, Mail, Bell, Check, LogIn, LogOut, Coins, MessageCircle, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import {
   Sheet,
@@ -156,6 +156,15 @@ export function ProfilePanel() {
           >
             <MessageCircle className="h-5 w-5 text-blue-500" />
             <span className="text-sm font-medium text-foreground">Chatear con soporte</span>
+          </button>
+
+          {/* Mis Compras Button */}
+          <button
+            onClick={() => router.push('/mis-compras')}
+            className="flex items-center justify-center gap-2 rounded-xl border border-green-500/50 bg-green-500/10 p-4 hover:bg-green-500/20 transition-colors"
+          >
+            <ShoppingBag className="h-5 w-5 text-green-500" />
+            <span className="text-sm font-medium text-foreground">Mis Compras</span>
           </button>
 
           {/* Email section */}

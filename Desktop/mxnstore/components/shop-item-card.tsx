@@ -260,9 +260,22 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
       });
       if (txError) {
         console.error('Error saving transaction:', txError);
-      } else {
-        console.log('Transaction saved successfully!');
       }
+
+      // Create purchase record
+      const { error: purchaseError } = await supabase.from('purchases').insert({
+        user_id: currentUser.id,
+        skin_name: name,
+        skin_price: price,
+        fortnite_username: fortniteUsername,
+        status: 'pending'
+      });
+      if (purchaseError) {
+        console.error('Error creating purchase:', purchaseError);
+      }
+    } catch (txErr) {
+      console.error('Transaction error:', txErr);
+    }
     } catch (txErr) {
       console.error('Transaction error:', txErr);
     }

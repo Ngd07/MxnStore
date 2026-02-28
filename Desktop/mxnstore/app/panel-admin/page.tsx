@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Coins, UserPlus, Check, AlertCircle, Lock, Loader2, History, Gift, ShoppingCart, MessageCircle } from 'lucide-react'
+import { Coins, UserPlus, Check, AlertCircle, Lock, Loader2, History, Gift, ShoppingCart, MessageCircle, Package } from 'lucide-react'
 import { createClient } from '@supabase/supabase-js'
 import Image from 'next/image'
 
@@ -30,8 +30,19 @@ interface Transaction {
   email?: string
 }
 
+interface Purchase {
+  id: string
+  user_id: string
+  skin_name: string
+  skin_price: number
+  fortnite_username: string
+  status: string
+  created_at: string
+  email?: string
+}
+
 export default function AdminPanelPage() {
-  const [activeTab, setActiveTab] = useState<'add-points' | 'transactions' | 'chats'>('add-points')
+  const [activeTab, setActiveTab] = useState<'add-points' | 'transactions' | 'purchases'>('add-points')
   const [userEmail, setUserEmail] = useState('')
   const [targetEmail, setTargetEmail] = useState('')
   const [amount, setAmount] = useState('')
@@ -41,6 +52,8 @@ export default function AdminPanelPage() {
   const [checkingAuth, setCheckingAuth] = useState(true)
   const [transactions, setTransactions] = useState<Transaction[]>([])
   const [txLoading, setTxLoading] = useState(true)
+  const [purchases, setPurchases] = useState<Purchase[]>([])
+  const [purchasesLoading, setPurchasesLoading] = useState(true)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -61,6 +74,9 @@ export default function AdminPanelPage() {
   useEffect(() => {
     if (activeTab === 'transactions' && isAuthorized) {
       fetchTransactions()
+    }
+    if (activeTab === 'purchases' && isAuthorized) {
+      fetchPurchases()
     }
   }, [activeTab, isAuthorized])
 
@@ -85,6 +101,37 @@ export default function AdminPanelPage() {
       setTransactions(transactionsWithEmail)
     }
     setTxLoading(false)
+  }
+
+  const fetchPurchases = async () => {
+    setPurchasesLoading(true)
+    const { data } = await supabase
+      .from('purchases')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (data) {
+      const purchasesWithEmail = await Promise.all(
+        data.map(async (p) => {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('email')
+            .eq('id', p.user_id)
+            .single()
+          return { ...p, email: profile?.email || 'Unknown' }
+        })
+      )
+      setPurchases(purchasesWithEmail)
+    }
+    setPurchasesLoading(false)
+  }
+
+  const updatePurchaseStatus = async (id: string, status: string) => {
+    await supabase
+      .from('purchases')
+      .update({ status })
+      .eq('id', id)
+    fetchPurchases()
   }
 
   const handleAddPoints = async () => {
@@ -198,6 +245,17 @@ export default function AdminPanelPage() {
             <MessageCircle className="h-4 w-4" />
             Chats
           </a>
+          <button
+            onClick={() => setActiveTab('purchases')}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              activeTab === 'purchases' 
+                ? 'bg-purple-500 text-white' 
+                : 'bg-secondary text-foreground hover:bg-secondary/80'
+            }`}
+          >
+            <Package className="inline-block mr-2 h-4 w-4" />
+            Compras
+          </button>
         </div>
 
         {/* Add Points Tab */}
@@ -354,6 +412,116 @@ export default function AdminPanelPage() {
                   </table>
                   {transactions.length === 0 && (
                     <p className="text-center text-muted-foreground py-8">No hay transacciones</p>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Purchases Tab */}
+        {activeTab === 'purchases' && (
+          <Card>
+            <CardContent className="pt-6">
+              {purchasesLoading ? (
+                <div className="flex justify-center py-8">
+                  <Loader2 className="h-8 w-8 animate-spin" />
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="border-b border-border">
+                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">Fecha</th>
+                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">Usuario</th>
+                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">Skin</th>
+                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">Usuario Fortnite</th>
+                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">Estado</th>
+                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {purchases.map((p) => (
+                        <tr key={p.id} className="border-b border-border/50">
+                          <td className="p-3 text-sm text-foreground">
+                            {new Date(p.created_at).toLocaleDateString('es-AR', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </td>
+                          <td className="p-3 text-sm text-foreground">{p.email}</td>
+                          <td className="p-3 text-sm font-bold text-purple-500">{p.skin_name}</td>
+                          <td className="p-3 text-sm text-foreground">{p.fortnite_username || '-'}</td>
+                          <td className="p-3 text-sm">
+                            <span className={`px-2 py-1 rounded-full text-xs ${
+                              p.status === 'completed' ? 'bg-green-500/20 text-green-500' :
+                              p.status === 'pending' ? 'bg-yellow-500/20 text-yellow-500' :
+                              p.status === 'processing' ? 'bg-blue-500/20 text-blue-500' :
+                              'bg-red-500/20 text-red-500'
+                            }`}>
+                              {p.status === 'completed' ? 'Entregado' : 
+                               p.status === 'pending' ? 'Pendiente' :
+                               p.status === 'processing' ? 'Procesando' : 'Cancelado'}
+                            </span>
+                          </td>
+                          <td className="p-3">
+                            <div className="flex gap-1">
+                              {p.status === 'pending' && (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => updatePurchaseStatus(p.id, 'processing')}
+                                    className="bg-blue-500 hover:bg-blue-600 text-xs"
+                                  >
+                                    Procesar
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => updatePurchaseStatus(p.id, 'completed')}
+                                    className="bg-green-500 hover:bg-green-600 text-xs"
+                                  >
+                                    ✓
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => updatePurchaseStatus(p.id, 'cancelled')}
+                                    variant="destructive"
+                                    className="text-xs"
+                                  >
+                                    ✗
+                                  </Button>
+                                </>
+                              )}
+                              {p.status === 'processing' && (
+                                <>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => updatePurchaseStatus(p.id, 'completed')}
+                                    className="bg-green-500 hover:bg-green-600 text-xs"
+                                  >
+                                    ✓ Entregar
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    onClick={() => updatePurchaseStatus(p.id, 'cancelled')}
+                                    variant="destructive"
+                                    className="text-xs"
+                                  >
+                                    ✗
+                                  </Button>
+                                </>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {purchases.length === 0 && (
+                    <p className="text-center text-muted-foreground py-8">No hay compras</p>
                   )}
                 </div>
               )}
