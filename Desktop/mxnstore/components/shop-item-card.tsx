@@ -227,35 +227,44 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
     }
     setRedeemMessage("Canjeando...");
     
+    // Get fresh user data
+    const { data: { user: currentUser } } = await supabase.auth.getUser();
+    
+    if (!currentUser) {
+      setRedeemMessage("Error: No estas logueado");
+      return;
+    }
+    
     // Deduct MxN Points from balance
-    if (user) {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ mxn_points: vbucksBalance - price })
-        .eq('id', user.id);
-      
-      if (error) {
-        setRedeemMessage("Error al canjear. Intenta de nuevo.");
-        return;
-      }
+    const { error } = await supabase
+      .from('profiles')
+      .update({ mxn_points: vbucksBalance - price })
+      .eq('id', currentUser.id);
+    
+    if (error) {
+      console.error('Error deducting points:', error);
+      setRedeemMessage("Error al canjear. Intenta de nuevo.");
+      return;
+    }
 
-      // Save transaction
-      try {
-        const { error: txError } = await supabase.from('transactions').insert({
-          user_id: user.id,
-          type: 'redeem',
-          amount: price,
-          skin_name: name,
-          skin_price: price,
-          fortnite_username: fortniteUsername,
-          status: 'pending'
-        });
-        if (txError) {
-          console.error('Error saving transaction:', txError);
-        }
-      } catch (txErr) {
-        console.error('Transaction error:', txErr);
+    // Save transaction
+    try {
+      const { error: txError } = await supabase.from('transactions').insert({
+        user_id: currentUser.id,
+        type: 'redeem',
+        amount: price,
+        skin_name: name,
+        skin_price: price,
+        fortnite_username: fortniteUsername,
+        status: 'pending'
+      });
+      if (txError) {
+        console.error('Error saving transaction:', txError);
+      } else {
+        console.log('Transaction saved successfully!');
       }
+    } catch (txErr) {
+      console.error('Transaction error:', txErr);
     }
     
     setRedeemMessage("¡Canjeado exitosamente! Te contactaremos en WhatsApp");
