@@ -14,23 +14,45 @@ export function VbucksBalance() {
 
   useEffect(() => {
     const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-      if (user) {
-        const { data } = await supabase
-          .from('profiles')
-          .select('mxn_points')
-          .eq('id', user.id)
-          .single();
-        if (data) setVbucksBalance(data.mxn_points);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        console.log('User in VbucksBalance:', user);
+        setUser(user);
+        if (user) {
+          const { data, error } = await supabase
+            .from('profiles')
+            .select('mxn_points')
+            .eq('id', user.id)
+            .single();
+          console.log('Profile data:', data, error);
+          if (data) setVbucksBalance(data.mxn_points);
+        }
+      } catch (err) {
+        console.error('Error in VbucksBalance:', err);
       }
       setLoading(false);
     };
     checkUser();
   }, []);
 
-  if (loading || !user) {
-    return null;
+  if (loading) {
+    return (
+      <div className="flex items-center justify-between rounded-xl border border-yellow-500/50 bg-yellow-500/10 px-4 py-2">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-foreground">Cargando...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex items-center justify-between rounded-xl border border-yellow-500/50 bg-yellow-500/10 px-4 py-2">
+        <div className="flex items-center gap-2">
+          <span className="text-sm font-medium text-foreground">Inicia sesión para ver tu saldo</span>
+        </div>
+      </div>
+    );
   }
 
   return (
