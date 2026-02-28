@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Loader2, Send, Lock, ShoppingBag } from 'lucide-react'
 import Image from 'next/image'
+import { useI18n } from '@/lib/i18n'
 
 interface PurchaseMessage {
   id: string
@@ -28,6 +29,7 @@ interface Purchase {
 }
 
 export default function MisComprasPage() {
+  const { t } = useI18n()
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
   const [purchases, setPurchases] = useState<Purchase[]>([])
@@ -283,7 +285,7 @@ export default function MisComprasPage() {
                 {/* Chat */}
                 <Card className="h-[400px] flex flex-col">
                   <div className="p-3 border-b">
-                    <h3 className="font-bold text-foreground">Chat de soporte</h3>
+                    <h3 className="font-bold text-foreground">{t("purchases.supportChat")}</h3>
                   </div>
                   <CardContent className="flex-1 flex flex-col p-0">
                     <div className="flex-1 overflow-y-auto p-4 space-y-3">
@@ -293,7 +295,7 @@ export default function MisComprasPage() {
                         </div>
                       ) : messages.length === 0 ? (
                         <p className="text-center text-muted-foreground py-8">
-                          Escribinos si tenés alguna duda sobre tu compra
+                          {t("purchases.supportDesc")}
                         </p>
                       ) : (
                         messages.map((msg) => (
@@ -326,7 +328,7 @@ export default function MisComprasPage() {
 
                     <div className="p-3 border-t flex gap-2">
                       <Input
-                        placeholder="Escribe un mensaje..."
+                        placeholder={t("purchases.writeMessage")}
                         value={newMessage}
                         onChange={(e) => setNewMessage(e.target.value)}
                         onKeyPress={handleKeyPress}
