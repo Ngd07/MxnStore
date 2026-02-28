@@ -259,6 +259,10 @@ export default function MisComprasPage() {
                         <p className="font-medium text-foreground">{selectedPurchase.fortnite_username || '-'}</p>
                       </div>
                       <div>
+                        <p className="text-sm text-muted-foreground">Email</p>
+                        <p className="font-medium text-foreground text-sm">{selectedPurchase.email || '-'}</p>
+                      </div>
+                      <div>
                         <p className="text-sm text-muted-foreground">Estado</p>
                         <span className={`inline-block px-2 py-1 rounded-full text-xs ${getStatusColor(selectedPurchase.status)}`}>
                           {getStatusText(selectedPurchase.status)}
