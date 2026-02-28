@@ -12,46 +12,30 @@ export function VbucksBalance() {
   const [vbucksBalance, setVbucksBalance] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  const fetchBalance = async (userId: string) => {
-    const { data } = await supabase
-      .from('profiles')
-      .select('mxn_points')
-      .eq('id', userId)
-      .single();
-    
-    if (data) {
-      setVbucksBalance(data.mxn_points);
-    }
-    setLoading(false);
-  };
-
   useEffect(() => {
     const init = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-      if (user) {
-        await fetchBalance(user.id);
-      } else {
-        setLoading(false);
+      // Get session directly - faster than getUser()
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (session?.user) {
+        setUser(session.user);
+        
+        // Fetch balance
+        const { data } = await supabase
+          .from('profiles')
+          .select('mxn_points')
+          .eq('id', session.user.id)
+          .single();
+        
+        if (data) {
+          setVbucksBalance(data.mxn_points);
+        }
       }
+      
+      setLoading(false);
     };
 
     init();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session?.user) {
-        setUser(session.user);
-        fetchBalance(session.user.id);
-      } else if (event === 'SIGNED_OUT') {
-        setUser(null);
-        setVbucksBalance(0);
-        setLoading(false);
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
   }, []);
 
   if (loading) {
