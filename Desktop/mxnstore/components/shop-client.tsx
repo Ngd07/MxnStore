@@ -141,7 +141,6 @@ export function ShopClient() {
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
-            <ProfilePanel />
             <Image
               src="/logo.png"
               alt="MxNStore"
@@ -163,6 +162,7 @@ export function ShopClient() {
           <div className="flex items-center gap-2">
             <NotificationsBell />
             <LanguageSwitcher />
+            <ProfilePanel />
           </div>
         </div>
       </header>

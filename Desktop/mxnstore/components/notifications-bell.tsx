@@ -2,9 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
-import { Bell, Send, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Bell, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 interface Notification {
@@ -20,9 +18,7 @@ export function NotificationsBell() {
   const [user, setUser] = useState<any>(null);
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [newMessage, setNewMessage] = useState("");
-  const [sending, setSending] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -40,10 +36,6 @@ export function NotificationsBell() {
     }
   }, [open, user]);
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [notifications]);
-
   const loadNotifications = async () => {
     if (!user) return;
 
@@ -55,37 +47,8 @@ export function NotificationsBell() {
       .limit(20);
 
     if (data) {
-      setNotifications(data.reverse());
-    }
-  };
-
-  const sendMessage = async () => {
-    if (!newMessage.trim() || !user) return;
-
-    setSending(true);
-
-    const { data, error } = await supabase
-      .from('notifications')
-      .insert({
-        sender_id: user.id,
-        content: newMessage.trim(),
-        is_read: false
-      })
-      .select()
-      .single();
-
-    if (!error && data) {
-      setNotifications([...notifications, data]);
-      setNewMessage("");
-    }
-
-    setSending(false);
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      sendMessage();
+      setNotifications(data);
+      setUnreadCount(data.filter(n => !n.is_read && n.sender_id !== user.id).length);
     }
   };
 
@@ -98,10 +61,15 @@ export function NotificationsBell() {
         className="flex items-center justify-center rounded-lg bg-secondary p-2 text-foreground transition-colors hover:bg-secondary/80"
       >
         <Bell className="h-5 w-5" />
+        {unreadCount > 0 && (
+          <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] font-bold text-white">
+            {unreadCount}
+          </span>
+        )}
       </button>
 
       {open && (
-        <div className="absolute right-0 top-12 z-50 w-80 rounded-xl border border-border bg-background shadow-xl">
+        <div className="absolute right-0 top-12 z-50 w-72 rounded-xl border border-border bg-background shadow-xl">
           <div className="flex items-center justify-between border-b border-border p-3">
             <h3 className="font-bold text-foreground">Notificaciones</h3>
             <button onClick={() => setOpen(false)}>
@@ -121,6 +89,8 @@ export function NotificationsBell() {
                   className={`rounded-lg p-2 text-sm ${
                     notif.sender_id === user.id
                       ? "bg-yellow-500/20 text-foreground"
+                      : notif.is_read
+                      ? "bg-muted text-muted-foreground"
                       : "bg-blue-500/20 text-foreground"
                   }`}
                 >
@@ -136,27 +106,6 @@ export function NotificationsBell() {
                 </div>
               ))
             )}
-            <div ref={messagesEndRef} />
-          </div>
-
-          <div className="border-t border-border p-2">
-            <div className="flex gap-2">
-              <Input
-                placeholder="Escribir mensaje..."
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
-                className="flex-1"
-              />
-              <Button
-                onClick={sendMessage}
-                disabled={sending || !newMessage.trim()}
-                size="icon"
-                className="bg-yellow-500 hover:bg-yellow-600"
-              >
-                <Send className="h-4 w-4" />
-              </Button>
-            </div>
           </div>
         </div>
       )}
