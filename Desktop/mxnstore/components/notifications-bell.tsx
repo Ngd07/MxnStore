@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { Bell, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useI18n } from "@/lib/i18n";
 
 interface Notification {
   id: string;
@@ -15,6 +16,7 @@ interface Notification {
 
 export function NotificationsBell() {
   const router = useRouter();
+  const { t } = useI18n();
   const [user, setUser] = useState<any>(null);
   const [open, setOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -71,7 +73,7 @@ export function NotificationsBell() {
       {open && (
         <div className="absolute right-0 top-12 z-50 w-72 rounded-xl border border-border bg-background shadow-xl">
           <div className="flex items-center justify-between border-b border-border p-3">
-            <h3 className="font-bold text-foreground">Notificaciones</h3>
+            <h3 className="font-bold text-foreground">{t("notifications.title")}</h3>
             <button onClick={() => setOpen(false)}>
               <X className="h-4 w-4 text-muted-foreground" />
             </button>
@@ -80,7 +82,7 @@ export function NotificationsBell() {
           <div className="max-h-64 overflow-y-auto p-3 space-y-2">
             {notifications.length === 0 ? (
               <p className="text-center text-sm text-muted-foreground py-4">
-                No hay notificaciones
+                {t("notifications.empty")}
               </p>
             ) : (
               notifications.map((notif) => (

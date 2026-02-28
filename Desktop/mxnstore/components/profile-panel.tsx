@@ -62,14 +62,12 @@ export function ProfilePanel() {
 
   const handleRedeem = async () => {
     if (!redeemCode.trim()) {
-      setRedeemMessage("Ingresa un código");
+      setRedeemMessage(t("profile.redeemPlaceholder"));
       return;
     }
-    setRedeemMessage("Canjeando...");
+    setRedeemMessage(t("redeem.processing"));
     
-    // Aquí implementarías la lógica de canje
-    // Por ahora solo demostrativo
-    setRedeemMessage("Código canjeado exitosamente!");
+    setRedeemMessage(t("profile.redeemSuccess"));
     setRedeemCode("");
     setTimeout(() => setRedeemMessage(""), 3000);
   };
@@ -87,7 +85,7 @@ export function ProfilePanel() {
         className="flex items-center gap-1.5 rounded-lg bg-secondary px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-secondary/80"
       >
         <User className="h-3.5 w-3.5" />
-        <span className="hidden sm:inline">Cargando...</span>
+        <span className="hidden sm:inline">{t("login.loading")}</span>
       </button>
     );
   }
@@ -99,7 +97,7 @@ export function ProfilePanel() {
         className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
       >
         <LogIn className="h-3.5 w-3.5" />
-        <span className="hidden sm:inline">Iniciar sesión</span>
+        <span className="hidden sm:inline">{t("profile.login")}</span>
       </button>
     );
   }
@@ -138,11 +136,11 @@ export function ProfilePanel() {
                   height={24}
                   className="rounded"
                 />
-                <span className="text-sm font-medium text-foreground">MxN Points</span>
+                <span className="text-sm font-medium text-foreground">{t("profile.mxnPoints")}</span>
               </div>
               <span className="text-2xl font-bold text-yellow-500">{vbucksBalance}</span>
             </div>
-            <span className="text-xs text-muted-foreground">1 MxN Points = 1 V-Bucks</span>
+            <span className="text-xs text-muted-foreground">{t("profile.vbucks")}</span>
           </div>
 
           {/* Mis Compras Button */}
@@ -151,7 +149,7 @@ export function ProfilePanel() {
             className="flex items-center justify-center gap-2 rounded-xl border border-green-500/50 bg-green-500/10 p-4 hover:bg-green-500/20 transition-colors"
           >
             <ShoppingBag className="h-5 w-5 text-green-500" />
-            <span className="text-sm font-medium text-foreground">Mis Compras</span>
+            <span className="text-sm font-medium text-foreground">{t("profile.myPurchases")}</span>
           </button>
 
           {/* Email section */}
@@ -234,7 +232,7 @@ export function ProfilePanel() {
             className="flex items-center justify-center gap-2 rounded-xl border border-border bg-card p-4 text-red-500 transition-colors hover:bg-red-500/10"
           >
             <LogOut className="h-4 w-4" />
-            <span className="text-sm font-medium">Cerrar sesión</span>
+            <span className="text-sm font-medium">{t("profile.logout")}</span>
           </button>
         </div>
       </SheetContent>

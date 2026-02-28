@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Coins, ArrowLeft, Copy, Check, MessageCircle } from 'lucide-react'
 import Image from 'next/image'
+import { useI18n } from '@/lib/i18n'
 
 const PACKAGES = [
   { mxn: 1000, price: 8.99, popular: false },
@@ -17,6 +18,7 @@ const PACKAGES = [
 
 export default function BuyVbucksPage() {
   const router = useRouter()
+  const { t } = useI18n()
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [copied, setCopied] = useState(false)
@@ -48,11 +50,11 @@ export default function BuyVbucksPage() {
         amount: selectedPackage.mxn,
         status: 'pending'
       })
-      alert('¡Gracias por tu compra! Envíanos el comprobante por WhatsApp y te acreditaremos los MxN Points en pocos minutos.')
-    } catch (error) {
-      alert('¡Gracias por tu compra! Envíanos el comprobante por WhatsApp y te acreditaremos los MxN Points en pocos minutos.')
-    }
+    alert(t("buy.whatsapp"))
+  } catch (error) {
+    alert(t("buy.whatsapp"))
   }
+}
 
   if (loading) {
     return (
@@ -67,12 +69,12 @@ export default function BuyVbucksPage() {
       <div className="flex min-h-screen items-center justify-center bg-background p-4">
         <Card className="w-full max-w-md">
           <CardHeader className="text-center">
-            <CardTitle>Debes iniciar sesión</CardTitle>
-            <CardDescription>Para comprar MxN Points necesitas una cuenta</CardDescription>
+            <CardTitle>{t("buy.noAccount")}</CardTitle>
+            <CardDescription>{t("login.subtitle")}</CardDescription>
           </CardHeader>
           <CardContent>
             <Button onClick={() => router.push('/login')} className="w-full">
-              Iniciar sesión
+              {t("profile.login")}
             </Button>
           </CardContent>
         </Card>
@@ -90,9 +92,9 @@ export default function BuyVbucksPage() {
             className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
           >
             <ArrowLeft className="h-4 w-4" />
-            Volver
+            {t("redeem.cancel")}
           </button>
-          <h1 className="text-lg font-bold text-foreground">Comprar MxN Points</h1>
+          <h1 className="text-lg font-bold text-foreground">{t("buy.title")}</h1>
           <div className="w-16"></div>
         </div>
       </header>
@@ -108,9 +110,9 @@ export default function BuyVbucksPage() {
               className="rounded-lg"
             />
           </div>
-          <h2 className="text-2xl font-bold text-foreground">Elige tu paquete</h2>
+          <h2 className="text-2xl font-bold text-foreground">{t("buy.selectAmount")}</h2>
           <p className="text-muted-foreground mt-2">
-            Compra MxN Points y canjea las skins que quieras
+            {t("buy.subtitle")}
           </p>
         </div>
 
@@ -128,7 +130,7 @@ export default function BuyVbucksPage() {
             >
               {pkg.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full z-10">
-                  POPULAR
+                  {t("buy.popular").toUpperCase()}
                 </div>
               )}
               <CardContent className="pt-8 text-center">
@@ -156,7 +158,7 @@ export default function BuyVbucksPage() {
               onClick={() => setShowPaymentInfo(true)}
               className="bg-green-600 hover:bg-green-700 text-lg px-8 py-6"
             >
-              Continuar con pago
+              {t("buy.selectAmount")}
             </Button>
           </div>
         )}
@@ -164,9 +166,9 @@ export default function BuyVbucksPage() {
         {showPaymentInfo && (
           <Card className="max-w-md mx-auto">
             <CardHeader>
-              <CardTitle>Información de pago</CardTitle>
+              <CardTitle>{t("buy.transferDetails")}</CardTitle>
               <CardDescription>
-                Transfiere ${selectedPackage.price} USD a:
+                {t("buy.step2")} ${selectedPackage.price} USD
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -185,7 +187,7 @@ export default function BuyVbucksPage() {
 
               <div className="bg-yellow-500/10 border border-yellow-500/30 p-4 rounded-lg">
                 <p className="text-sm text-yellow-500 font-medium">
-                  ⚠️ Envía el comprobante de pago por WhatsApp para acreditar los MxN Points
+                  {t("buy.step3")}
                 </p>
               </div>
 
@@ -196,11 +198,11 @@ export default function BuyVbucksPage() {
                 className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-medium"
               >
                 <MessageCircle className="h-5 w-5" />
-                Enviar comprobante por WhatsApp
+                {t("buy.whatsapp")}
               </a>
 
               <p className="text-xs text-muted-foreground text-center">
-                Una vez acreditado el pago, los MxN Points se sumarán automáticamente a tu cuenta
+                {t("buy.step4")}
               </p>
             </CardContent>
           </Card>

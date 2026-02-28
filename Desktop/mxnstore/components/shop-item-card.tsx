@@ -214,14 +214,14 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
 
   const handleRedeem = async () => {
     if (!fortniteUsername.trim()) {
-      setRedeemMessage("Ingresa tu usuario de Fortnite");
+      setRedeemMessage(t("redeem.enterUsername"));
       return;
     }
     if (vbucksBalance < price) {
-      setRedeemMessage("No tienes suficientes MxN Points");
+      setRedeemMessage(t("redeem.insufficientPoints"));
       return;
     }
-    setRedeemMessage("Canjeando...");
+    setRedeemMessage(t("redeem.processing"));
     
     // Get fresh user data
     const { data: { user: currentUser } } = await supabase.auth.getUser();
@@ -273,7 +273,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
       console.error('Transaction error:', txErr);
     }
     
-    setRedeemMessage("¡Canjeado exitosamente! Te contactaremos en WhatsApp");
+    setRedeemMessage(t("redeem.success") + "! Te contactaremos en WhatsApp");
     setVbucksBalance(vbucksBalance - price);
     setFortniteUsername("");
     setTimeout(() => {
@@ -419,7 +419,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
                     height={20}
                     className="rounded"
                   />
-                  Tu saldo: <span className="font-bold text-yellow-500">{balanceLoading ? '...' : vbucksBalance} MxN Points</span>
+                  {t("redeem.yourBalance")}: <span className="font-bold text-yellow-500">{balanceLoading ? '...' : vbucksBalance} MxN Points</span>
                 </div>
               )}
             </div>
