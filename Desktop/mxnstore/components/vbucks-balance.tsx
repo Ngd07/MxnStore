@@ -29,7 +29,7 @@ export function VbucksBalance() {
     checkUser();
   }, []);
 
-  if (loading || !user) {
+  if (!user) {
     return null;
   }
 
@@ -45,7 +45,11 @@ export function VbucksBalance() {
             className="rounded"
           />
           <span className="text-sm font-medium text-foreground">MxN Points</span>
-          <span className="text-lg font-bold text-yellow-500">{vbucksBalance}</span>
+          {loading ? (
+            <RefreshCw className="h-4 w-4 animate-spin text-yellow-500" />
+          ) : (
+            <span className="text-lg font-bold text-yellow-500">{vbucksBalance}</span>
+          )}
         </div>
         <span className="text-xs text-muted-foreground">1 MxN Points = 1 V-Bucks</span>
       </div>
