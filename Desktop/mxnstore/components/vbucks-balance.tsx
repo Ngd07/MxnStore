@@ -5,9 +5,11 @@ import { supabase } from "@/lib/supabase";
 import { Coins, RefreshCw } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useI18n } from "@/lib/i18n";
 
 export function VbucksBalance() {
   const router = useRouter();
+  const { t } = useI18n();
   const [user, setUser] = useState<any>(null);
   const [vbucksBalance, setVbucksBalance] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -56,17 +58,17 @@ export function VbucksBalance() {
             height={24}
             className="rounded"
           />
-          <span className="text-sm font-medium text-foreground">MxN Points</span>
+          <span className="text-sm font-medium text-foreground">{t("profile.mxnPoints")}</span>
           <span className="text-lg font-bold text-yellow-500">{vbucksBalance}</span>
         </div>
-        <span className="text-xs text-muted-foreground">1 MxN Points = 1 V-Bucks</span>
+        <span className="text-xs text-muted-foreground">{t("profile.vbucks")}</span>
       </div>
       <button
         onClick={() => router.push('/buy-vbucks')}
         className="flex items-center gap-1.5 rounded-lg bg-purple-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-purple-700"
       >
         <RefreshCw className="h-3.5 w-3.5" />
-        Recargar
+        {t("profile.recharge")}
       </button>
     </div>
   );
