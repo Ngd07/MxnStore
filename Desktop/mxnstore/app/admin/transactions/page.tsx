@@ -144,10 +144,10 @@ export default function TransactionsPage() {
                     </td>
                     <td className="p-3 text-sm text-foreground">{t.email}</td>
                     <td className="p-3 text-sm">
-                      {t.type === 'purchase' ? (
+                      {t.type === 'TOP UP' ? (
                         <span className="flex items-center gap-1 text-green-500">
                           <ShoppingCart className="h-4 w-4" />
-                          Compra
+                          Top Up
                         </span>
                       ) : (
                         <span className="flex items-center gap-1 text-purple-500">

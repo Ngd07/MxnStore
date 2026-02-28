@@ -48,7 +48,7 @@ export default function BuyVbucksPage() {
     try {
       await supabase.from('transactions').insert({
         user_id: user.id,
-        type: 'purchase',
+        type: 'TOP UP',
         amount: selectedPackage.mxn,
         status: 'pending'
       })
