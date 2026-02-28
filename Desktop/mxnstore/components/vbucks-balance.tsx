@@ -13,26 +13,50 @@ export function VbucksBalance() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let mounted = true;
+    let loadingTimeout: NodeJS.Timeout;
+    
     const checkUser = async () => {
+      // Start timeout to force loading false after 10 seconds
+    loadingTimeout = setTimeout(() => {
+        if (mounted) {
+          setLoading(false);
+        }
+      }, 10000);
+      
       try {
         const { data: { user } } = await supabase.auth.getUser();
+        if (!mounted) return;
+        
         console.log('User in VbucksBalance:', user);
         setUser(user);
+        
         if (user) {
-          const { data, error } = await supabase
+          const { data } = await supabase
             .from('profiles')
             .select('mxn_points')
             .eq('id', user.id)
             .single();
-          console.log('Profile data:', data, error);
-          if (data) setVbucksBalance(data.mxn_points);
+          
+          if (mounted && data) {
+            setVbucksBalance(data.mxn_points);
+          }
         }
       } catch (err) {
         console.error('Error in VbucksBalance:', err);
       }
-      setLoading(false);
+      
+      if (mounted) {
+        setLoading(false);
+      }
     };
+    
     checkUser();
+    
+    return () => {
+      mounted = false;
+      if (loadingTimeout) clearTimeout(loadingTimeout);
+    };
   }, []);
 
   if (loading) {
