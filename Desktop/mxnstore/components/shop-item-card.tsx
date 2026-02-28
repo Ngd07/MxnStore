@@ -15,13 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Coins, Gift, User } from "lucide-react";
-import { createClient } from "@supabase/supabase-js";
-
-const MXN_TO_USD = 0.0045;
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+import { supabase } from '@/lib/supabase'
 
 interface ShopItemCardProps {
   entry: ShopEntry;

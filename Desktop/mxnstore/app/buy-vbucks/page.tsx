@@ -1,16 +1,12 @@
 'use client'
 
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Coins, ArrowLeft, Copy, Check, MessageCircle } from 'lucide-react'
 import Image from 'next/image'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 const PACKAGES = [
   { mxn: 1000, price: 8.99, popular: false },

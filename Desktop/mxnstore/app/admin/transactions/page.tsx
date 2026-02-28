@@ -5,11 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Coins, UserPlus, Check, AlertCircle, Lock, History, Gift, ShoppingCart } from 'lucide-react'
-import { createClient } from '@supabase/supabase-js'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
+import { supabase } from '@/lib/supabase'
 
 const ADMIN_EMAILS = ['nleonelli0@gmail.com', 'juancruzgc10@gmail.com']
 
