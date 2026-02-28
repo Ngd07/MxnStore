@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
-import { Loader2, Send, Lock, MessageCircle, Users } from 'lucide-react'
+import { Loader2, Send, Lock, MessageCircle, Users, ShoppingBag } from 'lucide-react'
 import Image from 'next/image'
 
 const ADMIN_EMAILS = ['nleonelli0@gmail.com', 'juancruzgc10@gmail.com']
@@ -29,15 +29,38 @@ interface Chat {
   last_message?: string
 }
 
+interface PurchaseMessage {
+  id: string
+  purchase_id: string
+  sender_id: string
+  content: string
+  created_at: string
+}
+
+interface Purchase {
+  id: string
+  user_id: string
+  skin_name: string
+  skin_price: number
+  status: string
+  created_at: string
+  user_email?: string
+  last_message?: string
+}
+
 export default function AdminChatsPage() {
   const [loading, setLoading] = useState(true)
   const [isAuthorized, setIsAuthorized] = useState(false)
   const [checkingAuth, setCheckingAuth] = useState(true)
   const [chats, setChats] = useState<Chat[]>([])
+  const [purchases, setPurchases] = useState<Purchase[]>([])
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null)
+  const [selectedPurchase, setSelectedPurchase] = useState<Purchase | null>(null)
   const [messages, setMessages] = useState<Message[]>([])
+  const [purchaseMessages, setPurchaseMessages] = useState<PurchaseMessage[]>([])
   const [newMessage, setNewMessage] = useState('')
   const [sending, setSending] = useState(false)
+  const [activeTab, setActiveTab] = useState<'general' | 'purchases'>('general')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -46,6 +69,7 @@ export default function AdminChatsPage() {
       if (user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase())) {
         setIsAuthorized(true)
         loadChats()
+        loadPurchases()
       }
       setCheckingAuth(false)
     }
@@ -87,6 +111,40 @@ export default function AdminChatsPage() {
     setLoading(false)
   }
 
+  const loadPurchases = async () => {
+    const { data: purchasesData } = await supabase
+      .from('purchases')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (purchasesData) {
+      const purchasesWithEmail = await Promise.all(
+        purchasesData.map(async (purchase) => {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('email')
+            .eq('id', purchase.user_id)
+            .single()
+          
+          const { data: lastMsg } = await supabase
+            .from('purchase_messages')
+            .select('content')
+            .eq('purchase_id', purchase.id)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .single()
+
+          return { 
+            ...purchase, 
+            user_email: profile?.email || 'Unknown',
+            last_message: lastMsg?.content || ''
+          }
+        })
+      )
+      setPurchases(purchasesWithEmail)
+    }
+  }
+
   const loadMessages = async (chatId: string) => {
     const { data } = await supabase
       .from('messages')
@@ -96,6 +154,18 @@ export default function AdminChatsPage() {
 
     if (data) {
       setMessages(data)
+    }
+  }
+
+  const loadPurchaseMessages = async (purchaseId: string) => {
+    const { data } = await supabase
+      .from('purchase_messages')
+      .select('*')
+      .eq('purchase_id', purchaseId)
+      .order('created_at', { ascending: true })
+
+    if (data) {
+      setPurchaseMessages(data)
     }
   }
 
@@ -110,28 +180,58 @@ export default function AdminChatsPage() {
   }, [selectedChat])
 
   useEffect(() => {
+    if (selectedPurchase) {
+      loadPurchaseMessages(selectedPurchase.id)
+      const interval = setInterval(() => {
+        loadPurchaseMessages(selectedPurchase.id)
+      }, 3000)
+      return () => clearInterval(interval)
+    }
+  }, [selectedPurchase])
+
+  useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+  }, [messages, purchaseMessages])
 
   const sendMessage = async () => {
-    if (!newMessage.trim() || !selectedChat || !isAuthorized) return
+    if (!newMessage.trim()) return
     
     setSending(true)
     
-    const { data, error } = await supabase
-      .from('messages')
-      .insert({
-        chat_id: selectedChat.id,
-        sender_id: 'admin',
-        content: newMessage.trim()
-      })
-      .select()
-      .single()
+    if (activeTab === 'general' && selectedChat) {
+      const { data, error } = await supabase
+        .from('messages')
+        .insert({
+          chat_id: selectedChat.id,
+          sender_id: 'admin',
+          content: newMessage.trim()
+        })
+        .select()
+        .single()
 
-    if (!error && data) {
-      setMessages([...messages, data])
-      setNewMessage('')
-      loadChats()
+      if (!error && data) {
+        setMessages([...messages, data])
+        setNewMessage('')
+        loadChats()
+      }
+    } else if (activeTab === 'purchases' && selectedPurchase) {
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      const { data, error } = await supabase
+        .from('purchase_messages')
+        .insert({
+          purchase_id: selectedPurchase.id,
+          sender_id: user?.id || 'admin',
+          content: newMessage.trim()
+        })
+        .select()
+        .single()
+
+      if (!error && data) {
+        setPurchaseMessages([...purchaseMessages, data])
+        setNewMessage('')
+        loadPurchases()
+      }
     }
     
     setSending(false)
@@ -180,45 +280,116 @@ export default function AdminChatsPage() {
           <h1 className="text-2xl font-bold text-foreground">Chats con Clientes</h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[calc(100vh-150px)]">
-          {/* Chat List */}
-          <Card className="md:col-span-1 flex flex-col">
-            <div className="p-3 border-b">
-              <h2 className="font-bold text-foreground flex items-center gap-2">
-                <Users className="h-4 w-4" />
-                Conversaciones ({chats.length})
-              </h2>
-            </div>
-            <CardContent className="flex-1 overflow-y-auto p-0">
-              {loading ? (
-                <div className="flex justify-center py-8">
-                  <Loader2 className="h-6 w-6 animate-spin" />
-                </div>
-              ) : chats.length === 0 ? (
-                <p className="text-center text-muted-foreground py-8">No hay chats</p>
-              ) : (
-                chats.map((chat) => (
-                  <button
-                    key={chat.id}
-                    onClick={() => setSelectedChat(chat)}
-                    className={`w-full text-left p-3 border-b hover:bg-secondary/50 ${
-                      selectedChat?.id === chat.id ? 'bg-secondary' : ''
-                    }`}
-                  >
-                    <p className="font-medium text-foreground truncate">{chat.user_email}</p>
-                    <p className="text-sm text-muted-foreground truncate">{chat.last_message || 'Sin mensajes'}</p>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {new Date(chat.updated_at).toLocaleString('es-AR')}
-                    </p>
-                  </button>
-                ))
-              )}
-            </CardContent>
-          </Card>
+        {/* Tabs */}
+        <div className="flex gap-2 mb-4">
+          <button
+            onClick={() => { setActiveTab('general'); setSelectedChat(chats[0] || null); setSelectedPurchase(null); }}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+              activeTab === 'general' 
+                ? 'bg-blue-500 text-white' 
+                : 'bg-secondary text-foreground hover:bg-secondary/80'
+            }`}
+          >
+            <MessageCircle className="h-4 w-4" />
+            Chats Generales ({chats.length})
+          </button>
+          <button
+            onClick={() => { setActiveTab('purchases'); setSelectedPurchase(purchases[0] || null); setSelectedChat(null); }}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+              activeTab === 'purchases' 
+                ? 'bg-purple-500 text-white' 
+                : 'bg-secondary text-foreground hover:bg-secondary/80'
+            }`}
+          >
+            <ShoppingBag className="h-4 w-4" />
+            Chats de Compras ({purchases.length})
+          </button>
+        </div>
 
-          {/* Chat Window */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[calc(100vh-220px)]">
+          {/* Chat List - General */}
+          {activeTab === 'general' && (
+            <Card className="md:col-span-1 flex flex-col">
+              <div className="p-3 border-b">
+                <h2 className="font-bold text-foreground flex items-center gap-2">
+                  <Users className="h-4 w-4" />
+                  Conversaciones ({chats.length})
+                </h2>
+              </div>
+              <CardContent className="flex-1 overflow-y-auto p-0">
+                {loading ? (
+                  <div className="flex justify-center py-8">
+                    <Loader2 className="h-6 w-6 animate-spin" />
+                  </div>
+                ) : chats.length === 0 ? (
+                  <p className="text-center text-muted-foreground py-8">No hay chats</p>
+                ) : (
+                  chats.map((chat) => (
+                    <button
+                      key={chat.id}
+                      onClick={() => { setSelectedChat(chat); setSelectedPurchase(null); }}
+                      className={`w-full text-left p-3 border-b hover:bg-secondary/50 ${
+                        selectedChat?.id === chat.id ? 'bg-secondary' : ''
+                      }`}
+                    >
+                      <p className="font-medium text-foreground truncate">{chat.user_email}</p>
+                      <p className="text-sm text-muted-foreground truncate">{chat.last_message || 'Sin mensajes'}</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {new Date(chat.updated_at).toLocaleString('es-AR')}
+                      </p>
+                    </button>
+                  ))
+                )}
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Chat List - Purchases */}
+          {activeTab === 'purchases' && (
+            <Card className="md:col-span-1 flex flex-col">
+              <div className="p-3 border-b">
+                <h2 className="font-bold text-foreground flex items-center gap-2">
+                  <ShoppingBag className="h-4 w-4" />
+                  Compras ({purchases.length})
+                </h2>
+              </div>
+              <CardContent className="flex-1 overflow-y-auto p-0">
+                {purchases.length === 0 ? (
+                  <p className="text-center text-muted-foreground py-8">No hay compras</p>
+                ) : (
+                  purchases.map((purchase) => (
+                    <button
+                      key={purchase.id}
+                      onClick={() => { setSelectedPurchase(purchase); setSelectedChat(null); }}
+                      className={`w-full text-left p-3 border-b hover:bg-secondary/50 ${
+                        selectedPurchase?.id === purchase.id ? 'bg-secondary' : ''
+                      }`}
+                    >
+                      <p className="font-medium text-foreground truncate">{purchase.user_email}</p>
+                      <p className="text-sm text-purple-500 truncate font-medium">{purchase.skin_name}</p>
+                      <p className="text-sm text-muted-foreground truncate">{purchase.last_message || 'Sin mensajes'}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className={`px-2 py-0.5 rounded-full text-xs ${
+                          purchase.status === 'completed' ? 'bg-green-500/20 text-green-500' :
+                          purchase.status === 'pending' ? 'bg-yellow-500/20 text-yellow-500' :
+                          purchase.status === 'processing' ? 'bg-blue-500/20 text-blue-500' :
+                          'bg-red-500/20 text-red-500'
+                        }`}>
+                          {purchase.status === 'completed' ? 'Entregado' : 
+                           purchase.status === 'pending' ? 'Pendiente' :
+                           purchase.status === 'processing' ? 'Procesando' : 'Cancelado'}
+                        </span>
+                      </div>
+                    </button>
+                  ))
+                )}
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Chat Window - General */}
           <Card className="md:col-span-2 flex flex-col">
-            {selectedChat ? (
+            {activeTab === 'general' && selectedChat ? (
               <>
                 <div className="p-3 border-b">
                   <h2 className="font-bold text-foreground">{selectedChat.user_email}</h2>
@@ -274,9 +445,66 @@ export default function AdminChatsPage() {
                   </div>
                 </CardContent>
               </>
+            ) : activeTab === 'purchases' && selectedPurchase ? (
+              <>
+                <div className="p-3 border-b">
+                  <h2 className="font-bold text-foreground">{selectedPurchase.user_email}</h2>
+                  <p className="text-sm text-purple-500">{selectedPurchase.skin_name} - {selectedPurchase.skin_price} MxN</p>
+                </div>
+                <CardContent className="flex-1 flex flex-col p-0">
+                  <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                    {purchaseMessages.map((msg) => (
+                      <div
+                        key={msg.id}
+                        className={`flex ${msg.sender_id !== 'admin' ? 'justify-end' : 'justify-start'}`}
+                      >
+                        <div
+                          className={`max-w-[70%] rounded-lg px-3 py-2 ${
+                            msg.sender_id !== 'admin'
+                              ? 'bg-yellow-500 text-black'
+                              : 'bg-blue-500 text-white'
+                          }`}
+                        >
+                          <p className="text-sm">{msg.content}</p>
+                          <p className={`text-[10px] mt-1 ${
+                            msg.sender_id !== 'admin' ? 'text-black/70' : 'text-white/70'
+                          }`}>
+                            {new Date(msg.created_at).toLocaleTimeString('es-AR', { 
+                              hour: '2-digit', 
+                              minute: '2-digit' 
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                    <div ref={messagesEndRef} />
+                  </div>
+
+                  <div className="p-3 border-t flex gap-2">
+                    <Input
+                      placeholder="Escribe un mensaje..."
+                      value={newMessage}
+                      onChange={(e) => setNewMessage(e.target.value)}
+                      onKeyPress={handleKeyPress}
+                      className="flex-1"
+                    />
+                    <Button 
+                      onClick={sendMessage} 
+                      disabled={sending || !newMessage.trim()}
+                      className="bg-blue-500 hover:bg-blue-600"
+                    >
+                      {sending ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <Send className="h-4 w-4" />
+                      )}
+                    </Button>
+                  </div>
+                </CardContent>
+              </>
             ) : (
               <div className="flex-1 flex items-center justify-center">
-                <p className="text-muted-foreground">Selecciona un chat para empezar</p>
+                <p className="text-muted-foreground">Selecciona una conversación para empezar</p>
               </div>
             )}
           </Card>
