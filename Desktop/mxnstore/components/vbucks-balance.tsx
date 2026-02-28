@@ -12,71 +12,54 @@ export function VbucksBalance() {
   const [vbucksBalance, setVbucksBalance] = useState(0);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let mounted = true;
-    let loadingTimeout: NodeJS.Timeout;
+  const fetchBalance = async (userId: string) => {
+    const { data } = await supabase
+      .from('profiles')
+      .select('mxn_points')
+      .eq('id', userId)
+      .single();
     
-    const checkUser = async () => {
-      // Start timeout to force loading false after 10 seconds
-    loadingTimeout = setTimeout(() => {
-        if (mounted) {
-          setLoading(false);
-        }
-      }, 10000);
-      
-      try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!mounted) return;
-        
-        console.log('User in VbucksBalance:', user);
-        setUser(user);
-        
-        if (user) {
-          const { data } = await supabase
-            .from('profiles')
-            .select('mxn_points')
-            .eq('id', user.id)
-            .single();
-          
-          if (mounted && data) {
-            setVbucksBalance(data.mxn_points);
-          }
-        }
-      } catch (err) {
-        console.error('Error in VbucksBalance:', err);
-      }
-      
-      if (mounted) {
+    if (data) {
+      setVbucksBalance(data.mxn_points);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    const init = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      if (user) {
+        await fetchBalance(user.id);
+      } else {
         setLoading(false);
       }
     };
-    
-    checkUser();
-    
+
+    init();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        setUser(session.user);
+        fetchBalance(session.user.id);
+      } else if (event === 'SIGNED_OUT') {
+        setUser(null);
+        setVbucksBalance(0);
+        setLoading(false);
+      }
+    });
+
     return () => {
-      mounted = false;
-      if (loadingTimeout) clearTimeout(loadingTimeout);
+      subscription.unsubscribe();
     };
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-between rounded-xl border border-yellow-500/50 bg-yellow-500/10 px-4 py-2">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-foreground">Cargando...</span>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   if (!user) {
-    return (
-      <div className="flex items-center justify-between rounded-xl border border-yellow-500/50 bg-yellow-500/10 px-4 py-2">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-foreground">Inicia sesión para ver tu saldo</span>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (
