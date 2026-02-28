@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/lib/theme";
 import { useRouter } from "next/navigation";
@@ -34,20 +33,37 @@ export function ProfilePanel() {
   const [redeemMessage, setRedeemMessage] = useState("");
 
   useEffect(() => {
+    let mounted = true;
+    
     const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-      if (user) {
+      const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!mounted) return;
+      
+      if (session?.user) {
+        setUser(session.user);
+        
         const { data } = await supabase
           .from('profiles')
           .select('mxn_points')
-          .eq('id', user.id)
+          .eq('id', session.user.id)
           .single();
-        if (data) setVbucksBalance(data.mxn_points);
+        
+        if (mounted && data) {
+          setVbucksBalance(data.mxn_points);
+        }
       }
-      setLoading(false);
+      
+      if (mounted) {
+        setLoading(false);
+      }
     };
+    
     checkUser();
+    
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const handleLogin = () => {
@@ -85,7 +101,6 @@ export function ProfilePanel() {
         className="flex items-center gap-1.5 rounded-lg bg-secondary px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-secondary/80"
       >
         <User className="h-3.5 w-3.5" />
-        <span className="hidden sm:inline">{t("login.loading")}</span>
       </button>
     );
   }

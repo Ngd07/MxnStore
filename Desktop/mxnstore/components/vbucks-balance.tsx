@@ -15,9 +15,12 @@ export function VbucksBalance() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check session immediately
+    let mounted = true;
+    
     const checkSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
+      
+      if (!mounted) return;
       
       if (session?.user) {
         setUser(session.user);
@@ -28,15 +31,21 @@ export function VbucksBalance() {
           .eq('id', session.user.id)
           .single();
         
-        if (data) {
+        if (mounted && data) {
           setVbucksBalance(data.mxn_points);
         }
       }
       
-      setLoading(false);
+      if (mounted) {
+        setLoading(false);
+      }
     };
 
     checkSession();
+    
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   if (loading) {

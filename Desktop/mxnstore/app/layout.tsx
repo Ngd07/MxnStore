@@ -16,10 +16,6 @@ export const metadata: Metadata = {
       {
         url: '/logo.png',
       },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
     ],
     apple: '/logo.png',
   },
