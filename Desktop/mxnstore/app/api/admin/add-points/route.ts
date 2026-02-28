@@ -55,6 +55,14 @@ export async function POST(request: Request) {
       )
     }
 
+    // Save transaction
+    await supabase.from('transactions').insert({
+      user_id: user.id,
+      type: 'TOP UP',
+      amount: amount,
+      status: 'completed'
+    })
+
     return NextResponse.json({ 
       success: true, 
       profile,
