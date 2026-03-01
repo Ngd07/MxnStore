@@ -42,9 +42,19 @@ export function VbucksBalance() {
     };
 
     checkSession();
+
+    // Listen for balance updates from shop-item-card
+    const onBalanceUpdate = (e: any) => {
+      const bal = e?.detail?.balance;
+      if (typeof bal === 'number') {
+        setVbucksBalance(bal);
+      }
+    };
+    window.addEventListener('mxn-balance-updated', onBalanceUpdate);
     
     return () => {
       mounted = false;
+      window.removeEventListener('mxn-balance-updated', onBalanceUpdate);
     };
   }, []);
 
