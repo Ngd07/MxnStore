@@ -163,9 +163,13 @@ function getItemDescription(entry: ShopEntry): string {
 }
 
 export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCardProps) {
-  if (typeof window !== 'undefined') {
-    alert('ShopItemCard rendered: ' + getItemName(entry));
-  }
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+    if (typeof window !== 'undefined') {
+      alert('Mounted: ' + getItemName(entry));
+    }
+  }, [entry]);
   const [imageError, setImageError] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [fortniteUsername, setFortniteUsername] = useState("");
