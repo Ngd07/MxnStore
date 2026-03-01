@@ -4,10 +4,16 @@ import { NextResponse } from 'next/server'
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
 export async function POST(request: Request) {
   try {
+    // Get cookies from request headers
+    const cookieHeader = request.headers.get('cookie') || ''
+    
+    // Create supabase client with cookie header for auth
+    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+      global: { headers: { cookie: cookieHeader } }
+    })
+    
     // Authenticate user via session cookies
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     console.log('Redeem - user:', user?.email, 'authError:', authError)
