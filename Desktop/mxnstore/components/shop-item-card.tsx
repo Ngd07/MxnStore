@@ -227,6 +227,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
   }, []);
 
   const handleRedeem = async () => {
+    console.log('handleRedeem called', { fortniteUsername, price, vbucksBalance });
     if (!fortniteUsername.trim()) {
       setRedeemMessage(t("redeem.enterUsername"));
       return;
@@ -235,12 +236,15 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
     
     try {
       // Delegate funds deduction to backend to ensure correctness across items
+      console.log('Calling /api/redeem with:', { itemName: name, price, fortniteUsername });
       const res = await fetch('/api/redeem', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ itemName: name, price, fortniteUsername })
       });
+      console.log('API response status:', res.status);
       const data = await res.json();
+      console.log('API response data:', data);
       if (!res.ok) {
         setRedeemMessage(data?.error || 'Error canje');
         return;
