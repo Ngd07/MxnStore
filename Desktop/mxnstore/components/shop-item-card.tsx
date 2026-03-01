@@ -170,6 +170,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
   const [vbucksBalance, setVbucksBalance] = useState(0);
   const [user, setUser] = useState<any>(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
+  const [justRedeemed, setJustRedeemed] = useState(false);
   const { t } = useI18n();
   
   const image = getItemImage(entry);
@@ -194,6 +195,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
         .select('mxn_points')
         .eq('id', user.id)
         .single();
+      console.log('ShopItemCard fetchBalance:', data?.mxn_points);
       if (data) {
         setVbucksBalance(data.mxn_points);
       }
@@ -205,9 +207,9 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
     fetchBalance();
   }, []);
 
-  // Refresh balance when dialog opens
+  // Refresh balance when dialog opens - always fetch fresh from DB (unless just redeemed)
   useEffect(() => {
-    if (showDialog) {
+    if (showDialog && !justRedeemed) {
       fetchBalance();
     }
   }, [showDialog]);
@@ -244,7 +246,9 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
         return;
       }
       const newBalance = data.balance ?? vbucksBalance;
+      console.log('Redeem success, new balance:', newBalance);
       setVbucksBalance(newBalance);
+      setJustRedeemed(true);
       // Notify other cards to refresh balances
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('mxn-balance-updated', { detail: { balance: newBalance } }));
@@ -254,6 +258,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
       setTimeout(() => {
         setShowDialog(false);
         setRedeemMessage("");
+        setJustRedeemed(false);
       }, 3000);
     } catch (err) {
       console.error(err);

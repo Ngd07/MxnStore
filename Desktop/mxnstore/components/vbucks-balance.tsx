@@ -32,6 +32,7 @@ export function VbucksBalance() {
           .single();
         
         if (mounted && data) {
+          console.log('VbucksBalance initial fetch:', data.mxn_points);
           setVbucksBalance(data.mxn_points);
         }
       }
@@ -46,6 +47,7 @@ export function VbucksBalance() {
     // Listen for balance updates from shop-item-card
     const onBalanceUpdate = (e: any) => {
       const bal = e?.detail?.balance;
+      console.log('VbucksBalance received update:', bal);
       if (typeof bal === 'number') {
         setVbucksBalance(bal);
       }
