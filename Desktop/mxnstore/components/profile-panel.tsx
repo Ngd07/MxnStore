@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { User, Settings, Mail, Bell, Check, LogIn, LogOut, Coins, ShoppingBag } from "lucide-react";
+import { User, Settings, Mail, Check, LogIn, LogOut, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import {
   Sheet,
@@ -24,7 +24,6 @@ export function ProfilePanel() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [emailSaved, setEmailSaved] = useState(false);
-  const [notifications, setNotifications] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [vbucksBalance, setVbucksBalance] = useState(0);
@@ -200,24 +199,7 @@ export function ProfilePanel() {
             </div>
           </div>
 
-          {/* Notifications */}
-          <div className="flex items-center justify-between rounded-xl border border-border bg-card p-4">
-            <div className="flex items-center gap-3">
-              <Bell className="h-4 w-4 text-primary" />
-              <div className="flex flex-col">
-                <span className="text-sm font-medium text-foreground">
-                  {t("profile.notifications")}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {t("profile.notificationsDesc")}
-                </span>
-              </div>
-            </div>
-            <Switch
-              checked={notifications}
-              onCheckedChange={setNotifications}
-            />
-          </div>
+          {/* Notifications removed: NOTIFICACIONES button removed on settings */}
 
           {/* Theme toggle */}
           <div className="flex items-center justify-between rounded-xl border border-border bg-card p-4">

@@ -212,74 +212,53 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
     }
   }, [showDialog]);
 
+  // Listen for balance updates from other item cards to keep this card in sync
+  useEffect(() => {
+    const onBalanceUpdate = (e: any) => {
+      const bal = e?.detail?.balance;
+      if (typeof bal === 'number') {
+        setVbucksBalance(bal);
+      }
+    };
+    window.addEventListener('mxn-balance-updated', onBalanceUpdate);
+    return () => window.removeEventListener('mxn-balance-updated', onBalanceUpdate);
+  }, []);
+
   const handleRedeem = async () => {
     if (!fortniteUsername.trim()) {
       setRedeemMessage(t("redeem.enterUsername"));
       return;
     }
-    if (vbucksBalance < price) {
-      setRedeemMessage(t("redeem.insufficientPoints"));
-      return;
-    }
     setRedeemMessage(t("redeem.processing"));
     
-    // Get fresh user data
-    const { data: { user: currentUser } } = await supabase.auth.getUser();
-    
-    if (!currentUser) {
-      setRedeemMessage("Error: No estas logueado");
-      return;
-    }
-    
-    // Deduct MxN Points from balance
-    const { error } = await supabase
-      .from('profiles')
-      .update({ mxn_points: vbucksBalance - price })
-      .eq('id', currentUser.id);
-    
-    if (error) {
-      console.error('Error deducting points:', error);
-      setRedeemMessage("Error al canjear. Intenta de nuevo.");
-      return;
-    }
-
-    // Save transaction
     try {
-      const { error: txError } = await supabase.from('transactions').insert({
-        user_id: currentUser.id,
-        type: 'redeem',
-        amount: price,
-        skin_name: name,
-        skin_price: price,
-        fortnite_username: fortniteUsername,
-        status: 'pending'
+      // Delegate funds deduction to backend to ensure correctness across items
+      const res = await fetch('/api/redeem', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemName: name, price, fortniteUsername })
       });
-      if (txError) {
-        console.error('Error saving transaction:', txError);
+      const data = await res.json();
+      if (!res.ok) {
+        setRedeemMessage(data?.error || 'Error canje');
+        return;
       }
-
-      // Create purchase record
-      const { error: purchaseError } = await supabase.from('purchases').insert({
-        user_id: currentUser.id,
-        skin_name: name,
-        skin_price: price,
-        fortnite_username: fortniteUsername,
-        status: 'pending'
-      });
-      if (purchaseError) {
-        console.error('Error creating purchase:', purchaseError);
+      const newBalance = data.balance ?? vbucksBalance;
+      setVbucksBalance(newBalance);
+      // Notify other cards to refresh balances
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('mxn-balance-updated', { detail: { balance: newBalance } }));
       }
-    } catch (txErr) {
-      console.error('Transaction error:', txErr);
+      setRedeemMessage(t("redeem.success") + "! Te contactaremos en WhatsApp");
+      setFortniteUsername("");
+      setTimeout(() => {
+        setShowDialog(false);
+        setRedeemMessage("");
+      }, 3000);
+    } catch (err) {
+      console.error(err);
+      setRedeemMessage("Error al canjear. Intenta de nuevo.");
     }
-    
-    setRedeemMessage(t("redeem.success") + "! Te contactaremos en WhatsApp");
-    setVbucksBalance(vbucksBalance - price);
-    setFortniteUsername("");
-    setTimeout(() => {
-      setShowDialog(false);
-      setRedeemMessage("");
-    }, 3000);
   };
 
   const canAfford = vbucksBalance >= price;
