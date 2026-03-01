@@ -163,7 +163,9 @@ function getItemDescription(entry: ShopEntry): string {
 }
 
 export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCardProps) {
-  console.log('ShopItemCard rendered', { name: getItemName(entry), price: entry.finalPrice });
+  if (typeof window !== 'undefined') {
+    alert('ShopItemCard rendered: ' + getItemName(entry));
+  }
   const [imageError, setImageError] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [fortniteUsername, setFortniteUsername] = useState("");
