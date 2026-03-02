@@ -106,10 +106,6 @@ export default function MisComprasPage() {
     }
   }, [selectedPurchase])
 
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
-
   const sendMessage = async () => {
     if (!newMessage.trim() || !selectedPurchase || !user) return
     
