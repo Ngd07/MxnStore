@@ -170,6 +170,8 @@ export default function AdminChatsPage() {
     }
   }
 
+  const [lastMessageCount, setLastMessageCount] = useState(0)
+
   useEffect(() => {
     if (selectedChat) {
       loadMessages(selectedChat.id)
@@ -191,8 +193,12 @@ export default function AdminChatsPage() {
   }, [selectedPurchase])
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, purchaseMessages])
+    const currentCount = messages.length + purchaseMessages.length
+    if (currentCount > lastMessageCount) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+      setLastMessageCount(currentCount)
+    }
+  }, [messages, purchaseMessages, lastMessageCount])
 
   const sendMessage = async () => {
     if (!newMessage.trim()) return
