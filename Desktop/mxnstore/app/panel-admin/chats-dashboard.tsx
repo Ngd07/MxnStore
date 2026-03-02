@@ -55,7 +55,7 @@ export function ChatsDashboard() {
   return (
     <Card className="flex-1 flex flex-col h-full">
       <CardHeader>
-        <CardTitle>Chats</CardTitle>
+        <CardTitle>{selectedChat?.purchase_id ? `Chats de Compra #${selectedChat.purchase_id}` : 'Chats'}</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 flex gap-4">
         <div className="w-1/3 border-r border-border overflow-y-auto p-2">
@@ -64,7 +64,14 @@ export function ChatsDashboard() {
           ) : (
             chats.map((c) => (
               <div key={c.id} className={`p-2 mb-1 rounded hover:bg-secondary/50 cursor-pointer ${selectedChat?.id===c.id?'bg-secondary':''}`} onClick={()=>setSelectedChat(c)}>
-                <div className="font-semibold truncate">{c.user_email}</div>
+                <div className="font-semibold truncate flex items-center gap-2">
+                  <span>{c.user_email}</span>
+                  {c.purchase_id && (
+                    <span className="inline-flex items-center px-2 py-1 text-xs rounded bg-yellow-500/20 text-yellow-500">
+                      {`Compra #${c.purchase_id}`}
+                    </span>
+                  )}
+                </div>
                 <div className="text-xs text-muted-foreground truncate">{c.last_message || 'Sin mensajes'}</div>
               </div>
             ))
