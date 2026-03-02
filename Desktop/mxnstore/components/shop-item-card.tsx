@@ -212,6 +212,13 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
     fetchBalance();
   }, []);
 
+  // Fetch fresh balance when dialog opens
+  useEffect(() => {
+    if (showDialog) {
+      fetchBalance();
+    }
+  }, [showDialog]);
+
   // Listen for balance updates from other item cards to keep this card in sync
   useEffect(() => {
     const onBalanceUpdate = (e: any) => {
