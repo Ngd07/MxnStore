@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Coins, UserPlus, Check, AlertCircle, Lock, Loader2, History, Gift, ShoppingCart, MessageCircle, Package } from 'lucide-react'
@@ -485,6 +486,7 @@ export default function AdminPanelPage() {
                                   </Button>
                                 </>
                               )}
+                              <Link href={`/panel-admin/chats-by-purchase/${p.id}`} className="px-2 py-1 rounded bg-blue-500 text-white text-xs">Chat</Link>
                               {p.status === 'processing' && (
                                 <>
                                   <Button
