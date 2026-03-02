@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Loader2 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
@@ -63,17 +64,19 @@ export function ChatsDashboard() {
             <div className="flex justify-center items-center h-full"><Loader2 className="h-6 w-6 animate-spin"/></div>
           ) : (
             chats.map((c) => (
-              <div key={c.id} className={`p-2 mb-1 rounded hover:bg-secondary/50 cursor-pointer ${selectedChat?.id===c.id?'bg-secondary':''}`} onClick={()=>setSelectedChat(c)}>
-                <div className="font-semibold truncate flex items-center gap-2">
-                  <span>{c.user_email}</span>
-                  {c.purchase_id && (
-                    <span className="inline-flex items-center px-2 py-1 text-xs rounded bg-yellow-500/20 text-yellow-500">
-                      {`Compra #${c.purchase_id}`}
-                    </span>
-                  )}
+              <Link key={c.id} href={`/panel-admin/chats/${c.id}`} className={`block no-underline`}>
+                <div className={`p-2 mb-1 rounded hover:bg-secondary/50 cursor-pointer ${selectedChat?.id===c.id?'bg-secondary':''}`} onClick={()=>setSelectedChat(c)}>
+                  <div className="font-semibold truncate flex items-center gap-2">
+                    <span>{c.user_email}</span>
+                    {c.purchase_id && (
+                      <span className="inline-flex items-center px-2 py-1 text-xs rounded bg-yellow-500/20 text-yellow-500">
+                        {`Compra #${c.purchase_id}`}
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-xs text-muted-foreground truncate">{c.last_message || 'Sin mensajes'}</div>
                 </div>
-                <div className="text-xs text-muted-foreground truncate">{c.last_message || 'Sin mensajes'}</div>
-              </div>
+              </Link>
             ))
           )}
         </div>
