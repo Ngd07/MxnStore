@@ -175,6 +175,7 @@ export default function AdminChatsPage() {
   useEffect(() => {
     if (selectedChat) {
       loadMessages(selectedChat.id)
+      setLastMessageCount(0)
       const interval = setInterval(() => {
         loadMessages(selectedChat.id)
       }, 3000)
@@ -185,6 +186,7 @@ export default function AdminChatsPage() {
   useEffect(() => {
     if (selectedPurchase) {
       loadPurchaseMessages(selectedPurchase.id)
+      setLastMessageCount(0)
       const interval = setInterval(() => {
         loadPurchaseMessages(selectedPurchase.id)
       }, 3000)
@@ -193,12 +195,20 @@ export default function AdminChatsPage() {
   }, [selectedPurchase])
 
   useEffect(() => {
-    const currentCount = messages.length + purchaseMessages.length
-    if (currentCount > lastMessageCount) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-      setLastMessageCount(currentCount)
+    if (activeTab === 'general') {
+      const currentCount = messages.length
+      if (currentCount > lastMessageCount) {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+        setLastMessageCount(currentCount)
+      }
+    } else if (activeTab === 'purchases') {
+      const currentCount = purchaseMessages.length
+      if (currentCount > lastMessageCount) {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+        setLastMessageCount(currentCount)
+      }
     }
-  }, [messages, purchaseMessages, lastMessageCount])
+  }, [messages, purchaseMessages, activeTab, lastMessageCount])
 
   const sendMessage = async () => {
     if (!newMessage.trim()) return
