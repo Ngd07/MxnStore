@@ -163,13 +163,6 @@ function getItemDescription(entry: ShopEntry): string {
 }
 
 export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCardProps) {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-    if (typeof window !== 'undefined') {
-      alert('Mounted: ' + getItemName(entry));
-    }
-  }, [entry]);
   const [imageError, setImageError] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [fortniteUsername, setFortniteUsername] = useState("");
@@ -194,18 +187,22 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
 
   const fetchBalance = async () => {
     setBalanceLoading(true);
-    const { data: { user } } = await supabase.auth.getUser();
-    setUser(user);
-    if (user) {
-      const { data } = await supabase
-        .from('profiles')
-        .select('mxn_points')
-        .eq('id', user.id)
-        .single();
-      console.log('ShopItemCard fetchBalance:', data?.mxn_points);
-      if (data) {
-        setVbucksBalance(data.mxn_points);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      if (!user) {
+        setBalanceLoading(false);
+        return;
       }
+      const res = await fetch(`/api/balance?userId=${user.id}`);
+      const data = await res.json();
+      if (res.ok && data.balance !== undefined) {
+        setVbucksBalance(data.balance);
+      } else {
+        console.log('API balance error:', data);
+      }
+    } catch (err) {
+      console.error('fetchBalance error:', err);
     }
     setBalanceLoading(false);
   };
@@ -232,7 +229,10 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
   }, []);
 
   const handleRedeem = async () => {
-    console.log('handleRedeem called', { fortniteUsername, price, vbucksBalance });
+    if (!user?.id) {
+      setRedeemMessage("No autorizado");
+      return;
+    }
     if (!fortniteUsername.trim()) {
       setRedeemMessage(t("redeem.enterUsername"));
       return;
@@ -240,16 +240,12 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
     setRedeemMessage(t("redeem.processing"));
     
     try {
-      // Delegate funds deduction to backend to ensure correctness across items
-      console.log('Calling /api/redeem with:', { itemName: name, price, fortniteUsername });
       const res = await fetch('/api/redeem', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemName: name, price, fortniteUsername })
+        body: JSON.stringify({ itemName: name, price, fortniteUsername, userId: user.id })
       });
-      console.log('API response status:', res.status);
       const data = await res.json();
-      console.log('API response data:', data);
       if (!res.ok) {
         setRedeemMessage(data?.error || 'Error canje');
         return;
@@ -257,20 +253,22 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
       const newBalance = data.balance ?? vbucksBalance;
       setVbucksBalance(newBalance);
       setJustRedeemed(true);
-      window.alert('ALERT: Balance now is ' + newBalance);
-      // Notify other cards to refresh balances
+      
+      // Notify all components to refresh balance
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('mxn-balance-updated', { detail: { balance: newBalance } }));
       }
+      
       setRedeemMessage(t("redeem.success") + "! Te contactaremos en WhatsApp");
       setFortniteUsername("");
+      
+      // Close dialog after short delay
       setTimeout(() => {
         setShowDialog(false);
         setRedeemMessage("");
         setJustRedeemed(false);
-      }, 3000);
+      }, 2000);
     } catch (err) {
-      console.error(err);
       setRedeemMessage("Error al canjear. Intenta de nuevo.");
     }
   };
@@ -413,7 +411,6 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
                     className="rounded"
                   />
                   {t("redeem.yourBalance")}: <span className="font-bold text-yellow-500">{balanceLoading ? '...' : vbucksBalance} MxN Points</span>
-                  <span className="ml-1 text-xs text-blue-500">(DBG: {vbucksBalance})</span>
                   <span className="ml-2 text-xs text-red-500">[DEBUG: loaded]</span>
                 </div>
               )}

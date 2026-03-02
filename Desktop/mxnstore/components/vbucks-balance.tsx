@@ -10,7 +10,6 @@ import { useI18n } from "@/lib/i18n";
 export function VbucksBalance() {
   const router = useRouter();
   const { t } = useI18n();
-  const [user, setUser] = useState<any>(null);
   const [vbucksBalance, setVbucksBalance] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -18,23 +17,19 @@ export function VbucksBalance() {
     let mounted = true;
     
     const checkSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!mounted) return;
-      
-      if (session?.user) {
-        setUser(session.user);
-        
-        const { data } = await supabase
-          .from('profiles')
-          .select('mxn_points')
-          .eq('id', session.user.id)
-          .single();
-        
-        if (mounted && data) {
-          console.log('VbucksBalance initial fetch:', data.mxn_points);
-          setVbucksBalance(data.mxn_points);
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          if (mounted) setLoading(false);
+          return;
         }
+        const res = await fetch(`/api/balance?userId=${user.id}`);
+        const data = await res.json();
+        if (mounted && res.ok && data.balance !== undefined) {
+          setVbucksBalance(data.balance);
+        }
+      } catch (err) {
+        console.error('VbucksBalance error:', err);
       }
       
       if (mounted) {
@@ -47,7 +42,6 @@ export function VbucksBalance() {
     // Listen for balance updates from shop-item-card
     const onBalanceUpdate = (e: any) => {
       const bal = e?.detail?.balance;
-      console.log('VbucksBalance received update:', bal);
       if (typeof bal === 'number') {
         setVbucksBalance(bal);
       }
@@ -61,10 +55,6 @@ export function VbucksBalance() {
   }, []);
 
   if (loading) {
-    return null;
-  }
-
-  if (!user) {
     return null;
   }
 

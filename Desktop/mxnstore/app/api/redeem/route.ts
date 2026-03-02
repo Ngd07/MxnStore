@@ -2,37 +2,28 @@ import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
 
 export async function POST(request: Request) {
   try {
-    // Get cookies from request headers
-    const cookieHeader = request.headers.get('cookie') || ''
-    
-    // Create supabase client with cookie header for auth
-    const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-      global: { headers: { cookie: cookieHeader } }
-    })
-    
-    // Authenticate user via session cookies
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    console.log('Redeem - user:', user?.email, 'authError:', authError)
-    if (!user?.id) {
+    const body = await request.json()
+    const { itemName, price, fortniteUsername, userId } = body
+
+    if (!userId) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
-
-    const body = await request.json()
-    const { itemName, price, fortniteUsername } = body
 
     if (typeof price !== 'number' || price <= 0) {
       return NextResponse.json({ error: 'Precio inválido' }, { status: 400 })
     }
 
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
+
     // Read current balance
     const { data: profile } = await supabase
       .from('profiles')
       .select('mxn_points')
-      .eq('id', user.id)
+      .eq('id', userId)
       .single()
 
     const balance = profile?.mxn_points ?? 0
@@ -46,12 +37,12 @@ export async function POST(request: Request) {
     const { error: updError } = await supabase
       .from('profiles')
       .update({ mxn_points: newBalance })
-      .eq('id', user.id)
+      .eq('id', userId)
     if (updError) throw updError
 
     // Create transaction
     await supabase.from('transactions').insert({
-      user_id: user.id,
+      user_id: userId,
       type: 'redeem',
       amount: price,
       skin_name: itemName,
@@ -62,7 +53,7 @@ export async function POST(request: Request) {
 
     // Create purchase record
     await supabase.from('purchases').insert({
-      user_id: user.id,
+      user_id: userId,
       skin_name: itemName,
       skin_price: price,
       fortnite_username: fortniteUsername,
