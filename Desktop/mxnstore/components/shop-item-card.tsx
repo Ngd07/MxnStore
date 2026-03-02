@@ -255,6 +255,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
         return;
       }
       const newBalance = data.balance ?? vbucksBalance;
+      alert('DEBUG: newBalance = ' + newBalance + ', current = ' + vbucksBalance);
       console.log('Redeem success, new balance:', newBalance);
       setVbucksBalance(newBalance);
       setJustRedeemed(true);
