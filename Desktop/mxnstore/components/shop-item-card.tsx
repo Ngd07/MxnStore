@@ -255,11 +255,9 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
         return;
       }
       const newBalance = data.balance ?? vbucksBalance;
-      alert('DEBUG: newBalance = ' + newBalance + ', current = ' + vbucksBalance);
-      console.log('Redeem success, new balance:', newBalance);
       setVbucksBalance(newBalance);
       setJustRedeemed(true);
-      alert('Balance updated to: ' + newBalance);
+      window.alert('ALERT: Balance now is ' + newBalance);
       // Notify other cards to refresh balances
       if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent('mxn-balance-updated', { detail: { balance: newBalance } }));
