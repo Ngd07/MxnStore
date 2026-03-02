@@ -6,7 +6,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Coins, UserPlus, Check, AlertCircle, Lock, Loader2, History, Gift, ShoppingCart, MessageCircle, Package } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
-import { ChatsDashboard } from './chats-dashboard'
 import Image from 'next/image'
 
 const ADMIN_EMAILS = [
