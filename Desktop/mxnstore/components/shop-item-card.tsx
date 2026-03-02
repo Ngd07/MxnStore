@@ -207,11 +207,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
     setBalanceLoading(false);
   };
 
-  useEffect(() => {
-    fetchBalance();
-  }, []);
-
-  // Only fetch balance on initial mount, not when dialog opens
+  // Fetch balance on initial mount
   useEffect(() => {
     fetchBalance();
   }, []);
@@ -261,6 +257,11 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
       
       setRedeemMessage(t("redeem.success") + "! Te contactaremos en WhatsApp");
       setFortniteUsername("");
+      
+      // Refresh balance from server after a short delay to ensure consistency
+      setTimeout(() => {
+        fetchBalance();
+      }, 500);
       
       // Close dialog after short delay
       setTimeout(() => {
