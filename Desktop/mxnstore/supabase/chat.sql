@@ -57,3 +57,6 @@ CREATE TRIGGER update_chats_updated_at
   BEFORE UPDATE ON public.chats
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at();
+-- Migration: link chats to purchases (optional)
+-- Adds a nullable purchase_id to associate a chat with a specific purchase
+ALTER TABLE chats ADD COLUMN purchase_id integer;
