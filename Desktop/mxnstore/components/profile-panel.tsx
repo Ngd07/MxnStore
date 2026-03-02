@@ -24,7 +24,7 @@ export function ProfilePanel() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [emailSaved, setEmailSaved] = useState(false);
-  const [notifications, setNotifications] = useState(false);
+  // Removed: notifications toggle in settings
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [vbucksBalance, setVbucksBalance] = useState(0);
@@ -209,25 +209,7 @@ export function ProfilePanel() {
             </div>
           </div>
 
-          {/* Notifications */}
-          <div className="flex items-center justify-between rounded-xl border border-border bg-card p-4">
-            <div className="flex items-center gap-3">
-              <Bell className="h-4 w-4 text-primary" />
-              <div className="flex flex-col">
-                <span className="text-sm font-medium text-foreground">
-                  {t("profile.notifications")}
-                </span>
-                <span className="text-xs text-muted-foreground">
-                  {t("profile.notificationsDesc")}
-                </span>
-              </div>
-            </div>
-            <Switch
-              checked={notifications}
-              onCheckedChange={setNotifications}
-              disabled={true}
-            />
-          </div>
+          {/* Notificaciones bloque eliminado */}
 
           {/* Theme toggle */}
           <div className="flex items-center justify-between rounded-xl border border-border bg-card p-4">
