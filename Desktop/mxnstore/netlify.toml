@@ -6,8 +6,8 @@
   NODE_VERSION = "18"
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/:path*"
+  to = "/:path*"
   status = 200
 
 [[headers]]
