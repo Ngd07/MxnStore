@@ -415,6 +415,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
                     className="rounded"
                   />
                   {t("redeem.yourBalance")}: <span className="font-bold text-yellow-500">{balanceLoading ? '...' : vbucksBalance} MxN Points</span>
+                  <span className="ml-2 text-xs text-red-500">[DEBUG: loaded]</span>
                 </div>
               )}
             </div>
