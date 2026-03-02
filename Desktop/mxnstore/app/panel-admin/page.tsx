@@ -39,51 +39,6 @@ interface Purchase {
 }
 
 export default function AdminPanelPage() {
-  // In-page Chats section (replaces previous separate Chats Center)
-  const [chatList, setChatList] = useState<any[]>([])
-  const [chatLoading, setChatLoading] = useState(true)
-  const [selectedChat, setSelectedChat] = useState<any | null>(null)
-  const [chatMessages, setChatMessages] = useState<any[]>([])
-  const [chatNew, setChatNew] = useState('')
-  const [chatSending, setChatSending] = useState(false)
-
-  useEffect(() => {
-    const loadChats = async () => {
-      const { data } = await supabase.from('chats').select('*').order('updated_at', { ascending: false })
-      if (data) {
-        const enriched = await Promise.all(data.map(async (c) => {
-          const { data: profile } = await supabase.from('profiles').select('email').eq('id', c.user_id).single()
-          const { data: last } = await supabase.from('messages').select('content').eq('chat_id', c.id).order('created_at', { ascending: false }).limit(1).single()
-          return { ...c, user_email: profile?.email || 'Unknown', last_message: last?.content || '' }
-        }))
-        setChatList(enriched)
-        if (enriched.length > 0) {
-          setSelectedChat(enriched[0])
-        }
-      }
-      setChatLoading(false)
-    }
-    loadChats()
-  }, [])
-
-  useEffect(() => {
-    const loadMsgs = async (chatId: string) => {
-      const { data } = await supabase.from('messages').select('*').eq('chat_id', chatId).order('created_at', { ascending: true })
-      if (data) setChatMessages(data)
-    }
-    if (selectedChat?.id) loadMsgs(selectedChat.id)
-  }, [selectedChat?.id])
-
-  const sendChatMessage = async () => {
-    if (!selectedChat || !chatNew.trim()) return
-    setChatSending(true)
-    try {
-      const { data } = await supabase.from('messages').insert({ chat_id: selectedChat.id, sender_id: 'admin', content: chatNew.trim() }).select().single()
-      if (data) setChatMessages([...chatMessages, data])
-      setChatNew('')
-    } catch {}
-    setChatSending(false)
-  }
   const [activeTab, setActiveTab] = useState<'add-points' | 'transactions' | 'purchases'>('add-points')
   const [userEmail, setUserEmail] = useState('')
   const [targetEmail, setTargetEmail] = useState('')
@@ -565,54 +520,7 @@ export default function AdminPanelPage() {
             </CardContent>
           </Card>
         )}
-        {/* Chats (In-Page) */}
-        <Card className="mt-6">
-          <CardHeader>
-            <CardTitle>Chats</CardTitle>
-          </CardHeader>
-          <CardContent className="flex gap-4 h-96">
-            <div className="w-1/3 border-r border-border overflow-y-auto p-2">
-              {chatLoading ? (
-                <div className="flex justify-center items-center h-full"><Loader2 className="h-6 w-6 animate-spin"/></div>
-              ) : (
-                chatList.map((c) => (
-                  <div key={c.id} className={`p-2 mb-1 rounded hover:bg-secondary/50 cursor-pointer ${selectedChat?.id===c.id?'bg-secondary':''}`} onClick={()=>setSelectedChat(c)}>
-                    <div className="font-semibold truncate flex items-center gap-2">
-                      <span>{c.user_email}</span>
-                      {c.purchase_id && (
-                        <span className="inline-flex items-center px-2 py-1 text-xs rounded bg-yellow-500/20 text-yellow-500">
-                          {`Compra #${c.purchase_id}`}
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-xs text-muted-foreground truncate">{c.last_message || 'Sin mensajes'}</div>
-                  </div>
-                ))
-              )}
-            </div>
-            <div className="flex-1 flex flex-col">
-              <div className="flex-1 overflow-y-auto p-2">
-                {selectedChat ? (
-                  chatMessages.map((m) => (
-                    <div key={m.id} className={`mb-2 ${m!.sender_id==='admin' ? 'text-right' : 'text-left'}`}>
-                      <span className={`inline-block px-2 py-1 rounded ${m!.sender_id==='admin' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}>
-                        {m.content}
-                      </span>
-                    </div>
-                  ))
-                ) : (
-                  <div className="text-muted-foreground">Selecciona un chat</div>
-                )}
-              </div>
-              <div className="p-2 border-t flex gap-2">
-                <input className="flex-1 border rounded px-2 py-1" placeholder="Escribe un mensaje..." value={chatNew} onChange={e=>setChatNew(e.target.value)} onKeyDown={(e)=>{ if(e.key==='Enter') sendChatMessage(); }} />
-                <button onClick={sendChatMessage} className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded" disabled={!selectedChat || !chatNew.trim() || chatSending}>
-                  {chatSending ? 'Enviando...' : 'Enviar'}
-                </button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {/* Chats Tab removed: use dedicated per-purchase chat routes instead */}
       </div>
     </div>
   )
