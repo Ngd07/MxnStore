@@ -50,6 +50,7 @@ interface Purchase {
 }
 
 export default function AdminChatsPage() {
+  // Redeploy trigger: this changeset ensures Vercel redeploys if the patch lands
   const [loading, setLoading] = useState(true)
   const [isAuthorized, setIsAuthorized] = useState(false)
   const [checkingAuth, setCheckingAuth] = useState(true)
