@@ -9,13 +9,16 @@ export async function GET() {
       next: { revalidate: 30 },
     });
 
+    console.log('Shop API response status:', res.status);
     if (!res.ok) {
       throw new Error(`Fortnite API returned ${res.status}`);
     }
 
     const data = await res.json();
+    console.log('Shop API data keys:', Object.keys(data));
     return NextResponse.json(data);
-  } catch {
+  } catch (err) {
+    console.error('Shop API error:', err);
     return NextResponse.json(
       { error: "Failed to fetch shop data" },
       { status: 500 }
