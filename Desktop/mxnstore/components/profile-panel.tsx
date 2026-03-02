@@ -225,6 +225,7 @@ export function ProfilePanel() {
             <Switch
               checked={notifications}
               onCheckedChange={setNotifications}
+              disabled={true}
             />
           </div>
 
