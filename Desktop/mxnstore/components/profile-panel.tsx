@@ -209,7 +209,7 @@ export function ProfilePanel() {
             </div>
           </div>
 
-          {/* Notificaciones bloque eliminado */}
+         /* Theme toggle */
 
           {/* Theme toggle */}
           <div className="flex items-center justify-between rounded-xl border border-border bg-card p-4">
