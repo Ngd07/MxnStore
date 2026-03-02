@@ -194,26 +194,18 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
         setBalanceLoading(false);
         return;
       }
-      console.log('fetching balance for:', user.id);
       const res = await fetch(`/api/balance?userId=${user.id}&t=${Date.now()}`);
-      console.log('balance response:', res.status);
       const data = await res.json();
-      console.log('balance data:', data);
       if (res.ok && data.balance !== undefined) {
         setVbucksBalance(data.balance);
       }
     } catch (err) {
-      console.error('fetchBalance error:', err);
+      // Silent fail
     }
     setBalanceLoading(false);
   };
 
-  // Fetch balance on initial mount
-  useEffect(() => {
-    fetchBalance();
-  }, []);
-
-  // Fetch fresh balance when dialog opens
+  // Only fetch fresh balance when dialog opens
   useEffect(() => {
     if (showDialog) {
       fetchBalance();
@@ -419,8 +411,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
                     height={20}
                     className="rounded"
                   />
-                  {t("redeem.yourBalance")}: <span className="font-bold text-yellow-500">{balanceLoading ? '...' : vbucksBalance} MxN Points</span>
-                  <span className="ml-2 text-xs text-red-500">[DEBUG: loaded]</span>
+{t("redeem.yourBalance")}: <span className="font-bold text-yellow-500">{balanceLoading ? '...' : vbucksBalance} MxN Points</span>
                 </div>
               )}
             </div>

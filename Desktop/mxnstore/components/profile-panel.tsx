@@ -50,7 +50,7 @@ export function ProfilePanel() {
             setVbucksBalance(data.balance);
           }
         } catch (err) {
-          console.error('Error fetching balance:', err);
+          // Silent fail
         }
       }
       

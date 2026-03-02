@@ -27,9 +27,12 @@ export function VbucksBalance() {
         const data = await res.json();
         if (mounted && res.ok && data.balance !== undefined) {
           setVbucksBalance(data.balance);
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('mxn-balance-updated', { detail: { balance: data.balance } }));
+          }
         }
       } catch (err) {
-        console.error('VbucksBalance error:', err);
+        // Silent fail
       }
       
       if (mounted) {
