@@ -36,21 +36,21 @@ export function ProfilePanel() {
     let mounted = true;
     
     const checkUser = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { user } } = await supabase.auth.getUser();
       
       if (!mounted) return;
       
-      if (session?.user) {
-        setUser(session.user);
+      if (user) {
+        setUser(user);
         
-        const { data } = await supabase
-          .from('profiles')
-          .select('mxn_points')
-          .eq('id', session.user.id)
-          .single();
-        
-        if (mounted && data) {
-          setVbucksBalance(data.mxn_points);
+        try {
+          const res = await fetch(`/api/balance?userId=${user.id}`);
+          const data = await res.json();
+          if (mounted && res.ok && data.balance !== undefined) {
+            setVbucksBalance(data.balance);
+          }
+        } catch (err) {
+          console.error('Error fetching balance:', err);
         }
       }
       
@@ -61,8 +61,17 @@ export function ProfilePanel() {
     
     checkUser();
     
+    const onBalanceUpdate = (e: any) => {
+      const bal = e?.detail?.balance;
+      if (typeof bal === 'number') {
+        setVbucksBalance(bal);
+      }
+    };
+    window.addEventListener('mxn-balance-updated', onBalanceUpdate);
+    
     return () => {
       mounted = false;
+      window.removeEventListener('mxn-balance-updated', onBalanceUpdate);
     };
   }, []);
 
