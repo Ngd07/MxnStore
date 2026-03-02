@@ -39,7 +39,7 @@ interface Purchase {
 }
 
 export default function AdminPanelPage() {
-  const [activeTab, setActiveTab] = useState<'add-points' | 'transactions' | 'purchases'>('add-points')
+  const [activeTab, setActiveTab] = useState<'add-points' | 'transactions' | 'purchases' | 'chats'>('add-points')
   const [userEmail, setUserEmail] = useState('')
   const [targetEmail, setTargetEmail] = useState('')
   const [amount, setAmount] = useState('')
@@ -235,13 +235,13 @@ export default function AdminPanelPage() {
             <History className="inline-block mr-2 h-4 w-4" />
             Transacciones
           </button>
-          <a
-            href="/admin/chats"
+          <button
+            onClick={() => setActiveTab('chats')}
             className="px-4 py-2 rounded-lg font-medium transition-colors bg-green-500 text-white hover:bg-green-600 flex items-center gap-2"
           >
             <MessageCircle className="h-4 w-4" />
             Chats
-          </a>
+          </button>
           <button
             onClick={() => setActiveTab('purchases')}
             className={`px-4 py-2 rounded-lg font-medium transition-colors ${
@@ -524,6 +524,10 @@ export default function AdminPanelPage() {
               )}
             </CardContent>
           </Card>
+        )}
+        {/* Chats Tab (in-page) */}
+        {activeTab === 'chats' && (
+          <ChatsDashboard />
         )}
       </div>
     </div>
