@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Coins, UserPlus, Check, AlertCircle, Lock, Loader2, History, Gift, ShoppingCart, MessageCircle, Package } from 'lucide-react'
@@ -40,7 +39,6 @@ interface Purchase {
 }
 
 export default function AdminPanelPage() {
-  const router = useRouter()
   const [activeTab, setActiveTab] = useState<'add-points' | 'transactions' | 'purchases' | 'chats'>('add-points')
   const [userEmail, setUserEmail] = useState('')
   const [targetEmail, setTargetEmail] = useState('')
@@ -238,11 +236,11 @@ export default function AdminPanelPage() {
             Transacciones
           </button>
           <button
-            onClick={() => router.push('/panel-admin/chats-center')}
+            onClick={() => setActiveTab('chats')}
             className="px-4 py-2 rounded-lg font-medium transition-colors bg-green-500 text-white hover:bg-green-600 flex items-center gap-2"
           >
             <MessageCircle className="h-4 w-4" />
-            Chats (Nueva)
+            Chats
           </button>
           <button
             onClick={() => setActiveTab('purchases')}
