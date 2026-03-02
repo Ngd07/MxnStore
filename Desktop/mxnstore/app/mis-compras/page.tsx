@@ -204,7 +204,7 @@ export default function MisComprasPage() {
             {/* Purchase List */}
             <div className="lg:col-span-1">
               <h2 className="font-bold text-foreground mb-2">Tus canjes</h2>
-              <div className="h-96 overflow-y-auto space-y-2 pr-1">
+              <div className="max-h-[60vh] overflow-y-auto space-y-2 pr-1">
                 {purchases.map((purchase) => (
                 <button
                   key={purchase.id}
