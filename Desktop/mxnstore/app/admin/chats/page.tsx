@@ -463,18 +463,18 @@ export default function AdminChatsPage() {
                     {purchaseMessages.map((msg) => (
                       <div
                         key={msg.id}
-                        className={`flex ${msg.sender_id !== 'admin' ? 'justify-end' : 'justify-start'}`}
+                        className={`flex ${msg.sender_id === 'admin' ? 'justify-end' : 'justify-start'}`}
                       >
                         <div
                           className={`max-w-[70%] rounded-lg px-3 py-2 ${
-                            msg.sender_id !== 'admin'
-                              ? 'bg-yellow-500 text-black'
-                              : 'bg-blue-500 text-white'
+                            msg.sender_id === 'admin'
+                              ? 'bg-blue-500 text-white'
+                              : 'bg-purple-500 text-white'
                           }`}
                         >
                           <p className="text-sm">{msg.content}</p>
                           <p className={`text-[10px] mt-1 ${
-                            msg.sender_id !== 'admin' ? 'text-black/70' : 'text-white/70'
+                            msg.sender_id === 'admin' ? 'text-white/70' : 'text-white/70'
                           }`}>
                             {new Date(msg.created_at).toLocaleTimeString('es-AR', { 
                               hour: '2-digit', 
