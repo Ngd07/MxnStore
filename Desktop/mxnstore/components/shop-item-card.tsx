@@ -170,6 +170,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
   const [vbucksBalance, setVbucksBalance] = useState(0);
   const [user, setUser] = useState<any>(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
+  const [justRedeemed, setJustRedeemed] = useState(false);
   const { t } = useI18n();
   
   const image = getItemImage(entry);
@@ -186,100 +187,99 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
 
   const fetchBalance = async () => {
     setBalanceLoading(true);
-    const { data: { user } } = await supabase.auth.getUser();
-    setUser(user);
-    if (user) {
-      const { data } = await supabase
-        .from('profiles')
-        .select('mxn_points')
-        .eq('id', user.id)
-        .single();
-      if (data) {
-        setVbucksBalance(data.mxn_points);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      if (!user) {
+        setBalanceLoading(false);
+        return;
       }
+      console.log('fetching balance for:', user.id);
+      const res = await fetch(`/api/balance?userId=${user.id}&t=${Date.now()}`);
+      console.log('balance response:', res.status);
+      const data = await res.json();
+      console.log('balance data:', data);
+      if (res.ok && data.balance !== undefined) {
+        setVbucksBalance(data.balance);
+      }
+    } catch (err) {
+      console.error('fetchBalance error:', err);
     }
     setBalanceLoading(false);
   };
 
+  // Fetch balance on initial mount
   useEffect(() => {
     fetchBalance();
   }, []);
 
-  // Refresh balance when dialog opens
+  // Fetch fresh balance when dialog opens
   useEffect(() => {
     if (showDialog) {
       fetchBalance();
     }
   }, [showDialog]);
 
+  // Listen for balance updates from other item cards to keep this card in sync
+  useEffect(() => {
+    const onBalanceUpdate = (e: any) => {
+      const bal = e?.detail?.balance;
+      if (typeof bal === 'number') {
+        setVbucksBalance(bal);
+      }
+    };
+    window.addEventListener('mxn-balance-updated', onBalanceUpdate);
+    return () => window.removeEventListener('mxn-balance-updated', onBalanceUpdate);
+  }, []);
+
   const handleRedeem = async () => {
+    if (!user?.id) {
+      setRedeemMessage("No autorizado");
+      return;
+    }
     if (!fortniteUsername.trim()) {
       setRedeemMessage(t("redeem.enterUsername"));
       return;
     }
-    if (vbucksBalance < price) {
-      setRedeemMessage(t("redeem.insufficientPoints"));
-      return;
-    }
     setRedeemMessage(t("redeem.processing"));
     
-    // Get fresh user data
-    const { data: { user: currentUser } } = await supabase.auth.getUser();
-    
-    if (!currentUser) {
-      setRedeemMessage("Error: No estas logueado");
-      return;
-    }
-    
-    // Deduct MxN Points from balance
-    const { error } = await supabase
-      .from('profiles')
-      .update({ mxn_points: vbucksBalance - price })
-      .eq('id', currentUser.id);
-    
-    if (error) {
-      console.error('Error deducting points:', error);
-      setRedeemMessage("Error al canjear. Intenta de nuevo.");
-      return;
-    }
-
-    // Save transaction
     try {
-      const { error: txError } = await supabase.from('transactions').insert({
-        user_id: currentUser.id,
-        type: 'redeem',
-        amount: price,
-        skin_name: name,
-        skin_price: price,
-        fortnite_username: fortniteUsername,
-        status: 'pending'
+      const res = await fetch('/api/redeem', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ itemName: name, price, fortniteUsername, userId: user.id })
       });
-      if (txError) {
-        console.error('Error saving transaction:', txError);
+      const data = await res.json();
+      if (!res.ok) {
+        setRedeemMessage(data?.error || 'Error canje');
+        return;
       }
-
-      // Create purchase record
-      const { error: purchaseError } = await supabase.from('purchases').insert({
-        user_id: currentUser.id,
-        skin_name: name,
-        skin_price: price,
-        fortnite_username: fortniteUsername,
-        status: 'pending'
-      });
-      if (purchaseError) {
-        console.error('Error creating purchase:', purchaseError);
+      const newBalance = data.balance ?? vbucksBalance;
+      setVbucksBalance(newBalance);
+      setJustRedeemed(true);
+      
+      // Notify all components to refresh balance
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('mxn-balance-updated', { detail: { balance: newBalance } }));
       }
-    } catch (txErr) {
-      console.error('Transaction error:', txErr);
+      
+      setRedeemMessage(t("redeem.success") + "! Te contactaremos en WhatsApp");
+      setFortniteUsername("");
+      
+      // Refresh balance from server after a short delay to ensure consistency
+      setTimeout(() => {
+        fetchBalance();
+      }, 500);
+      
+      // Close dialog after short delay
+      setTimeout(() => {
+        setShowDialog(false);
+        setRedeemMessage("");
+        setJustRedeemed(false);
+      }, 2000);
+    } catch (err) {
+      setRedeemMessage("Error al canjear. Intenta de nuevo.");
     }
-    
-    setRedeemMessage(t("redeem.success") + "! Te contactaremos en WhatsApp");
-    setVbucksBalance(vbucksBalance - price);
-    setFortniteUsername("");
-    setTimeout(() => {
-      setShowDialog(false);
-      setRedeemMessage("");
-    }, 3000);
   };
 
   const canAfford = vbucksBalance >= price;
@@ -420,6 +420,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
                     className="rounded"
                   />
                   {t("redeem.yourBalance")}: <span className="font-bold text-yellow-500">{balanceLoading ? '...' : vbucksBalance} MxN Points</span>
+                  <span className="ml-2 text-xs text-red-500">[DEBUG: loaded]</span>
                 </div>
               )}
             </div>
