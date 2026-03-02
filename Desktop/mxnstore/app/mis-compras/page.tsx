@@ -202,9 +202,10 @@ export default function MisComprasPage() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Purchase List */}
-            <div className="lg:col-span-1 space-y-2">
+            <div className="lg:col-span-1">
               <h2 className="font-bold text-foreground mb-2">Tus canjes</h2>
-              {purchases.map((purchase) => (
+              <div className="h-96 overflow-y-auto space-y-2 pr-1">
+                {purchases.map((purchase) => (
                 <button
                   key={purchase.id}
                   onClick={() => setSelectedPurchase(purchase)}
@@ -231,6 +232,7 @@ export default function MisComprasPage() {
                   </p>
                 </button>
               ))}
+              </div>
             </div>
 
             {/* Chat and Details */}
