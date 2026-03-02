@@ -214,12 +214,10 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
     fetchBalance();
   }, []);
 
-  // Refresh balance when dialog opens - always fetch fresh from DB (unless just redeemed)
+  // Only fetch balance on initial mount, not when dialog opens
   useEffect(() => {
-    if (showDialog && !justRedeemed) {
-      fetchBalance();
-    }
-  }, [showDialog]);
+    fetchBalance();
+  }, []);
 
   // Listen for balance updates from other item cards to keep this card in sync
   useEffect(() => {
