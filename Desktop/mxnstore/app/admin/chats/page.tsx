@@ -330,42 +330,7 @@ export default function AdminChatsPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[calc(100vh-220px)]">
-          {/* Chat List - General */}
-          {activeTab === 'general' && (
-            <Card className="md:col-span-1 flex flex-col">
-              <div className="p-3 border-b">
-                <h2 className="font-bold text-foreground flex items-center gap-2">
-                  <Users className="h-4 w-4" />
-                  Conversaciones ({chats.length})
-                </h2>
-              </div>
-              <CardContent className="flex-1 overflow-y-auto p-0">
-                {loading ? (
-                  <div className="flex justify-center py-8">
-                    <Loader2 className="h-6 w-6 animate-spin" />
-                  </div>
-                ) : chats.length === 0 ? (
-                  <p className="text-center text-muted-foreground py-8">No hay chats</p>
-                ) : (
-                  chats.map((chat) => (
-                    <button
-                      key={chat.id}
-                      onClick={() => { setSelectedChat(chat); setSelectedPurchase(null); }}
-                      className={`w-full text-left p-3 border-b hover:bg-secondary/50 ${
-                        selectedChat?.id === chat.id ? 'bg-secondary' : ''
-                      }`}
-                    >
-                      <p className="font-medium text-foreground truncate">{chat.user_email}</p>
-                      <p className="text-sm text-muted-foreground truncate">{chat.last_message || 'Sin mensajes'}</p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {new Date(chat.updated_at).toLocaleString('es-AR')}
-                      </p>
-                    </button>
-                  ))
-                )}
-              </CardContent>
-            </Card>
-          )}
+        {/* Chats Generales removido: ya no se muestra (administración enfocada en chats de clientes) */}
 
           {/* Chat List - Purchases */}
           {activeTab === 'purchases' && (
