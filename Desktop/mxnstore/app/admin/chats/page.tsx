@@ -393,13 +393,13 @@ export default function AdminChatsPage() {
                         <div
                           className={`max-w-[70%] rounded-lg px-3 py-2 ${
                             msg.sender_id === 'admin'
-                              ? 'bg-blue-500 text-white'
+                              ? 'bg-yellow-500 text-black'
                               : 'bg-secondary text-foreground'
                           }`}
                         >
                           <p className="text-sm">{msg.content}</p>
                           <p className={`text-[10px] mt-1 ${
-                            msg.sender_id === 'admin' ? 'text-white/70' : 'text-muted-foreground'
+                            msg.sender_id === 'admin' ? 'text-black/70' : 'text-muted-foreground'
                           }`}>
                             {new Date(msg.created_at).toLocaleTimeString('es-AR', { 
                               hour: '2-digit', 
@@ -423,7 +423,7 @@ export default function AdminChatsPage() {
                     <Button 
                       onClick={sendMessage} 
                       disabled={sending || !newMessage.trim()}
-                      className="bg-blue-500 hover:bg-blue-600"
+                      className="bg-yellow-500 hover:bg-yellow-600"
                     >
                       {sending ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
