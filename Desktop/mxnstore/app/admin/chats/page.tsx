@@ -494,7 +494,7 @@ export default function AdminChatsPage() {
                 </Card>
 
                 {/* Chat */}
-                <Card className="m-4 mt-4 flex-1 flex flex-col">
+                <Card className="m-4 mt-4 h-[400px] flex flex-col">
                   <div className="p-3 border-b">
                     <h3 className="font-bold text-foreground">Chat de Soporte</h3>
                   </div>
