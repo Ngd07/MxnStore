@@ -204,7 +204,7 @@ export default function MisComprasPage() {
             {/* Purchase List */}
             <div className="lg:col-span-1">
               <h2 className="font-bold text-foreground mb-2">Tus canjes</h2>
-              <div className="max-h-[60vh] overflow-y-auto space-y-2 pr-1">
+              <div className="max-h-[70vh] overflow-y-auto space-y-2 pr-1">
                 {purchases.map((purchase) => (
                 <button
                   key={purchase.id}
@@ -281,12 +281,12 @@ export default function MisComprasPage() {
                 </Card>
 
                 {/* Chat */}
-                <Card className="h-[400px] flex flex-col">
+                <Card className="flex flex-col">
                   <div className="p-3 border-b">
                     <h3 className="font-bold text-foreground">{t("purchases.supportChat")}</h3>
                   </div>
                   <CardContent className="flex-1 flex flex-col p-0">
-                    <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                    <div className="max-h-[30vh] overflow-y-auto p-4 space-y-3">
                       {txLoading ? (
                         <div className="flex justify-center py-8">
                           <Loader2 className="h-6 w-6 animate-spin" />
