@@ -83,8 +83,8 @@ export default function MisComprasPage() {
     }
   }, [selectedPurchase])
 
-  const loadMessages = async (purchaseId: string) => {
-    setTxLoading(true)
+  const loadMessages = async (purchaseId: string, isInitial = false) => {
+    if (isInitial) setTxLoading(true)
     const { data } = await supabase
       .from('purchase_messages')
       .select('*')
@@ -94,11 +94,12 @@ export default function MisComprasPage() {
     if (data) {
       setMessages(data)
     }
-    setTxLoading(false)
+    if (isInitial) setTxLoading(false)
   }
 
   useEffect(() => {
     if (selectedPurchase) {
+      loadMessages(selectedPurchase.id, true)
       const interval = setInterval(() => {
         loadMessages(selectedPurchase.id)
       }, 3000)
