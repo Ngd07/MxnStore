@@ -309,17 +309,6 @@ export default function AdminChatsPage() {
         {/* Tabs */}
         <div className="flex gap-2 mb-4">
           <button
-            onClick={() => { setActiveTab('general'); setSelectedChat(chats[0] || null); setSelectedPurchase(null); }}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
-              activeTab === 'general' 
-                ? 'bg-blue-500 text-white' 
-                : 'bg-secondary text-foreground hover:bg-secondary/80'
-            }`}
-          >
-            <MessageCircle className="h-4 w-4" />
-            Chats Generales ({chats.length})
-          </button>
-          <button
             onClick={() => { setActiveTab('purchases'); setSelectedPurchase(purchases[0] || null); setSelectedChat(null); }}
             className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
               activeTab === 'purchases' 
@@ -378,74 +367,11 @@ export default function AdminChatsPage() {
             </Card>
           )}
 
-          {/* Chat Window - General */}
           <Card className="lg:col-span-2 flex flex-col">
-            {activeTab === 'general' && selectedChat ? (
-              <>
-                <div className="p-3 border-b">
-                  <h2 className="font-bold text-foreground">{selectedChat.user_email}</h2>
-                </div>
-                <CardContent className="flex-1 flex flex-col p-0">
-                  <div className="max-h-[30vh] overflow-y-auto p-4 space-y-3">
-                    {messages.length === 0 ? (
-                      <p className="text-center text-muted-foreground py-8">
-                        ¡Hola! Escribile al cliente desde aquí.
-                      </p>
-                    ) : (
-                      messages.map((msg) => (
-                        <div
-                          key={msg.id}
-                          className={`flex ${msg.sender_id === 'admin' || msg.sender_id === adminUser?.id ? 'justify-end' : 'justify-start'}`}
-                        >
-                          <div
-                            className={`max-w-[70%] rounded-lg px-3 py-2 ${
-                              msg.sender_id === 'admin' || msg.sender_id === adminUser?.id
-                                ? 'bg-yellow-500 text-black'
-                                : 'bg-blue-500 text-white'
-                            }`}
-                          >
-                            <p className="text-sm">{msg.content}</p>
-                            <p className={`text-[10px] mt-1 ${
-                              msg.sender_id === 'admin' || msg.sender_id === adminUser?.id ? 'text-black/70' : 'text-white/70'
-                            }`}>
-                              {new Date(msg.created_at).toLocaleTimeString('es-AR', { 
-                                hour: '2-digit', 
-                                minute: '2-digit' 
-                              })}
-                            </p>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                    <div ref={messagesEndRef} />
-                  </div>
-
-                  <div className="p-3 border-t flex gap-2">
-                    <Input
-                      placeholder="Escribe un mensaje..."
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyPress={handleKeyPress}
-                      className="flex-1"
-                    />
-                    <Button 
-                      onClick={sendMessage} 
-                      disabled={sending || !newMessage.trim()}
-                      className="bg-yellow-500 hover:bg-yellow-600"
-                    >
-                      {sending ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Send className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </div>
-                </CardContent>
-              </>
-            ) : activeTab === 'purchases' && selectedPurchase ? (
+            {selectedPurchase ? (
               <>
                 {/* Purchase Details */}
-                <Card className="m-4 mb-0">
+              <Card className="m-4 mb-0">
                   <CardContent className="pt-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
@@ -551,7 +477,7 @@ export default function AdminChatsPage() {
                 </Card>
               </>
             ) : (
-              <div className="flex-1 flex items-center justify-center">
+              <div className="flex-1 flex items-center justify-center p-8">
                 <p className="text-muted-foreground">Selecciona una conversación para empezar</p>
               </div>
             )}
