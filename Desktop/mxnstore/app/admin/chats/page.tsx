@@ -330,19 +330,19 @@ export default function AdminChatsPage() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-[calc(100vh-220px)]">
-        {/* Chats Generales removido: ya no se muestra (administración enfocada en chats de clientes) */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Chats Generales removido: ya no se muestra (administración enfocada en chats de clientes) */}
 
           {/* Chat List - Purchases */}
           {activeTab === 'purchases' && (
-            <Card className="md:col-span-1 flex flex-col">
+            <Card className="lg:col-span-1 flex flex-col">
               <div className="p-3 border-b">
                 <h2 className="font-bold text-foreground flex items-center gap-2">
                   <ShoppingBag className="h-4 w-4" />
                   Compras ({purchases.length})
                 </h2>
               </div>
-              <CardContent className="flex-1 overflow-y-auto p-0">
+              <CardContent className="max-h-[60vh] overflow-y-auto p-0">
                 {purchases.length === 0 ? (
                   <p className="text-center text-muted-foreground py-8">No hay compras</p>
                 ) : (
@@ -377,7 +377,7 @@ export default function AdminChatsPage() {
           )}
 
           {/* Chat Window - General */}
-          <Card className="md:col-span-2 flex flex-col">
+          <Card className="lg:col-span-2 flex flex-col">
             {activeTab === 'general' && selectedChat ? (
               <>
                 <div className="p-3 border-b">
@@ -486,7 +486,7 @@ export default function AdminChatsPage() {
                 </Card>
 
                 {/* Chat */}
-                <Card className="m-4 mt-4 flex-1 flex flex-col mb-4">
+                <Card className="m-4 mt-4 h-[400px] flex flex-col">
                   <div className="p-3 border-b">
                     <h3 className="font-bold text-foreground">Chat de Soporte</h3>
                   </div>
