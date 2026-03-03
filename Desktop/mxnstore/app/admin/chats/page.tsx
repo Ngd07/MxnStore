@@ -386,7 +386,7 @@ export default function AdminChatsPage() {
                   <h2 className="font-bold text-foreground">{selectedChat.user_email}</h2>
                 </div>
                 <CardContent className="flex-1 flex flex-col p-0">
-                  <div className="h-[300px] overflow-y-auto p-4 space-y-3">
+                  <div className="flex-1 overflow-y-auto p-4 space-y-3">
                     {messages.length === 0 ? (
                       <p className="text-center text-muted-foreground py-8">
                         ¡Hola! Escribile al cliente desde aquí.
@@ -494,12 +494,12 @@ export default function AdminChatsPage() {
                 </Card>
 
                 {/* Chat */}
-                <Card className="m-4 mt-4 h-[400px] flex flex-col">
+                <Card className="m-4 mt-4 flex-1 flex flex-col">
                   <div className="p-3 border-b">
                     <h3 className="font-bold text-foreground">Chat de Soporte</h3>
                   </div>
                   <CardContent className="flex-1 flex flex-col p-0">
-                    <div className="h-[250px] overflow-y-auto p-4 space-y-3">
+                    <div className="flex-1 overflow-y-auto p-4 space-y-3">
                       {purchaseMessages.map((msg) => (
                         <div
                           key={msg.id}
