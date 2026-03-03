@@ -344,7 +344,7 @@ export default function AdminChatsPage() {
                   Compras ({purchases.length})
                 </h2>
               </div>
-              <CardContent className="max-h-[60vh] overflow-y-auto p-0">
+              <CardContent className="max-h-[30vh] overflow-y-auto p-0">
                 {purchases.length === 0 ? (
                   <p className="text-center text-muted-foreground py-8">No hay compras</p>
                 ) : (
