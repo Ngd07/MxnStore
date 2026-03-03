@@ -136,12 +136,11 @@ export default function AdminChatsPage() {
             .eq('purchase_id', purchase.id)
             .order('created_at', { ascending: false })
             .limit(1)
-            .single()
 
           return { 
             ...purchase, 
             user_email: profile?.email || 'Unknown',
-            last_message: lastMsg?.content || ''
+            last_message: lastMsg?.[0]?.content || ''
           }
         })
       )
