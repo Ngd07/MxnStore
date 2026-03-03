@@ -57,13 +57,10 @@ export default function AdminChatsPage() {
   const [adminUser, setAdminUser] = useState<any>(null)
   const [chats, setChats] = useState<Chat[]>([])
   const [purchases, setPurchases] = useState<Purchase[]>([])
-  const [selectedChat, setSelectedChat] = useState<Chat | null>(null)
   const [selectedPurchase, setSelectedPurchase] = useState<Purchase | null>(null)
-  const [messages, setMessages] = useState<Message[]>([])
   const [purchaseMessages, setPurchaseMessages] = useState<PurchaseMessage[]>([])
   const [newMessage, setNewMessage] = useState('')
   const [sending, setSending] = useState(false)
-  const [activeTab, setActiveTab] = useState<'general' | 'purchases'>('general')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -72,7 +69,6 @@ export default function AdminChatsPage() {
       setAdminUser(user)
       if (user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase())) {
         setIsAuthorized(true)
-        loadChats()
         loadPurchases()
       }
       setCheckingAuth(false)
@@ -148,18 +144,6 @@ export default function AdminChatsPage() {
     }
   }
 
-  const loadMessages = async (chatId: string) => {
-    const { data } = await supabase
-      .from('messages')
-      .select('*')
-      .eq('chat_id', chatId)
-      .order('created_at', { ascending: true })
-
-    if (data) {
-      setMessages(data)
-    }
-  }
-
   const loadPurchaseMessages = async (purchaseId: string) => {
     const { data } = await supabase
       .from('purchase_messages')
@@ -175,17 +159,6 @@ export default function AdminChatsPage() {
   const [lastMessageCount, setLastMessageCount] = useState(0)
 
   useEffect(() => {
-    if (selectedChat) {
-      loadMessages(selectedChat.id)
-      setLastMessageCount(0)
-      const interval = setInterval(() => {
-        loadMessages(selectedChat.id)
-      }, 3000)
-      return () => clearInterval(interval)
-    }
-  }, [selectedChat])
-
-  useEffect(() => {
     if (selectedPurchase) {
       loadPurchaseMessages(selectedPurchase.id)
       setLastMessageCount(0)
@@ -197,60 +170,34 @@ export default function AdminChatsPage() {
   }, [selectedPurchase])
 
   useEffect(() => {
-    if (activeTab === 'general') {
-      const currentCount = messages.length
-      if (currentCount > lastMessageCount) {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-        setLastMessageCount(currentCount)
-      }
-    } else if (activeTab === 'purchases') {
-      const currentCount = purchaseMessages.length
-      if (currentCount > lastMessageCount) {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-        setLastMessageCount(currentCount)
-      }
+    const currentCount = purchaseMessages.length
+    if (currentCount > lastMessageCount) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+      setLastMessageCount(currentCount)
     }
-  }, [messages, purchaseMessages, activeTab, lastMessageCount])
+  }, [purchaseMessages, lastMessageCount])
 
   const sendMessage = async () => {
-    if (!newMessage.trim()) return
+    if (!newMessage.trim() || !selectedPurchase) return
     
     setSending(true)
     
-    if (activeTab === 'general' && selectedChat) {
-      const { data, error } = await supabase
-        .from('messages')
-        .insert({
-          chat_id: selectedChat.id,
-          sender_id: 'admin',
-          content: newMessage.trim()
-        })
-        .select()
-        .single()
+    const { data: { user } } = await supabase.auth.getUser()
+    
+    const { data, error } = await supabase
+      .from('purchase_messages')
+      .insert({
+        purchase_id: selectedPurchase.id,
+        sender_id: user?.id || 'admin',
+        content: newMessage.trim()
+      })
+      .select()
+      .single()
 
-      if (!error && data) {
-        setMessages([...messages, data])
-        setNewMessage('')
-        loadChats()
-      }
-    } else if (activeTab === 'purchases' && selectedPurchase) {
-      const { data: { user } } = await supabase.auth.getUser()
-      
-      const { data, error } = await supabase
-        .from('purchase_messages')
-        .insert({
-          purchase_id: selectedPurchase.id,
-          sender_id: user?.id || 'admin',
-          content: newMessage.trim()
-        })
-        .select()
-        .single()
-
-      if (!error && data) {
-        setPurchaseMessages([...purchaseMessages, data])
-        setNewMessage('')
-        loadPurchases()
-      }
+    if (!error && data) {
+      setPurchaseMessages([...purchaseMessages, data])
+      setNewMessage('')
+      loadPurchases()
     }
     
     setSending(false)
@@ -308,12 +255,8 @@ export default function AdminChatsPage() {
         {/* Tabs */}
         <div className="flex gap-2 mb-4">
           <button
-            onClick={() => { setActiveTab('purchases'); setSelectedPurchase(purchases[0] || null); setSelectedChat(null); }}
-            className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
-              activeTab === 'purchases' 
-                ? 'bg-purple-500 text-white' 
-                : 'bg-secondary text-foreground hover:bg-secondary/80'
-            }`}
+            onClick={() => { setSelectedPurchase(purchases[0] || null); }}
+            className="px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 bg-purple-500 text-white"
           >
             <ShoppingBag className="h-4 w-4" />
             Chats de Compras ({purchases.length})
@@ -321,29 +264,26 @@ export default function AdminChatsPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Chats Generales removido: ya no se muestra (administración enfocada en chats de clientes) */}
-
           {/* Chat List - Purchases */}
-          {activeTab === 'purchases' && (
-            <Card className="lg:col-span-1 flex flex-col">
-              <div className="p-3 border-b">
-                <h2 className="font-bold text-foreground flex items-center gap-2">
-                  <ShoppingBag className="h-4 w-4" />
-                  Compras ({purchases.length})
-                </h2>
-              </div>
-              <CardContent className="max-h-[70vh] overflow-y-auto p-0">
-                {purchases.length === 0 ? (
-                  <p className="text-center text-muted-foreground py-8">No hay compras</p>
-                ) : (
-                  purchases.map((purchase) => (
-                    <button
-                      key={purchase.id}
-                      onClick={() => { setSelectedPurchase(purchase); setSelectedChat(null); }}
-                      className={`w-full text-left p-3 border-b hover:bg-secondary/50 ${
-                        selectedPurchase?.id === purchase.id ? 'bg-secondary' : ''
-                      }`}
-                    >
+          <Card className="lg:col-span-1 flex flex-col">
+            <div className="p-3 border-b">
+              <h2 className="font-bold text-foreground flex items-center gap-2">
+                <ShoppingBag className="h-4 w-4" />
+                Compras ({purchases.length})
+              </h2>
+            </div>
+            <CardContent className="max-h-[70vh] overflow-y-auto p-0">
+              {purchases.length === 0 ? (
+                <p className="text-center text-muted-foreground py-8">No hay compras</p>
+              ) : (
+                purchases.map((purchase) => (
+                  <button
+                    key={purchase.id}
+                    onClick={() => { setSelectedPurchase(purchase); }}
+                    className={`w-full text-left p-3 border-b hover:bg-secondary/50 ${
+                      selectedPurchase?.id === purchase.id ? 'bg-secondary' : ''
+                    }`}
+                  >
                       <p className="font-medium text-foreground truncate">{purchase.user_email}</p>
                       <p className="text-sm text-purple-500 truncate font-medium">{purchase.skin_name}</p>
                       <p className="text-sm text-muted-foreground truncate">{purchase.last_message || 'Sin mensajes'}</p>
@@ -364,7 +304,6 @@ export default function AdminChatsPage() {
                 )}
               </CardContent>
             </Card>
-          )}
 
           <Card className="lg:col-span-2 flex flex-col">
             {selectedPurchase ? (
