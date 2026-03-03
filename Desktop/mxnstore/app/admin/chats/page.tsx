@@ -54,6 +54,7 @@ export default function AdminChatsPage() {
   const [loading, setLoading] = useState(true)
   const [isAuthorized, setIsAuthorized] = useState(false)
   const [checkingAuth, setCheckingAuth] = useState(true)
+  const [adminUser, setAdminUser] = useState<any>(null)
   const [chats, setChats] = useState<Chat[]>([])
   const [purchases, setPurchases] = useState<Purchase[]>([])
   const [selectedChat, setSelectedChat] = useState<Chat | null>(null)
@@ -68,6 +69,7 @@ export default function AdminChatsPage() {
   useEffect(() => {
     const checkAuth = async () => {
       const { data: { user } } = await supabase.auth.getUser()
+      setAdminUser(user)
       if (user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase())) {
         setIsAuthorized(true)
         loadChats()
@@ -377,7 +379,7 @@ export default function AdminChatsPage() {
           )}
 
           {/* Chat Window - General */}
-          <Card className="lg:col-span-2 flex flex-col">
+          <Card className="lg:col-span-2 flex flex-col h-[calc(60vh+200px)]">
             {activeTab === 'general' && selectedChat ? (
               <>
                 <div className="p-3 border-b">
@@ -388,18 +390,18 @@ export default function AdminChatsPage() {
                     {messages.map((msg) => (
                       <div
                         key={msg.id}
-                        className={`flex ${msg.sender_id === 'admin' ? 'justify-end' : 'justify-start'}`}
+                        className={`flex ${msg.sender_id === 'admin' || msg.sender_id === adminUser?.id ? 'justify-end' : 'justify-start'}`}
                       >
                         <div
                           className={`max-w-[70%] rounded-lg px-3 py-2 ${
-                            msg.sender_id === 'admin'
+                            msg.sender_id === 'admin' || msg.sender_id === adminUser?.id
                               ? 'bg-yellow-500 text-black'
-                              : 'bg-secondary text-foreground'
+                              : 'bg-blue-500 text-white'
                           }`}
                         >
                           <p className="text-sm">{msg.content}</p>
                           <p className={`text-[10px] mt-1 ${
-                            msg.sender_id === 'admin' ? 'text-black/70' : 'text-muted-foreground'
+                            msg.sender_id === 'admin' || msg.sender_id === adminUser?.id ? 'text-black/70' : 'text-white/70'
                           }`}>
                             {new Date(msg.created_at).toLocaleTimeString('es-AR', { 
                               hour: '2-digit', 
@@ -495,18 +497,18 @@ export default function AdminChatsPage() {
                       {purchaseMessages.map((msg) => (
                         <div
                           key={msg.id}
-                          className={`flex ${msg.sender_id === 'admin' ? 'justify-end' : 'justify-start'}`}
+                          className={`flex ${msg.sender_id === 'admin' || msg.sender_id === adminUser?.id ? 'justify-end' : 'justify-start'}`}
                         >
                           <div
                             className={`max-w-[70%] rounded-lg px-3 py-2 ${
-                              msg.sender_id === 'admin'
+                              msg.sender_id === 'admin' || msg.sender_id === adminUser?.id
                                 ? 'bg-yellow-500 text-black'
                                 : 'bg-blue-500 text-white'
                             }`}
                           >
                             <p className="text-sm">{msg.content}</p>
                             <p className={`text-[10px] mt-1 ${
-                              msg.sender_id === 'admin' ? 'text-black/70' : 'text-white/70'
+                              msg.sender_id === 'admin' || msg.sender_id === adminUser?.id ? 'text-black/70' : 'text-white/70'
                             }`}>
                               {new Date(msg.created_at).toLocaleTimeString('es-AR', { 
                                 hour: '2-digit', 
