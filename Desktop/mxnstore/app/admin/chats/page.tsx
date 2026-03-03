@@ -43,6 +43,7 @@ interface Purchase {
   user_id: string
   skin_name: string
   skin_price: number
+  fortnite_username?: string
   status: string
   created_at: string
   user_email?: string
@@ -435,60 +436,111 @@ export default function AdminChatsPage() {
               </>
             ) : activeTab === 'purchases' && selectedPurchase ? (
               <>
-                <div className="p-3 border-b">
-                  <h2 className="font-bold text-foreground">{selectedPurchase.user_email}</h2>
-                  <p className="text-sm text-purple-500">{selectedPurchase.skin_name} - {selectedPurchase.skin_price} MxN</p>
-                </div>
-                <CardContent className="flex-1 flex flex-col p-0">
-                  <div className="flex-1 overflow-y-auto p-4 space-y-3">
-                    {purchaseMessages.map((msg) => (
-                      <div
-                        key={msg.id}
-                        className={`flex ${msg.sender_id === 'admin' ? 'justify-end' : 'justify-start'}`}
-                      >
-                        <div
-                          className={`max-w-[70%] rounded-lg px-3 py-2 ${
-                            msg.sender_id === 'admin'
-                              ? 'bg-blue-500 text-white'
-                              : 'bg-purple-500 text-white'
-                          }`}
-                        >
-                          <p className="text-sm">{msg.content}</p>
-                          <p className={`text-[10px] mt-1 ${
-                            msg.sender_id === 'admin' ? 'text-white/70' : 'text-white/70'
-                          }`}>
-                            {new Date(msg.created_at).toLocaleTimeString('es-AR', { 
-                              hour: '2-digit', 
-                              minute: '2-digit' 
-                            })}
-                          </p>
-                        </div>
+                {/* Purchase Details */}
+                <Card className="m-4 mb-0">
+                  <CardContent className="pt-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Skin</p>
+                        <p className="font-bold text-foreground">{selectedPurchase.skin_name}</p>
                       </div>
-                    ))}
-                    <div ref={messagesEndRef} />
-                  </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Precio</p>
+                        <p className="font-bold text-yellow-500">{selectedPurchase.skin_price} MxN</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Usuario Fortnite</p>
+                        <p className="font-medium text-foreground">{selectedPurchase.fortnite_username || '-'}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Email</p>
+                        <p className="font-medium text-foreground text-sm">{selectedPurchase.user_email || '-'}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Estado</p>
+                        <span className={`inline-block px-2 py-1 rounded-full text-xs ${
+                          selectedPurchase.status === 'completed' ? 'bg-green-500/20 text-green-500' :
+                          selectedPurchase.status === 'pending' ? 'bg-yellow-500/20 text-yellow-500' :
+                          selectedPurchase.status === 'processing' ? 'bg-blue-500/20 text-blue-500' :
+                          'bg-red-500/20 text-red-500'
+                        }`}>
+                          {selectedPurchase.status === 'completed' ? 'Entregado' : 
+                           selectedPurchase.status === 'pending' ? 'Pendiente' :
+                           selectedPurchase.status === 'processing' ? 'Procesando' : 'Cancelado'}
+                        </span>
+                      </div>
+                      <div className="col-span-2">
+                        <p className="text-sm text-muted-foreground">Fecha</p>
+                        <p className="font-medium text-foreground">
+                          {new Date(selectedPurchase.created_at).toLocaleString('es-AR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
-                  <div className="p-3 border-t flex gap-2">
-                    <Input
-                      placeholder="Escribe un mensaje..."
-                      value={newMessage}
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      onKeyPress={handleKeyPress}
-                      className="flex-1"
-                    />
-                    <Button 
-                      onClick={sendMessage} 
-                      disabled={sending || !newMessage.trim()}
-                      className="bg-blue-500 hover:bg-blue-600"
-                    >
-                      {sending ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Send className="h-4 w-4" />
-                      )}
-                    </Button>
+                {/* Chat */}
+                <Card className="m-4 mt-4 flex-1 flex flex-col mb-4">
+                  <div className="p-3 border-b">
+                    <h3 className="font-bold text-foreground">Chat de Soporte</h3>
                   </div>
-                </CardContent>
+                  <CardContent className="flex-1 flex flex-col p-0">
+                    <div className="flex-1 overflow-y-auto p-4 space-y-3">
+                      {purchaseMessages.map((msg) => (
+                        <div
+                          key={msg.id}
+                          className={`flex ${msg.sender_id === 'admin' ? 'justify-end' : 'justify-start'}`}
+                        >
+                          <div
+                            className={`max-w-[70%] rounded-lg px-3 py-2 ${
+                              msg.sender_id === 'admin'
+                                ? 'bg-yellow-500 text-black'
+                                : 'bg-blue-500 text-white'
+                            }`}
+                          >
+                            <p className="text-sm">{msg.content}</p>
+                            <p className={`text-[10px] mt-1 ${
+                              msg.sender_id === 'admin' ? 'text-black/70' : 'text-white/70'
+                            }`}>
+                              {new Date(msg.created_at).toLocaleTimeString('es-AR', { 
+                                hour: '2-digit', 
+                                minute: '2-digit' 
+                              })}
+                            </p>
+                          </div>
+                        </div>
+                      ))}
+                      <div ref={messagesEndRef} />
+                    </div>
+
+                    <div className="p-3 border-t flex gap-2">
+                      <Input
+                        placeholder="Escribe un mensaje..."
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        className="flex-1"
+                      />
+                      <Button 
+                        onClick={sendMessage} 
+                        disabled={sending || !newMessage.trim()}
+                        className="bg-yellow-500 hover:bg-yellow-600"
+                      >
+                        {sending ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Send className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
               </>
             ) : (
               <div className="flex-1 flex items-center justify-center">
