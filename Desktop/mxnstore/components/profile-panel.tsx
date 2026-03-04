@@ -178,6 +178,15 @@ export function ProfilePanel() {
             <span className="text-sm font-medium text-foreground">{t("profile.myPurchases")}</span>
           </a>
 
+          {/* Recargar Button */}
+          <button
+            onClick={() => router.push('/buy-vbucks')}
+            className="flex items-center justify-center gap-2 rounded-xl border border-purple-500/50 bg-purple-500/10 p-4 hover:bg-purple-500/20 transition-colors"
+          >
+            <Coins className="h-5 w-5 text-purple-500" />
+            <span className="text-sm font-medium text-foreground">{t("profile.recharge")}</span>
+          </button>
+
           {/* Email section */}
           <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
             <div className="flex items-center gap-2">
