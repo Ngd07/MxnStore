@@ -140,34 +140,34 @@ export function ShopClient() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-          <div className="flex items-center gap-3">
-            <Image
-              src="/logo.png"
-              alt="MxNStore"
-              width={48}
-              height={48}
-              className="rounded-lg object-cover"
-            />
-            <h1 className="text-2xl font-bold text-foreground">
-              MxNStore
-            </h1>
+        <div className="mx-auto max-w-7xl px-4 py-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-3">
+              <Image
+                src="/logo.png"
+                alt="MxNStore"
+                width={48}
+                height={48}
+                className="rounded-lg object-cover"
+              />
+              <h1 className="text-2xl font-bold text-foreground">
+                MxNStore
+              </h1>
+            </div>
+            <div className="flex items-center gap-2">
+              <NotificationsBell />
+              <LanguageSwitcher />
+              <ProfilePanel />
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <NotificationsBell />
-            <LanguageSwitcher />
-            <ProfilePanel />
+          <div className="flex justify-center">
+            <ShopCountdown />
           </div>
         </div>
       </header>
 
       {/* Main */}
       <main className="mx-auto max-w-7xl px-4 py-6">
-        {/* Countdown */}
-        <div className="mb-6">
-          <ShopCountdown />
-        </div>
-
         {/* Filters */}
         <div className="mb-6 flex flex-col gap-4">
           <VbucksBalance />
