@@ -77,41 +77,11 @@ export default function AdminChatsPage() {
   }, [])
 
   const loadPurchases = async () => {
-    const { data: purchasesData } = await supabase
-      .from('purchases')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (purchasesData) {
-      const userIds = [...new Set(purchasesData.map(p => p.user_id))]
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('id, email')
-        .in('id', userIds)
-      
-      const profileMap = new Map(profiles?.map(p => [p.id, p.email]) || [])
-
-      const purchaseIds = purchasesData.map(p => p.id)
-      const { data: lastMessages } = await supabase
-        .from('purchase_messages')
-        .select('purchase_id, content')
-        .in('purchase_id', purchaseIds)
-        .order('created_at', { ascending: false })
-      
-      const lastMsgMap = new Map()
-      lastMessages?.forEach(msg => {
-        if (!lastMsgMap.has(msg.purchase_id)) {
-          lastMsgMap.set(msg.purchase_id, msg.content)
-        }
-      })
-
-      const purchasesWithEmail = purchasesData.map(purchase => ({
-        ...purchase,
-        user_email: profileMap.get(purchase.user_id) || 'Unknown',
-        last_message: lastMsgMap.get(purchase.id) || ''
-      }))
-      
-      setPurchases(purchasesWithEmail)
+    const res = await fetch('/api/admin/admin-chats')
+    const purchasesData = await res.json()
+    
+    if (purchasesData && !purchasesData.error) {
+      setPurchases(purchasesData)
     }
   }
 
