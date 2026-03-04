@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
@@ -30,6 +30,14 @@ interface Purchase {
 }
 
 export default function MisComprasPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center"><div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div></div>}>
+      <MisComprasContent />
+    </Suspense>
+  )
+}
+
+function MisComprasContent() {
   const { t } = useI18n()
   const searchParams = useSearchParams()
   const purchaseId = searchParams.get('purchase')
