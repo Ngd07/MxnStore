@@ -45,7 +45,7 @@ export default function TransactionsPage() {
     const { data, error } = await supabase
       .from('transactions')
       .select('*')
-      .eq('type', 'deposit')
+      .neq('type', 'redeem')
       .order('created_at', { ascending: false })
 
     if (!error && data) {
