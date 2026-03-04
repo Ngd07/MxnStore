@@ -36,13 +36,13 @@ export function ShopCountdown() {
   if (!timeLeft) return null;
 
   return (
-    <div className="flex flex-col items-center justify-center gap-1">
-      <div className="flex items-center gap-1.5">
-        <Zap className="h-4 w-4 text-yellow-500 animate-pulse" />
+    <div className="flex items-center justify-center gap-2">
+      <Zap className="h-3.5 w-3.5 text-yellow-500 animate-pulse" />
+      <div className="flex flex-col items-center justify-center gap-0.5">
         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nueva tienda en</p>
-        <Zap className="h-4 w-4 text-yellow-500 animate-pulse" />
+        <p className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-orange-500 font-mono">{timeLeft}</p>
       </div>
-      <p className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-orange-500 font-mono">{timeLeft}</p>
+      <Zap className="h-3.5 w-3.5 text-yellow-500 animate-pulse" />
     </div>
   );
 }
