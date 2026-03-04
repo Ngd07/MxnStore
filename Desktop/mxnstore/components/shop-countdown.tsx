@@ -39,7 +39,7 @@ export function ShopCountdown() {
       <div className="h-1 w-8 bg-gradient-to-r from-transparent via-yellow-500 to-transparent rounded-full" />
       <div className="flex flex-col items-center justify-center gap-1">
         <div className="text-xs font-semibold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent uppercase tracking-wider">
-          Nueva tienda en
+          {t("shop.countdown")}
         </div>
         <p className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 font-mono leading-none">{timeLeft}</p>
       </div>
