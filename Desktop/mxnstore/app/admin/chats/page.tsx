@@ -89,7 +89,7 @@ export default function AdminChatsPage() {
             .from('profiles')
             .select('email')
             .eq('id', purchase.user_id)
-            .single()
+            .maybeSingle()
           
           const { data: lastMsg } = await supabase
             .from('purchase_messages')

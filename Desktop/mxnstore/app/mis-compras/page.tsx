@@ -57,7 +57,7 @@ export default function MisComprasPage() {
             .from('profiles')
             .select('email')
             .eq('id', user.id)
-            .single()
+            .maybeSingle()
           
           const purchasesWithEmail = purchasesData.map(p => ({
             ...p,
