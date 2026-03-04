@@ -84,16 +84,19 @@ export default function AdminPanelPage() {
       .order('created_at', { ascending: false })
 
     if (!error && data) {
-      const transactionsWithEmail = await Promise.all(
-        data.map(async (t) => {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('email')
-            .eq('id', t.user_id)
-            .maybeSingle()
-          return { ...t, email: profile?.email || 'Unknown' }
-        })
-      )
+      const userIds = [...new Set(data.map(t => t.user_id))]
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, email')
+        .in('id', userIds)
+      
+      const profileMap = new Map(profiles?.map(p => [p.id, p.email]) || [])
+
+      const transactionsWithEmail = data.map(t => ({
+        ...t,
+        email: profileMap.get(t.user_id) || 'Unknown'
+      }))
+      
       setTransactions(transactionsWithEmail)
     }
     setTxLoading(false)
@@ -107,16 +110,19 @@ export default function AdminPanelPage() {
       .order('created_at', { ascending: false })
 
     if (data) {
-      const purchasesWithEmail = await Promise.all(
-        data.map(async (p) => {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('email')
-            .eq('id', p.user_id)
-            .maybeSingle()
-          return { ...p, email: profile?.email || 'Unknown' }
-        })
-      )
+      const userIds = [...new Set(data.map(p => p.user_id))]
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, email')
+        .in('id', userIds)
+      
+      const profileMap = new Map(profiles?.map(p => [p.id, p.email]) || [])
+
+      const purchasesWithEmail = data.map(p => ({
+        ...p,
+        email: profileMap.get(p.user_id) || 'Unknown'
+      }))
+      
       setPurchases(purchasesWithEmail)
     }
     setPurchasesLoading(false)

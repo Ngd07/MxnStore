@@ -83,28 +83,34 @@ export default function AdminChatsPage() {
       .order('created_at', { ascending: false })
 
     if (purchasesData) {
-      const purchasesWithEmail = await Promise.all(
-        purchasesData.map(async (purchase) => {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('email')
-            .eq('id', purchase.user_id)
-            .maybeSingle()
-          
-          const { data: lastMsg } = await supabase
-            .from('purchase_messages')
-            .select('content')
-            .eq('purchase_id', purchase.id)
-            .order('created_at', { ascending: false })
-            .limit(1)
+      const userIds = [...new Set(purchasesData.map(p => p.user_id))]
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, email')
+        .in('id', userIds)
+      
+      const profileMap = new Map(profiles?.map(p => [p.id, p.email]) || [])
 
-          return { 
-            ...purchase, 
-            user_email: profile?.email || 'Unknown',
-            last_message: lastMsg?.[0]?.content || ''
-          }
-        })
-      )
+      const purchaseIds = purchasesData.map(p => p.id)
+      const { data: lastMessages } = await supabase
+        .from('purchase_messages')
+        .select('purchase_id, content')
+        .in('purchase_id', purchaseIds)
+        .order('created_at', { ascending: false })
+      
+      const lastMsgMap = new Map()
+      lastMessages?.forEach(msg => {
+        if (!lastMsgMap.has(msg.purchase_id)) {
+          lastMsgMap.set(msg.purchase_id, msg.content)
+        }
+      })
+
+      const purchasesWithEmail = purchasesData.map(purchase => ({
+        ...purchase,
+        user_email: profileMap.get(purchase.user_id) || 'Unknown',
+        last_message: lastMsgMap.get(purchase.id) || ''
+      }))
+      
       setPurchases(purchasesWithEmail)
     }
   }
