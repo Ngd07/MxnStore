@@ -69,6 +69,23 @@ export default function TransactionsPage() {
 
   const updateStatus = async (id: string, status: string) => {
     setUpdatingId(id)
+    
+    const transaction = transactions.find(t => t.id === id)
+    
+    if (status === 'cancelled' && transaction) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('mxn_points')
+        .eq('id', transaction.user_id)
+        .maybeSingle()
+      
+      const currentPoints = profile?.mxn_points || 0
+      await supabase
+        .from('profiles')
+        .update({ mxn_points: currentPoints + transaction.amount })
+        .eq('id', transaction.user_id)
+    }
+    
     await supabase
       .from('transactions')
       .update({ status })
@@ -125,6 +142,7 @@ export default function TransactionsPage() {
                   <th className="text-left p-3 text-sm font-medium text-muted-foreground">Tipo</th>
                   <th className="text-left p-3 text-sm font-medium text-muted-foreground">Cantidad</th>
                   <th className="text-left p-3 text-sm font-medium text-muted-foreground">Skin</th>
+                  <th className="text-left p-3 text-sm font-medium text-muted-foreground">Monto</th>
                   <th className="text-left p-3 text-sm font-medium text-muted-foreground">Usuario Fortnite</th>
                   <th className="text-left p-3 text-sm font-medium text-muted-foreground">Estado</th>
                   <th className="text-left p-3 text-sm font-medium text-muted-foreground">Acciones</th>
@@ -158,6 +176,7 @@ export default function TransactionsPage() {
                     </td>
                     <td className="p-3 text-sm font-bold text-yellow-500">{t.amount}</td>
                     <td className="p-3 text-sm text-foreground">{t.skin_name || '-'}</td>
+                    <td className="p-3 text-sm font-bold text-yellow-500">{t.amount} MXN</td>
                     <td className="p-3 text-sm text-foreground">{t.fortnite_username || '-'}</td>
                     <td className="p-3 text-sm">
                       <span className={`px-2 py-1 rounded-full text-xs ${
