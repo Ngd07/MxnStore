@@ -442,11 +442,6 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
           </div>
 
           <DialogFooter>
-            {redeemMessage && (
-              <p className={`text-sm text-center w-full mb-2 ${redeemMessage.includes("Error") || redeemMessage.includes("No tienes") ? "text-red-500" : "text-green-500"}`}>
-                {redeemMessage}
-              </p>
-            )}
             {isLoggedIn ? (
               <Button
                 onClick={handleRedeem}
