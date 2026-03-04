@@ -574,11 +574,22 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | null>(null);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>("es");
+  const [locale, setLocaleState] = useState<Locale>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('locale') as Locale;
+      if (saved && ['es', 'en', 'de', 'ru'].includes(saved)) {
+        return saved;
+      }
+    }
+    return "es";
+  });
 
   const setLocale = useCallback((newLocale: Locale) => {
     setLocaleState(newLocale);
     document.documentElement.lang = newLocale;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('locale', newLocale);
+    }
   }, []);
 
   const t = useCallback(
