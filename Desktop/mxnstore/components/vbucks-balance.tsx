@@ -79,9 +79,9 @@ export function VbucksBalance() {
       </div>
       <button
         onClick={() => router.push('/buy-vbucks')}
-        className="flex items-center gap-1.5 rounded-lg bg-purple-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-purple-700"
+        className="flex items-center gap-2 rounded-lg bg-purple-600 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-purple-700 hover:scale-105 active:scale-95"
       >
-        <RefreshCw className="h-3.5 w-3.5" />
+        <RefreshCw className="h-5 w-5" />
         {t("profile.recharge")}
       </button>
     </div>
