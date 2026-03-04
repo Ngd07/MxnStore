@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { Coins, RefreshCw } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
@@ -81,7 +80,13 @@ export function VbucksBalance() {
         onClick={() => router.push('/buy-vbucks')}
         className="flex items-center gap-2 rounded-lg bg-purple-600 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-purple-700 hover:scale-105 active:scale-95"
       >
-        <RefreshCw className="h-5 w-5" />
+        <Image
+          src="/logomxnpoints.png"
+          alt="MxN Points"
+          width={20}
+          height={20}
+          className="rounded"
+        />
         {t("profile.recharge")}
       </button>
     </div>
