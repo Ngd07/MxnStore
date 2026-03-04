@@ -198,9 +198,9 @@ export function ShopClient() {
             </p>
             <button
               onClick={() => mutate()}
-              className="mt-4 flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              className="mt-4 flex items-center gap-2 rounded-lg bg-primary px-8 py-4 text-lg font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
-              <RotateCw className="h-5 w-5" />
+              <RotateCw className="h-6 w-6" />
               {t("shop.retry")}
             </button>
           </div>
