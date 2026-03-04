@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
 
 export type Locale = "es" | "en" | "de" | "ru";
 
@@ -582,15 +582,20 @@ interface I18nContextType {
 const I18nContext = createContext<I18nContextType | null>(null);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('locale') as Locale;
-      if (saved && ['es', 'en', 'de', 'ru'].includes(saved)) {
-        return saved;
-      }
+  const [locale, setLocaleState] = useState<Locale>("es");
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    // Only access localStorage on client after mount to prevent hydration mismatch
+    const saved = localStorage.getItem('locale') as Locale;
+    if (saved && ['es', 'en', 'de', 'ru'].includes(saved)) {
+      setLocaleState(saved);
+      document.documentElement.lang = saved;
+    } else {
+      document.documentElement.lang = 'es';
     }
-    return "es";
-  });
+    setIsMounted(true);
+  }, []);
 
   const setLocale = useCallback((newLocale: Locale) => {
     setLocaleState(newLocale);
@@ -612,6 +617,16 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     },
     [locale]
   );
+
+  // Don't render children until we've hydrated from localStorage
+  // This prevents hydration mismatch when locale differs from server default
+  if (!isMounted) {
+    return (
+      <I18nContext.Provider value={{ locale: "es", setLocale, t, dateLocale: dateLocales.es }}>
+        {children}
+      </I18nContext.Provider>
+    );
+  }
 
   return (
     <I18nContext.Provider value={{ locale, setLocale, t, dateLocale: dateLocales[locale] }}>
