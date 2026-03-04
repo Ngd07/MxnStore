@@ -156,6 +156,22 @@ export default function AdminPanelPage() {
   }
 
   const updatePurchaseStatus = async (id: string, status: string) => {
+    const purchase = purchases.find(p => p.id === id)
+    
+    if (status === 'cancelled' && purchase) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('mxn_points')
+        .eq('id', purchase.user_id)
+        .maybeSingle()
+      
+      const currentPoints = profile?.mxn_points || 0
+      await supabase
+        .from('profiles')
+        .update({ mxn_points: currentPoints + purchase.skin_price })
+        .eq('id', purchase.user_id)
+    }
+    
     await supabase
       .from('purchases')
       .update({ status })
@@ -466,6 +482,7 @@ export default function AdminPanelPage() {
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Fecha</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Usuario</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Skin</th>
+                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">Monto</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Usuario Fortnite</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Estado</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Acciones</th>
@@ -485,6 +502,7 @@ export default function AdminPanelPage() {
                           </td>
                           <td className="p-3 text-sm text-foreground">{p.email}</td>
                           <td className="p-3 text-sm font-bold text-purple-500">{p.skin_name}</td>
+                          <td className="p-3 text-sm font-bold text-yellow-500">{p.skin_price} MXN</td>
                           <td className="p-3 text-sm text-foreground">{p.fortnite_username || '-'}</td>
                           <td className="p-3 text-sm">
                             <span className={`px-2 py-1 rounded-full text-xs ${
