@@ -35,23 +35,15 @@ export function ShopCountdown() {
   if (!timeLeft) return null;
 
   return (
-    <div className="flex items-center justify-center gap-2">
-      <div className="w-1 h-6 bg-gradient-to-b from-yellow-500 to-orange-500 rounded-full animate-pulse" />
-      <div className="flex flex-col items-center justify-center gap-0.5">
-        <p style={{
-          fontFamily: '"Impact", "Arial Black", sans-serif',
-          fontWeight: 900,
-          letterSpacing: '0.15em',
-          textTransform: 'uppercase',
-          fontSize: '0.7rem',
-          color: 'rgb(234, 179, 8)',
-          textShadow: '2px 2px 0 rgba(234, 179, 8, 0.3)',
-        }}>
+    <div className="flex items-center justify-center gap-3">
+      <div className="h-1 w-8 bg-gradient-to-r from-transparent via-yellow-500 to-transparent rounded-full" />
+      <div className="flex flex-col items-center justify-center gap-1">
+        <div className="text-xs font-semibold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent uppercase tracking-wider">
           Nueva tienda en
-        </p>
-        <p className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-orange-500 font-mono">{timeLeft}</p>
+        </div>
+        <p className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 font-mono leading-none">{timeLeft}</p>
       </div>
-      <div className="w-1 h-6 bg-gradient-to-b from-yellow-500 to-orange-500 rounded-full animate-pulse" />
+      <div className="h-1 w-8 bg-gradient-to-r from-transparent via-yellow-500 to-transparent rounded-full" />
     </div>
   );
 }
