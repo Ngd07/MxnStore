@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -30,6 +31,8 @@ interface Purchase {
 
 export default function MisComprasPage() {
   const { t } = useI18n()
+  const searchParams = useSearchParams()
+  const purchaseId = searchParams.get('purchase')
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
   const [purchases, setPurchases] = useState<Purchase[]>([])
@@ -66,7 +69,13 @@ export default function MisComprasPage() {
           
           setPurchases(purchasesWithEmail)
           if (purchasesWithEmail.length > 0) {
-            setSelectedPurchase(purchasesWithEmail[0])
+            // If purchaseId query param exists, select that purchase
+            if (purchaseId) {
+              const found = purchasesWithEmail.find(p => p.id === purchaseId)
+              setSelectedPurchase(found || purchasesWithEmail[0])
+            } else {
+              setSelectedPurchase(purchasesWithEmail[0])
+            }
           }
         }
       }

@@ -171,6 +171,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
   const [user, setUser] = useState<any>(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
   const [justRedeemed, setJustRedeemed] = useState(false);
+  const [redeeming, setRedeeming] = useState(false);
   const { t } = useI18n();
   
   const image = getItemImage(entry);
@@ -234,6 +235,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
       return;
     }
     setRedeemMessage(t("redeem.processing"));
+    setRedeeming(true);
     
     try {
       const res = await fetch('/api/redeem', {
@@ -244,6 +246,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
       const data = await res.json();
       if (!res.ok) {
         setRedeemMessage(data?.error || 'Error canje');
+        setRedeeming(false);
         return;
       }
       const newBalance = data.balance ?? vbucksBalance;
@@ -255,22 +258,23 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
         window.dispatchEvent(new CustomEvent('mxn-balance-updated', { detail: { balance: newBalance } }));
       }
       
-      setRedeemMessage(t("redeem.success") + "! Te contactaremos en WhatsApp");
+      setRedeeming(false);
       setFortniteUsername("");
       
-      // Refresh balance from server after a short delay to ensure consistency
-      setTimeout(() => {
-        fetchBalance();
-      }, 500);
+      // Open mis-compras in new tab with the purchase selected
+      if (data.purchaseId) {
+        window.open(`/mis-compras?purchase=${data.purchaseId}`, '_blank');
+      }
       
       // Close dialog after short delay
       setTimeout(() => {
         setShowDialog(false);
         setRedeemMessage("");
         setJustRedeemed(false);
-      }, 2000);
+      }, 1500);
     } catch (err) {
       setRedeemMessage("Error al canjear. Intenta de nuevo.");
+      setRedeeming(false);
     }
   };
 
@@ -446,11 +450,11 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
             {isLoggedIn ? (
               <Button
                 onClick={handleRedeem}
-                disabled={!canAfford}
+                disabled={!canAfford || redeeming}
                 className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50"
               >
                 <Gift className="mr-2 h-4 w-4" />
-                Canjear {price.toLocaleString()} MxN Points
+                {redeeming ? t("redeem.processing") : `Canjear ${price.toLocaleString()} MxN Points`}
               </Button>
             ) : (
               <Button
