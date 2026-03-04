@@ -26,7 +26,7 @@ export default function AdminPage() {
       const adminList = ADMIN_EMAILS.map(e => e.toLowerCase())
       if (userEmail && adminList.includes(userEmail)) {
         setIsAuthorized(true)
-        setCurrentUserEmail(user.email)
+        setCurrentUserEmail(user?.email || '')
       }
       setCheckingAuth(false)
     }
