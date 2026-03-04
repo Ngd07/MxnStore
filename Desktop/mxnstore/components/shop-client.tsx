@@ -10,8 +10,9 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { ProfilePanel } from "@/components/profile-panel";
 import { VbucksBalance } from "@/components/vbucks-balance";
 import { NotificationsBell } from "@/components/notifications-bell";
+import { ShopCountdown } from "@/components/shop-countdown";
 import type { ShopData, ShopEntry } from "@/lib/types";
-import { Store } from "lucide-react";
+import { RotateCw } from "lucide-react";
 import Image from "next/image";
 import { useI18n } from "@/lib/i18n";
 
@@ -139,25 +140,18 @@ export function ShopClient() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
           <div className="flex items-center gap-3">
             <Image
               src="/logo.png"
               alt="MxNStore"
-              width={40}
-              height={40}
+              width={48}
+              height={48}
               className="rounded-lg object-cover"
             />
-            <div>
-              <h1 className="text-lg font-bold text-foreground">
-                MxNStore
-              </h1>
-              {formattedDate && (
-                <p className="text-xs text-muted-foreground capitalize">
-                  {formattedDate}
-                </p>
-              )}
-            </div>
+            <h1 className="text-2xl font-bold text-foreground">
+              MxNStore
+            </h1>
           </div>
           <div className="flex items-center gap-2">
             <NotificationsBell />
@@ -169,6 +163,11 @@ export function ShopClient() {
 
       {/* Main */}
       <main className="mx-auto max-w-7xl px-4 py-6">
+        {/* Countdown */}
+        <div className="mb-6">
+          <ShopCountdown />
+        </div>
+
         {/* Filters */}
         <div className="mb-6 flex flex-col gap-4">
           <VbucksBalance />
@@ -199,8 +198,9 @@ export function ShopClient() {
             </p>
             <button
               onClick={() => mutate()}
-              className="mt-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+              className="mt-4 flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
+              <RotateCw className="h-5 w-5" />
               {t("shop.retry")}
             </button>
           </div>
