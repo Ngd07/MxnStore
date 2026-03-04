@@ -34,6 +34,11 @@ export default function RootLayout({
             __html: `(function(){try{var t=localStorage.getItem('theme');document.documentElement.className=t==='light'?'light':'dark'}catch(e){document.documentElement.className='dark'}})()`,
           }}
         />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var l=localStorage.getItem('locale');if(l){document.documentElement.lang=l}}catch(e){}})()`,
+          }}
+        />
       </head>
       <body className="font-sans antialiased">
         <I18nProvider>
