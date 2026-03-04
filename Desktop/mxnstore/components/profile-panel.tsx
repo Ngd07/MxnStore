@@ -168,13 +168,15 @@ export function ProfilePanel() {
           </div>
 
           {/* Mis Compras Button */}
-          <button
-            onClick={() => router.push('/mis-compras')}
+          <a
+            href="/mis-compras"
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 rounded-xl border border-green-500/50 bg-green-500/10 p-4 hover:bg-green-500/20 transition-colors"
           >
             <ShoppingBag className="h-5 w-5 text-green-500" />
             <span className="text-sm font-medium text-foreground">{t("profile.myPurchases")}</span>
-          </button>
+          </a>
 
           {/* Email section */}
           <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
