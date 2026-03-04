@@ -454,7 +454,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
                 </Button>
                 {!fortniteUsername.trim() && !redeeming && (
                   <p className="text-sm text-center text-red-500 font-medium absolute -bottom-6 w-full">
-                    Debes colocar un usuario de Fortnite para continuar
+                    {t("redeem.usernameRequired")}
                   </p>
                 )}
               </>
