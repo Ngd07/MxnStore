@@ -441,20 +441,20 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
             )}
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="relative">
             {isLoggedIn ? (
               <>
                 <Button
                   onClick={handleRedeem}
-                  disabled={!canAfford || redeeming}
+                  disabled={!canAfford || redeeming || !fortniteUsername.trim()}
                   className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50"
                 >
                   <Gift className="mr-2 h-4 w-4" />
                   {redeeming ? t("redeem.processing") : `Canjear ${price.toLocaleString()} MxN Points`}
                 </Button>
                 {!fortniteUsername.trim() && !redeeming && (
-                  <p className="text-xs text-center text-muted-foreground mt-1">
-                    {t("redeem.enterUsername")}
+                  <p className="text-sm text-center text-red-500 font-medium absolute -bottom-6 w-full">
+                    Debes colocar un usuario de Fortnite para continuar
                   </p>
                 )}
               </>
