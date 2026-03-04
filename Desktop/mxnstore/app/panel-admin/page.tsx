@@ -156,24 +156,17 @@ export default function AdminPanelPage() {
   const updatePurchaseStatus = async (id: string, status: string) => {
     const purchase = purchases.find(p => p.id === id)
     
-    if (status === 'cancelled' && purchase) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('mxn_points')
-        .eq('id', purchase.user_id)
-        .maybeSingle()
-      
-      const currentPoints = profile?.mxn_points || 0
-      await supabase
-        .from('profiles')
-        .update({ mxn_points: currentPoints + purchase.skin_price })
-        .eq('id', purchase.user_id)
-    }
+    await fetch('/api/admin/update-purchase', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        purchase_id: id,
+        status,
+        refund_amount: status === 'cancelled' ? purchase?.skin_price : null,
+        user_id: purchase?.user_id
+      })
+    })
     
-    await supabase
-      .from('purchases')
-      .update({ status })
-      .eq('id', id)
     fetchPurchases()
   }
 
