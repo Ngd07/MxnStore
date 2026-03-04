@@ -443,14 +443,21 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
 
           <DialogFooter>
             {isLoggedIn ? (
-              <Button
-                onClick={handleRedeem}
-                disabled={!canAfford || redeeming}
-                className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50"
-              >
-                <Gift className="mr-2 h-4 w-4" />
-                {redeeming ? t("redeem.processing") : `Canjear ${price.toLocaleString()} MxN Points`}
-              </Button>
+              <>
+                <Button
+                  onClick={handleRedeem}
+                  disabled={!canAfford || redeeming}
+                  className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50"
+                >
+                  <Gift className="mr-2 h-4 w-4" />
+                  {redeeming ? t("redeem.processing") : `Canjear ${price.toLocaleString()} MxN Points`}
+                </Button>
+                {!fortniteUsername.trim() && !redeeming && (
+                  <p className="text-xs text-center text-muted-foreground mt-1">
+                    {t("redeem.enterUsername")}
+                  </p>
+                )}
+              </>
             ) : (
               <Button
                 onClick={() => window.location.href = '/login'}
