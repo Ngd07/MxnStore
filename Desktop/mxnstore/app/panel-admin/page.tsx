@@ -90,7 +90,7 @@ export default function AdminPanelPage() {
             .from('profiles')
             .select('email')
             .eq('id', t.user_id)
-            .single()
+            .maybeSingle()
           return { ...t, email: profile?.email || 'Unknown' }
         })
       )
@@ -113,7 +113,7 @@ export default function AdminPanelPage() {
             .from('profiles')
             .select('email')
             .eq('id', p.user_id)
-            .single()
+            .maybeSingle()
           return { ...p, email: profile?.email || 'Unknown' }
         })
       )

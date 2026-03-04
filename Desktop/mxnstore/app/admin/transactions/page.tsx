@@ -54,7 +54,7 @@ export default function TransactionsPage() {
             .from('profiles')
             .select('email')
             .eq('id', t.user_id)
-            .single()
+            .maybeSingle()
           return { ...t, email: profile?.email || 'Unknown' }
         })
       )
