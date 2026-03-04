@@ -76,41 +76,6 @@ export default function AdminChatsPage() {
     checkAuth()
   }, [])
 
-  const loadChats = async () => {
-    const { data: chatsData } = await supabase
-      .from('chats')
-      .select('*')
-      .order('updated_at', { ascending: false })
-
-    if (chatsData) {
-      const chatsWithEmail = await Promise.all(
-        chatsData.map(async (chat) => {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('email')
-            .eq('id', chat.user_id)
-            .single()
-          
-          const { data: lastMsg } = await supabase
-            .from('messages')
-            .select('content')
-            .eq('chat_id', chat.id)
-            .order('created_at', { ascending: false })
-            .limit(1)
-            .single()
-
-          return { 
-            ...chat, 
-            user_email: profile?.email || 'Unknown',
-            last_message: lastMsg?.content || ''
-          }
-        })
-      )
-      setChats(chatsWithEmail)
-    }
-    setLoading(false)
-  }
-
   const loadPurchases = async () => {
     const { data: purchasesData } = await supabase
       .from('purchases')
