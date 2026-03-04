@@ -2,10 +2,53 @@
 
 import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
+import { Zap } from "lucide-react";
 
 export function ShopCountdown() {
   const [timeLeft, setTimeLeft] = useState<string>("");
   const { t } = useI18n();
+
+  useEffect(() => {
+    const updateCountdown = () => {
+      const now = new Date();
+      const utcNow = new Date(now.toISOString());
+      
+      // Calculate time until next UTC midnight
+      const nextMidnight = new Date(utcNow);
+      nextMidnight.setUTCDate(nextMidnight.getUTCDate() + 1);
+      nextMidnight.setUTCHours(0, 0, 0, 0);
+      
+      const msUntilMidnight = nextMidnight.getTime() - utcNow.getTime();
+      
+      const hours = Math.floor(msUntilMidnight / (1000 * 60 * 60));
+      const minutes = Math.floor((msUntilMidnight % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((msUntilMidnight % (1000 * 60)) / 1000);
+      
+      setTimeLeft(`${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`);
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!timeLeft) return null;
+
+  return (
+    <div className="flex flex-col items-center justify-center gap-1">
+      <div className="flex items-center gap-1.5">
+        <Zap className="h-4 w-4 text-yellow-500 animate-pulse" />
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nueva tienda en</p>
+        <Zap className="h-4 w-4 text-yellow-500 animate-pulse" />
+      </div>
+      <p className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-orange-500 font-mono">{timeLeft}</p>
+    </div>
+  );
+}
+
+export function ShopCountdownSimple() {
+  const [timeLeft, setTimeLeft] = useState<string>("");
 
   useEffect(() => {
     const updateCountdown = () => {
