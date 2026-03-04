@@ -48,16 +48,19 @@ export default function TransactionsPage() {
       .order('created_at', { ascending: false })
 
     if (!error && data) {
-      const transactionsWithEmail = await Promise.all(
-        data.map(async (t) => {
-          const { data: profile } = await supabase
-            .from('profiles')
-            .select('email')
-            .eq('id', t.user_id)
-            .maybeSingle()
-          return { ...t, email: profile?.email || 'Unknown' }
-        })
-      )
+      const userIds = [...new Set(data.map(t => t.user_id))]
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, email')
+        .in('id', userIds)
+      
+      const profileMap = new Map(profiles?.map(p => [p.id, p.email]) || [])
+
+      const transactionsWithEmail = data.map(t => ({
+        ...t,
+        email: profileMap.get(t.user_id) || 'Unknown'
+      }))
+      
       setTransactions(transactionsWithEmail)
     }
     setLoading(false)
