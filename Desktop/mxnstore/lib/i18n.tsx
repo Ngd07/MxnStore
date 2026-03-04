@@ -146,7 +146,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "admin.confirmDelivery": "Confirmar entrega",
     "redeem.title": "Canjear Skin",
     "redeem.fortniteUser": "Usuario de Fortnite",
-    "redeem.fortnitePlaceholder": "Tu usuario de Fortnite",
+    "redeem.fortnitePlaceholder": "Tu nombre de usuario en Fortnite",
     "redeem.confirm": "Confirmar canje",
     "redeem.cancel": "Cancelar",
     "redeem.success": "Canjeado exitosamente",

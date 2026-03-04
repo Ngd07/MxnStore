@@ -425,10 +425,10 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium text-foreground flex items-center gap-2">
                   <User className="h-4 w-4" />
-                  Usuario de Fortnite
+                  {t("redeem.fortniteUser")}
                 </label>
                 <Input
-                  placeholder="Tu nombre de usuario en Fortnite"
+                  placeholder={t("redeem.fortnitePlaceholder")}
                   value={fortniteUsername}
                   onChange={(e) => setFortniteUsername(e.target.value)}
                   className="bg-secondary"
