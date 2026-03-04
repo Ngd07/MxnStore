@@ -126,8 +126,6 @@ export default function AdminPanelPage() {
       .eq('id', id)
     fetchTransactions()
   }
-    setTxLoading(false)
-  }
 
   const fetchPurchases = async () => {
     setPurchasesLoading(true)
@@ -209,14 +207,6 @@ export default function AdminPanelPage() {
     }
 
     setLoading(false)
-  }
-
-  const updateStatus = async (id: string, status: string) => {
-    await supabase
-      .from('transactions')
-      .update({ status })
-      .eq('id', id)
-    fetchTransactions()
   }
 
   if (checkingAuth) {
