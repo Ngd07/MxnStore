@@ -183,7 +183,13 @@ export function ProfilePanel() {
             onClick={() => router.push('/buy-vbucks')}
             className="flex items-center justify-center gap-2 rounded-xl border border-purple-500/50 bg-purple-500/10 p-4 hover:bg-purple-500/20 transition-colors"
           >
-            <Coins className="h-5 w-5 text-purple-500" />
+            <Image
+              src="/logomxnpoints.png"
+              alt="MxN Points"
+              width={20}
+              height={20}
+              className="rounded"
+            />
             <span className="text-sm font-medium text-foreground">{t("profile.recharge")}</span>
           </button>
 
