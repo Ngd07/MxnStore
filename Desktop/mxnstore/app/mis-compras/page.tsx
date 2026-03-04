@@ -197,14 +197,14 @@ export default function MisComprasPage() {
           <Card>
             <CardContent className="pt-6 text-center">
               <ShoppingBag className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">No tienes compras todavía</p>
+              <p className="text-muted-foreground">{t("purchases.empty")}</p>
             </CardContent>
           </Card>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Purchase List */}
             <div className="lg:col-span-1">
-              <h2 className="font-bold text-foreground mb-2">Tus canjes</h2>
+              <h2 className="font-bold text-foreground mb-2">{t("purchases.yourRedeems")}</h2>
               <div className="max-h-[70vh] overflow-y-auto space-y-2 pr-1">
                 {purchases.map((purchase) => (
                 <button
@@ -244,29 +244,29 @@ export default function MisComprasPage() {
                   <CardContent className="pt-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm text-muted-foreground">Skin</p>
+                        <p className="text-sm text-muted-foreground">{t("purchases.skin")}</p>
                         <p className="font-bold text-foreground">{selectedPurchase.skin_name}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-muted-foreground">Precio</p>
+                        <p className="text-sm text-muted-foreground">{t("purchases.price")}</p>
                         <p className="font-bold text-yellow-500">{selectedPurchase.skin_price} MxN</p>
                       </div>
                       <div>
-                        <p className="text-sm text-muted-foreground">Usuario Fortnite</p>
+                        <p className="text-sm text-muted-foreground">{t("purchases.fortniteUser")}</p>
                         <p className="font-medium text-foreground">{selectedPurchase.fortnite_username || '-'}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-muted-foreground">Email</p>
+                        <p className="text-sm text-muted-foreground">{t("purchases.email")}</p>
                         <p className="font-medium text-foreground text-sm">{selectedPurchase.email || '-'}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-muted-foreground">Estado</p>
+                        <p className="text-sm text-muted-foreground">{t("purchases.statusLabel")}</p>
                         <span className={`inline-block px-2 py-1 rounded-full text-xs ${getStatusColor(selectedPurchase.status)}`}>
                           {getStatusText(selectedPurchase.status)}
                         </span>
                       </div>
                       <div className="col-span-2">
-                        <p className="text-sm text-muted-foreground">Fecha</p>
+                        <p className="text-sm text-muted-foreground">{t("purchases.date")}</p>
                         <p className="font-medium text-foreground">
                           {new Date(selectedPurchase.created_at).toLocaleString('es-AR', {
                             day: '2-digit',
