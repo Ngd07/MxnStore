@@ -78,7 +78,7 @@ export function VbucksBalance() {
       </div>
       <button
         onClick={() => router.push('/buy-vbucks')}
-        className="flex items-center gap-2 rounded-lg bg-purple-600 px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-purple-700 hover:scale-105 active:scale-95"
+        className="flex items-center justify-center gap-2 rounded-xl border border-purple-500/50 bg-purple-500/10 px-4 py-3 hover:bg-purple-500/20 transition-colors"
       >
         <Image
           src="/logomxnpoints.png"
@@ -87,7 +87,7 @@ export function VbucksBalance() {
           height={20}
           className="rounded"
         />
-        {t("profile.recharge")}
+        <span className="text-sm font-medium text-foreground">{t("profile.recharge")}</span>
       </button>
     </div>
   );
