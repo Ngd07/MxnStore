@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
-import { Zap } from "lucide-react";
 
 export function ShopCountdown() {
   const [timeLeft, setTimeLeft] = useState<string>("");
@@ -37,12 +36,22 @@ export function ShopCountdown() {
 
   return (
     <div className="flex items-center justify-center gap-2">
-      <Zap className="h-3.5 w-3.5 text-yellow-500 animate-pulse" />
+      <div className="w-1 h-6 bg-gradient-to-b from-yellow-500 to-orange-500 rounded-full animate-pulse" />
       <div className="flex flex-col items-center justify-center gap-0.5">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">Nueva tienda en</p>
+        <p style={{
+          fontFamily: '"Impact", "Arial Black", sans-serif',
+          fontWeight: 900,
+          letterSpacing: '0.15em',
+          textTransform: 'uppercase',
+          fontSize: '0.7rem',
+          color: 'rgb(234, 179, 8)',
+          textShadow: '2px 2px 0 rgba(234, 179, 8, 0.3)',
+        }}>
+          Nueva tienda en
+        </p>
         <p className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-orange-500 font-mono">{timeLeft}</p>
       </div>
-      <Zap className="h-3.5 w-3.5 text-yellow-500 animate-pulse" />
+      <div className="w-1 h-6 bg-gradient-to-b from-yellow-500 to-orange-500 rounded-full animate-pulse" />
     </div>
   );
 }
