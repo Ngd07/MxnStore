@@ -149,10 +149,10 @@ export default function MisComprasPage() {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'pending': return 'Pendiente'
-      case 'processing': return 'Procesando'
-      case 'completed': return 'Entregado'
-      case 'cancelled': return 'Cancelado'
+      case 'pending': return t("purchases.statusPending")
+      case 'processing': return t("purchases.statusProcessing")
+      case 'completed': return t("purchases.statusCompleted")
+      case 'cancelled': return t("purchases.statusCancelled")
       default: return status
     }
   }
@@ -190,7 +190,7 @@ export default function MisComprasPage() {
             height={32}
             className="rounded"
           />
-          <h1 className="text-2xl font-bold text-foreground">Mis Compras</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t("purchases.title")}</h1>
         </div>
 
         {purchases.length === 0 ? (
