@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
+import { Users } from "lucide-react";
 
 export function VbucksBalance() {
   const router = useRouter();
@@ -76,6 +77,13 @@ export function VbucksBalance() {
         </div>
         <span className="text-xs text-muted-foreground">{t("profile.vbucks")}</span>
       </div>
+      <button
+        onClick={() => router.push('/agregar-amigo')}
+        className="flex items-center justify-center gap-2 rounded-xl border border-blue-500/50 bg-blue-500/10 px-4 py-3 hover:bg-blue-500/20 transition-colors"
+      >
+        <Users className="h-5 w-5 text-blue-500" />
+        <span className="text-sm font-medium text-foreground">{t("profile.addFriend")}</span>
+      </button>
       <button
         onClick={() => router.push('/buy-vbucks')}
         className="flex items-center justify-center gap-2 rounded-xl border border-purple-500/50 bg-purple-500/10 px-4 py-3 hover:bg-purple-500/20 transition-colors"
