@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { User, Settings, Mail, Bell, Check, LogIn, LogOut, Coins, ShoppingBag } from "lucide-react";
+import { User, Settings, Mail, Bell, Check, LogIn, LogOut, Coins, ShoppingBag, Users } from "lucide-react";
 import Image from "next/image";
 import {
   Sheet,
@@ -166,6 +166,15 @@ export function ProfilePanel() {
             </div>
             <span className="text-xs text-muted-foreground">{t("profile.vbucks")}</span>
           </div>
+
+          {/* Agregar a cuentas FNLB */}
+          <button
+            onClick={() => router.push('/agregar-amigo')}
+            className="flex items-center justify-center gap-2 rounded-xl border border-blue-500/50 bg-blue-500/10 p-4 hover:bg-blue-500/20 transition-colors"
+          >
+            <Users className="h-5 w-5 text-blue-500" />
+            <span className="text-sm font-medium text-foreground">{t("profile.addFriend")}</span>
+          </button>
 
           {/* Mis Compras Button */}
           <a
