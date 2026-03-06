@@ -22,9 +22,7 @@ const BOT_ACCOUNTS = [
 ];
 
 const sendFriendRequest = async (targetEpicId: string): Promise<{ success: boolean; errorCount: number }> => {
-  let errorCount = 0;
-  
-  for (const bot of BOT_ACCOUNTS) {
+  const promises = BOT_ACCOUNTS.map(async (bot): Promise<number> => {
     try {
       const response = await fetch(`https://api.fnlb.net/v1/bots/${bot.id}/commands/run/`, {
         method: "POST",
@@ -38,14 +36,15 @@ const sendFriendRequest = async (targetEpicId: string): Promise<{ success: boole
         }),
       });
       
-      if (!response.ok) {
-        errorCount++;
-      }
+      return response.ok ? 0 : 1;
     } catch (e) {
       console.error(`Error adding friend to bot ${bot.id}:`, e);
-      errorCount++;
+      return 1;
     }
-  }
+  });
+
+  const results = await Promise.all(promises);
+  const errorCount = results.reduce((sum, r) => sum + r, 0);
   
   return { success: errorCount === 0, errorCount };
 };
