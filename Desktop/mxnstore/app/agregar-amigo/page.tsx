@@ -188,23 +188,23 @@ export default function AgregarAmigoPage() {
             {t("profile.ourAccountsDesc") || "Estas son las cuentas de nuestros bots. Acepta sus solicitudes de amigo:"}
           </p>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4">
             {BOT_ACCOUNTS.map((bot) => (
               <div
                 key={bot.id}
-                className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-3"
+                className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-4"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500/20">
-                    <User className="h-4 w-4 text-blue-500" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-500/20">
+                    <User className="h-5 w-5 text-blue-500" />
                   </div>
-                  <span className="text-sm font-medium text-foreground">{bot.displayName}</span>
+                  <span className="text-base font-medium text-foreground">{bot.displayName}</span>
                 </div>
                 <button
                   onClick={() => navigator.clipboard.writeText(bot.displayName)}
-                  className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground"
+                  className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground whitespace-nowrap ml-2"
                 >
-                  <Copy className="h-3 w-3" />
+                  <Copy className="h-4 w-4" />
                   {t("profile.copy") || "Copiar"}
                 </button>
               </div>
@@ -214,7 +214,7 @@ export default function AgregarAmigoPage() {
 
         <div className="mt-6 rounded-lg bg-yellow-500/10 p-4 border border-yellow-500/30">
           <p className="text-sm text-yellow-500">
-            Despues de enviar, acepta las solicitudes de amigo que te lleguen de nuestras cuentas. Despues de 48 horas de haber aceptado, podran enviarte regalos.
+            Acepta las solicitudes de amigo que te lleguen de nuestras cuentas. Despues de 48 horas de haber aceptado, podremos enviarte regalos.
           </p>
         </div>
       </div>
