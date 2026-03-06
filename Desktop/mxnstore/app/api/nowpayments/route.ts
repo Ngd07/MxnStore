@@ -19,7 +19,7 @@ const PACKAGES: PackageInfo[] = [
 
 export async function POST(request: NextRequest) {
   try {
-    console.log("NOWPayments API Key loaded:", NOWPAYMENTS_API_KEY ? "YES" : "NO");
+    console.log("NOWPayments API Key loaded:", NOWPAYMENTS_API_KEY ? "YES (length: " + NOWPAYMENTS_API_KEY.length + ")" : "NO");
     console.log("NOWPayments IPN URL:", NOWPAYMENTS_IPN_URL);
     console.log("APP URL:", APP_URL);
     
@@ -41,10 +41,26 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { data: { user } } = await supabase.auth.getUser();
+    // Get user from the request - try both header approaches
+    const authHeader = request.headers.get('authorization');
+    let user = null;
+    
+    if (authHeader) {
+      const { data: { user: authUser } } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''));
+      user = authUser;
+    }
+    
+    // Fallback: try to get user without token (for cookie-based auth)
+    if (!user) {
+      const { data: { user: anonymousUser } } = await supabase.auth.getUser();
+      user = anonymousUser;
+    }
+
+    console.log("User found:", user ? user.id : "NO");
+
     if (!user) {
       return NextResponse.json(
-        { error: "Unauthorized" },
+        { error: "Unauthorized - please log in" },
         { status: 401 }
       );
     }
