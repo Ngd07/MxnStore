@@ -48,12 +48,16 @@ const sendFriendRequest = async (targetEpicId: string): Promise<{ success: boole
   return { success: errorCount === 0, errorCount };
 };
 
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-    
-    console.log("FNLB Webhook received:", body);
+export async function POST() {
+  return processRequests();
+}
 
+export async function GET() {
+  return processRequests();
+}
+
+async function processRequests() {
+  try {
     const pendingRequests = await supabase
       .from("pending_friend_requests")
       .select("*")
@@ -66,24 +70,24 @@ export async function POST(request: Request) {
 
     let processed = 0;
 
-    for (const request of pendingRequests.data) {
-      const result = await sendFriendRequest(request.epic_id);
+    for (const req of pendingRequests.data) {
+      const result = await sendFriendRequest(req.epic_id);
       
       if (result.success) {
         await supabase
           .from("pending_friend_requests")
           .update({ status: "completed", updated_at: new Date().toISOString() })
-          .eq("id", request.id);
+          .eq("id", req.id);
         
         processed++;
       } else if (result.errorCount === BOT_ACCOUNTS.length) {
         await supabase
           .from("pending_friend_requests")
           .update({ 
-            attempts: request.attempts + 1, 
+            attempts: req.attempts + 1, 
             updated_at: new Date().toISOString() 
           })
-          .eq("id", request.id);
+          .eq("id", req.id);
       }
     }
 
