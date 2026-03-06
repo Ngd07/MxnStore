@@ -174,7 +174,7 @@ export default function AgregarAmigoPage() {
             ) : (
               <>
                 <Check className="mr-2 h-4 w-4" />
-                {t("profile.saveAndAdd") || "Guardar y agregar como amigo"}
+                {t("profile.saveAndAdd") || "Enviar ID"}
               </>
             )}
           </Button>
@@ -188,7 +188,7 @@ export default function AgregarAmigoPage() {
             {t("profile.ourAccountsDesc") || "Estas son las cuentas de nuestros bots. Acepta sus solicitudes de amigo:"}
           </p>
 
-          <div className="space-y-3">
+          <div className="grid grid-cols-2 gap-3">
             {BOT_ACCOUNTS.map((bot) => (
               <div
                 key={bot.id}
@@ -214,7 +214,7 @@ export default function AgregarAmigoPage() {
 
         <div className="mt-6 rounded-lg bg-yellow-500/10 p-4 border border-yellow-500/30">
           <p className="text-sm text-yellow-500">
-            {t("profile.helpText") || "Despues de enviar, acepta las solicitudes de amigo que te lleguen de nuestras cuentas. Una vez aceptado, podras usar nuestros bots."}
+            Despues de enviar, acepta las solicitudes de amigo que te lleguen de nuestras cuentas. Despues de 48 horas de haber aceptado, podran enviarte regalos.
           </p>
         </div>
       </div>
