@@ -177,23 +177,23 @@ export default function AgregarAmigoPage() {
 
   return (
     <div className="min-h-screen bg-background p-4">
-      <div className="mx-auto max-w-md">
-        <div className="rounded-xl border border-border bg-card p-6">
-          <div className="mb-6 flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/20">
-              <Users className="h-6 w-6 text-blue-500" />
+      <div className="mx-auto max-w-md space-y-4">
+        <div className="rounded-xl border border-border bg-card p-4 sm:p-6">
+          <div className="mb-4 sm:mb-6 flex items-center gap-3">
+            <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-blue-500/20">
+              <Users className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-foreground">
+              <h1 className="text-lg sm:text-xl font-bold text-foreground">
                 {t("profile.addFriendTitle") || "Agregar a nuestros bots"}
               </h1>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs sm:text-sm text-muted-foreground">
                 {t("profile.addFriendDesc") || "Ingresa tu Epic ID para que nuestros bots te agreguen"}
               </p>
             </div>
           </div>
 
-          <div className="mb-6">
+          <div className="mb-4 sm:mb-6">
             <label className="mb-2 block text-sm font-medium text-foreground">
               {t("profile.epicId") || "Epic ID"}
             </label>
@@ -234,11 +234,11 @@ export default function AgregarAmigoPage() {
           </Button>
         </div>
 
-        <div className="mt-6 rounded-xl border border-border bg-card p-6">
-          <h2 className="mb-4 text-lg font-semibold text-foreground">
+        <div className="rounded-xl border border-border bg-card p-4 sm:p-6">
+          <h2 className="mb-2 sm:mb-4 text-base sm:text-lg font-semibold text-foreground">
             {t("profile.ourAccounts") || "Nuestras cuentas"}
           </h2>
-          <p className="mb-4 text-sm text-muted-foreground">
+          <p className="mb-3 sm:mb-4 text-xs sm:text-sm text-muted-foreground">
             {t("profile.ourAccountsDesc") || "Estas son las cuentas de nuestros bots. Acepta sus solicitudes de amigo:"}
           </p>
 
@@ -249,10 +249,10 @@ export default function AgregarAmigoPage() {
                 className="flex items-center justify-between rounded-lg border border-border bg-secondary/50 p-2"
               >
                 <div className="flex items-center gap-2 min-w-0 flex-1">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-500/20">
-                    <User className="h-4 w-4 text-blue-500" />
+                  <div className="flex h-7 w-7 sm:h-8 sm:w-8 shrink-0 items-center justify-center rounded-full bg-blue-500/20">
+                    <User className="h-3 w-3 sm:h-4 sm:w-4 text-blue-500" />
                   </div>
-                  <span className="text-sm font-medium text-foreground truncate">{bot.displayName}</span>
+                  <span className="text-xs sm:text-sm font-medium text-foreground truncate">{bot.displayName}</span>
                 </div>
                 <button
                   onClick={() => navigator.clipboard.writeText(bot.displayName)}
@@ -265,8 +265,8 @@ export default function AgregarAmigoPage() {
           </div>
         </div>
 
-        <div className="mt-6 rounded-lg bg-yellow-500/10 p-4 border border-yellow-500/30">
-          <p className="text-sm text-yellow-500">
+        <div className="rounded-lg bg-yellow-500/10 p-3 sm:p-4 border border-yellow-500/30">
+          <p className="text-xs sm:text-sm text-yellow-500">
             {locale === "es" ? t("profile.helpTextEs") : locale === "en" ? t("profile.helpTextEn") : locale === "de" ? t("profile.helpTextDe") : t("profile.helpTextRu")}
           </p>
         </div>
