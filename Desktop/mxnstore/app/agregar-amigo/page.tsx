@@ -11,14 +11,14 @@ import { Button } from "@/components/ui/button";
 const FNLB_API_KEY = "FNLB_aabkryf_F7p6Njy0wM8pqFJc01jihxpguFdd1NyBypcfVghqpkMAr6QJeEo.IITFUC8Gou11lHy9G76gEg";
 
 const BOT_ACCOUNTS = [
-  { id: "MXNstore1", displayName: "MXNstore1" },
-  { id: "MXNstore2", displayName: "MXNstore2" },
-  { id: "MXNstore3", displayName: "MXNstore3" },
-  { id: "MXNstore4", displayName: "MXNstore4" },
-  { id: "MXNstore5", displayName: "MXNstore5" },
-  { id: "MXNstore6", displayName: "MXNstore6" },
-  { id: "MXNstore7", displayName: "MXNstore7" },
-  { id: "MXNstore8", displayName: "MXNstore8" },
+  { id: "69a6e589d2065d82e11e37f9", displayName: "MXNstore1" },
+  { id: "69aa1d2a53c0a4720a29c1ce", displayName: "MXNstore2" },
+  { id: "69aa0f1653c0a4720a29c07b", displayName: "MXNstore3" },
+  { id: "69aa1cc8bd2753d5f07114f5", displayName: "MXNstore4" },
+  { id: "69aa1d93c5629f92b0717283", displayName: "MXNstore5" },
+  { id: "69aa1e00bd2753d5f0711526", displayName: "MXNstore6" },
+  { id: "69aa1e59c5629f92b071729e", displayName: "MXNstore7" },
+  { id: "69aa1ead53c0a4720a29c200", displayName: "MXNstore8" },
 ];
 
 export default function AgregarAmigoPage() {
