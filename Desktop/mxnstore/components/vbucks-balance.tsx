@@ -77,13 +77,15 @@ export function VbucksBalance() {
         </div>
         <span className="text-xs text-muted-foreground">{t("profile.vbucks")}</span>
       </div>
-      <button
-        onClick={() => router.push('/agregar-amigo')}
+      <a
+        href="/agregar-amigo"
+        target="_blank"
+        rel="noopener noreferrer"
         className="flex items-center justify-center gap-2 rounded-xl border border-blue-500/50 bg-blue-500/10 px-4 py-3 hover:bg-blue-500/20 transition-colors"
       >
         <Users className="h-5 w-5 text-blue-500" />
         <span className="text-sm font-medium text-foreground">{t("profile.addFriend")}</span>
-      </button>
+      </a>
       <button
         onClick={() => router.push('/buy-vbucks')}
         className="flex items-center justify-center gap-2 rounded-xl border border-purple-500/50 bg-purple-500/10 px-4 py-3 hover:bg-purple-500/20 transition-colors"
