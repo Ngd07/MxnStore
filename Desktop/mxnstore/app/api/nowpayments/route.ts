@@ -73,7 +73,7 @@ export async function POST(request: NextRequest) {
     if (!response.ok || paymentResponse.error) {
       console.error("NOWPayments API error:", paymentResponse);
       return NextResponse.json(
-        { error: paymentResponse.error || "Failed to create payment" },
+        { error: paymentResponse.message || paymentResponse.error || "Failed to create payment", details: paymentResponse },
         { status: response.status }
       );
     }
