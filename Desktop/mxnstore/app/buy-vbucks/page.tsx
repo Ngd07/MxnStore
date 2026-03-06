@@ -82,7 +82,7 @@ function BuyVbucksContent() {
         return
       }
 
-      window.location.href = data.paymentUrl
+      window.open(data.paymentUrl, '_blank')
     } catch (error) {
       setCryptoError(t('buy.cryptoError'))
     } finally {
