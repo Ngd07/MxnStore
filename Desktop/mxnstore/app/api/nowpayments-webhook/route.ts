@@ -7,6 +7,7 @@ export async function POST(request: NextRequest) {
     
     const {
       payment_id,
+      invoice_id,
       order_id,
       payment_status,
       price_amount,
@@ -16,31 +17,51 @@ export async function POST(request: NextRequest) {
 
     console.log("NOWPayments webhook received:", {
       payment_id,
+      invoice_id,
       order_id,
       payment_status,
       price_amount,
+      body,
     });
 
-    if (!order_id || !payment_status) {
+    if (!payment_status) {
       return NextResponse.json(
-        { error: "Missing required fields" },
+        { error: "Missing payment_status" },
         { status: 400 }
       );
     }
 
-    const { data: payment } = await supabase
-      .from("crypto_payments")
-      .select("*")
-      .eq("order_id", order_id)
-      .single();
+    // Try to find payment by order_id or payment_id or invoice_id
+    let payment = null;
+    
+    if (order_id) {
+      const { data } = await supabase
+        .from("crypto_payments")
+        .select("*")
+        .eq("order_id", order_id)
+        .single();
+      payment = data;
+    }
+    
+    // If not found by order_id, try payment_id
+    if (!payment && payment_id) {
+      const { data } = await supabase
+        .from("crypto_payments")
+        .select("*")
+        .eq("payment_id", payment_id)
+        .single();
+      payment = data;
+    }
 
     if (!payment) {
-      console.error("Payment not found:", order_id);
+      console.error("Payment not found:", { order_id, payment_id, invoice_id });
       return NextResponse.json(
         { error: "Payment not found" },
         { status: 404 }
       );
     }
+
+    console.log("Found payment:", payment);
 
     if (payment.status === "completed") {
       return NextResponse.json({ success: true, message: "Already processed" });
