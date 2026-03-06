@@ -11,9 +11,14 @@ import { Button } from "@/components/ui/button";
 const FNLB_API_KEY = "FNLB_aabkryf_F7p6Njy0wM8pqFJc01jihxpguFdd1NyBypcfVghqpkMAr6QJeEo.IITFUC8Gou11lHy9G76gEg";
 
 const BOT_ACCOUNTS = [
-  { id: "7a5d8f3b2c1e4d9a", displayName: "MxN Bot 1" },
-  { id: "8b6e9g4c3d2f5e1b", displayName: "MxN Bot 2" },
-  { id: "9c7f1h5d4e3g6f2c", displayName: "MxN Bot 3" },
+  { id: "MXNstore1", displayName: "MXNstore1" },
+  { id: "MXNstore2", displayName: "MXNstore2" },
+  { id: "MXNstore3", displayName: "MXNstore3" },
+  { id: "MXNstore4", displayName: "MXNstore4" },
+  { id: "MXNstore5", displayName: "MXNstore5" },
+  { id: "MXNstore6", displayName: "MXNstore6" },
+  { id: "MXNstore7", displayName: "MXNstore7" },
+  { id: "MXNstore8", displayName: "MXNstore8" },
 ];
 
 export default function AgregarAmigoPage() {
