@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { User, Check, Copy, Users } from "lucide-react";
+import { User, Check, Copy, Users, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import { Input } from "@/components/ui/input";
@@ -21,12 +21,42 @@ const BOT_ACCOUNTS = [
   { id: "69aa1ead53c0a4720a29c200", displayName: "MXNstore8" },
 ];
 
+const sendFriendRequest = async (targetEpicId: string): Promise<{ success: boolean; errorCount: number }> => {
+  let errorCount = 0;
+  
+  for (const bot of BOT_ACCOUNTS) {
+    try {
+      const response = await fetch(`https://api.fnlb.net/v1/bots/${bot.id}/commands/run/`, {
+        method: "POST",
+        headers: {
+          "Authorization": FNLB_API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          command: "add-friend",
+          args: targetEpicId,
+        }),
+      });
+      
+      if (!response.ok) {
+        errorCount++;
+      }
+    } catch (e) {
+      console.error(`Error adding friend to bot ${bot.id}:`, e);
+      errorCount++;
+    }
+  }
+  
+  return { success: errorCount === 0, errorCount };
+};
+
 export default function AgregarAmigoPage() {
   const { t, locale } = useI18n();
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [epicId, setEpicId] = useState("");
   const [loading, setLoading] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error">("success");
 
@@ -42,6 +72,48 @@ export default function AgregarAmigoPage() {
 
     checkUser();
   }, [router]);
+
+  useEffect(() => {
+    const processPendingRequests = async () => {
+      if (!user) return;
+      
+      setProcessing(true);
+      
+      const { data: pendingRequests } = await supabase
+        .from("pending_friend_requests")
+        .select("*")
+        .eq("user_id", user.id)
+        .eq("status", "pending")
+        .order("created_at", { ascending: true });
+      
+      if (pendingRequests && pendingRequests.length > 0) {
+        for (const request of pendingRequests) {
+          const result = await sendFriendRequest(request.epic_id);
+          
+          if (result.success) {
+            await supabase
+              .from("pending_friend_requests")
+              .update({ status: "completed", updated_at: new Date().toISOString() })
+              .eq("id", request.id);
+              
+            setMessage(t("profile.friendRequestSent", { username: request.epic_id }));
+            setMessageType("success");
+          } else if (result.errorCount === BOT_ACCOUNTS.length) {
+            await supabase
+              .from("pending_friend_requests")
+              .update({ attempts: request.attempts + 1, updated_at: new Date().toISOString() })
+              .eq("id", request.id);
+          }
+        }
+      }
+      
+      setProcessing(false);
+    };
+
+    if (user) {
+      processPendingRequests();
+    }
+  }, [user, t]);
 
   const handleSaveAndAdd = async () => {
     if (!epicId.trim()) {
@@ -66,31 +138,24 @@ export default function AgregarAmigoPage() {
 
       if (upsertError) throw upsertError;
 
-      for (const bot of BOT_ACCOUNTS) {
-        try {
-          const response = await fetch(`https://api.fnlb.net/v1/bots/${bot.id}/commands/run/`, {
-            method: "POST",
-            headers: {
-              "Authorization": FNLB_API_KEY,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              command: "add-friend",
-              args: epicId.trim(),
-            }),
+      const result = await sendFriendRequest(epicId.trim());
+      
+      if (result.success) {
+        setMessage(t("profile.friendRequestSent", { username: epicId.trim() }));
+        setMessageType("success");
+      } else {
+        await supabase
+          .from("pending_friend_requests")
+          .insert({
+            user_id: user.id,
+            epic_id: epicId.trim(),
+            status: "pending",
+            attempts: 1,
           });
           
-          if (!response.ok) {
-            const errorData = await response.json();
-            console.error(`Error from FNLB API for bot ${bot.id}:`, errorData);
-          }
-        } catch (e) {
-          console.error(`Error adding friend to bot ${bot.id}:`, e);
-        }
+        setMessage(t("profile.requestSaved") || "Solicitud guardada. Se enviara cuando los bots esten activos.");
+        setMessageType("success");
       }
-
-      setMessage(t("profile.friendRequestSent", { username: epicId.trim() }));
-      setMessageType("success");
 
     } catch (err) {
       console.error(err);
