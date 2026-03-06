@@ -140,24 +140,24 @@ export function ShopClient() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto max-w-7xl px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+        <div className="mx-auto max-w-7xl px-2 sm:px-4 py-2 sm:py-4">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 sm:gap-3">
               <Image
                 src="/logo.png"
                 alt="MxNStore"
-                width={48}
-                height={48}
+                width={32}
+                height={32}
                 className="rounded-lg object-cover"
               />
-              <h1 className="text-2xl font-bold text-foreground">
+              <h1 className="text-lg sm:text-2xl font-bold text-foreground">
                 MxNStore
               </h1>
             </div>
-            <div className="flex-1 flex justify-center">
+            <div className="hidden sm:flex-1 sm:flex sm:justify-center">
               <ShopCountdown />
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2">
               <NotificationsBell />
               <LanguageSwitcher />
               <ProfilePanel />
