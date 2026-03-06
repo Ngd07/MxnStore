@@ -12,8 +12,8 @@ import { useI18n } from '@/lib/i18n'
 const PACKAGES = [
   { mxn: 2000, price: 8.00, popular: false },
   { mxn: 5000, price: 18.00, popular: false },
-  { mxn: 10000, price: 35.00, popular: true },
-  { mxn: 13500, price: 45.00, popular: false },
+  { mxn: 10000, price: 35.00, popular: false },
+  { mxn: 13500, price: 45.00, popular: true, bestPrice: true },
 ]
 
 function BuyVbucksContent() {
@@ -180,7 +180,7 @@ function BuyVbucksContent() {
             >
               {pkg.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full z-10">
-                  {t("buy.popular").toUpperCase()}
+                  {pkg.bestPrice ? t("buy.bestPrice")?.toUpperCase() || "MEJOR PRECIO" : t("buy.popular").toUpperCase()}
                 </div>
               )}
               <CardContent className="pt-8 text-center">
