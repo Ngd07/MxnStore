@@ -89,7 +89,7 @@ export default function AgregarAmigoPage() {
         }
       }
 
-      setMessage(t("profile.friendRequestSent") || "Solicitud de amigo enviada a todos los bots");
+      setMessage("Solicitud enviada a " + epicId.trim());
       setMessageType("success");
 
     } catch (err) {
