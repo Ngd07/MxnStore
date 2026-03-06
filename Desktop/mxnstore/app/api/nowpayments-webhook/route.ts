@@ -69,7 +69,13 @@ export async function POST(request: NextRequest) {
 
     let newStatus = payment_status;
     
-    if (payment_status === "finished" || payment_status === "confirmed" || payment_status === "partially_received") {
+    console.log("Payment status:", payment_status);
+    
+    // Handle all paid statuses
+    if (payment_status === "finished" || 
+        payment_status === "confirmed" || 
+        payment_status === "partially_received" ||
+        payment_status === "partially_paid") {
       newStatus = "completed";
       
       const { data: profile } = await supabase
