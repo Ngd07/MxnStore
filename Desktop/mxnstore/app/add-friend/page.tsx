@@ -144,7 +144,7 @@ export default function AgregarAmigoPage() {
         setMessage(t("profile.friendRequestSent", { username: epicId.trim() }));
         setMessageType("success");
       } else {
-        await supabase
+        const { error: insertError } = await supabase
           .from("pending_friend_requests")
           .insert({
             user_id: user.id,
@@ -152,9 +152,15 @@ export default function AgregarAmigoPage() {
             status: "pending",
             attempts: 1,
           });
-          
-        setMessage(t("profile.requestSaved") || "Solicitud guardada. Se enviara cuando los bots esten activos.");
-        setMessageType("success");
+        
+        if (insertError) {
+          console.error("Error saving pending request:", insertError);
+          setMessage(t("profile.errorSaving") || "Error al guardar");
+          setMessageType("error");
+        } else {
+          setMessage(t("profile.requestSaved") || "Solicitud guardada. Se enviara cuando los bots esten activos.");
+          setMessageType("success");
+        }
       }
 
     } catch (err) {
