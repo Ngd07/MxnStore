@@ -63,6 +63,7 @@ export async function GET(request: NextRequest) {
         console.log("NOWPayments payment status:", paymentData);
 
         if (paymentData.payment_status === "partially_paid" ||
+            paymentData.payment_status === "partially_received" ||
             paymentData.payment_status === "confirmed" ||
             paymentData.payment_status === "finished") {
           
