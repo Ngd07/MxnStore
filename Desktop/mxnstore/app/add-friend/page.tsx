@@ -140,7 +140,7 @@ export default function AgregarAmigoPage() {
 
       const result = await sendFriendRequest(epicId.trim());
       
-      if (result.success) {
+      if (result.errorCount === 0) {
         setMessage(t("profile.friendRequestSent", { username: epicId.trim() }));
         setMessageType("success");
       } else {
