@@ -11,10 +11,10 @@ interface PackageInfo {
 }
 
 const PACKAGES: PackageInfo[] = [
-  { mxn: 1000, price: 8.99 },
-  { mxn: 2800, price: 22.99 },
-  { mxn: 5000, price: 37.99 },
-  { mxn: 10000, price: 69.99 },
+  { mxn: 2000, price: 8.00 },
+  { mxn: 5000, price: 18.00 },
+  { mxn: 10000, price: 35.00 },
+  { mxn: 13500, price: 45.00 },
 ];
 
 export async function POST(request: NextRequest) {

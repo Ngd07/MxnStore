@@ -10,10 +10,10 @@ import Image from 'next/image'
 import { useI18n } from '@/lib/i18n'
 
 const PACKAGES = [
-  { mxn: 1000, price: 8.99, popular: false },
-  { mxn: 2800, price: 22.99, popular: true },
-  { mxn: 5000, price: 37.99, popular: false },
-  { mxn: 10000, price: 69.99, popular: false },
+  { mxn: 2000, price: 8.00, popular: false },
+  { mxn: 5000, price: 18.00, popular: false },
+  { mxn: 10000, price: 35.00, popular: true },
+  { mxn: 13500, price: 45.00, popular: false },
 ]
 
 function BuyVbucksContent() {
