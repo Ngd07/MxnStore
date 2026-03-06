@@ -22,14 +22,13 @@ const BOT_ACCOUNTS = [
 ];
 
 export default function AgregarAmigoPage() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [epicId, setEpicId] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState<"success" | "error">("success");
-  const [savedEpicId, setSavedEpicId] = useState<string | null>(null);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -39,17 +38,6 @@ export default function AgregarAmigoPage() {
         return;
       }
       setUser(user);
-
-      const { data } = await supabase
-        .from("user_profiles")
-        .select("epic_id")
-        .eq("user_id", user.id)
-        .single();
-
-      if (data?.epic_id) {
-        setSavedEpicId(data.epic_id);
-        setEpicId(data.epic_id);
-      }
     };
 
     checkUser();
@@ -103,7 +91,6 @@ export default function AgregarAmigoPage() {
 
       setMessage(t("profile.friendRequestSent") || "Solicitud de amigo enviada a todos los bots");
       setMessageType("success");
-      setSavedEpicId(epicId.trim());
 
     } catch (err) {
       console.error(err);
@@ -218,7 +205,7 @@ export default function AgregarAmigoPage() {
 
         <div className="mt-6 rounded-lg bg-yellow-500/10 p-4 border border-yellow-500/30">
           <p className="text-sm text-yellow-500">
-            Acepta las solicitudes de amigo que te lleguen de nuestras cuentas. Despues de 48 horas de haber aceptado, podremos enviarte regalos.
+            {locale === "es" ? t("profile.helpTextEs") : locale === "en" ? t("profile.helpTextEn") : locale === "de" ? t("profile.helpTextDe") : t("profile.helpTextRu")}
           </p>
         </div>
       </div>
