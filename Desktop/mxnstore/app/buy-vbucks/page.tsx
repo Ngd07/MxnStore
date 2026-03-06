@@ -179,8 +179,15 @@ function BuyVbucksContent() {
               onClick={() => setSelectedPackage(pkg)}
             >
               {pkg.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full z-10">
-                  {pkg.bestPrice ? t("buy.bestPrice")?.toUpperCase() || "MEJOR PRECIO" : t("buy.popular").toUpperCase()}
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-yellow-500 text-black text-[10px] font-bold px-3 py-1.5 rounded-full z-10 whitespace-nowrap">
+                  {pkg.bestPrice ? (
+                    <span className="flex flex-col items-center leading-tight">
+                      <span>MEJOR</span>
+                      <span>PRECIO</span>
+                    </span>
+                  ) : (
+                    t("buy.popular").toUpperCase()
+                  )}
                 </div>
               )}
               <CardContent className="pt-8 text-center">
