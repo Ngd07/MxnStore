@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { User, ArrowLeft, Check, Copy, Users } from "lucide-react";
+import { User, Check, Copy, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import { Input } from "@/components/ui/input";
@@ -108,14 +108,6 @@ export default function AgregarAmigoPage() {
   return (
     <div className="min-h-screen bg-background p-4">
       <div className="mx-auto max-w-md">
-        <button
-          onClick={() => router.back()}
-          className="mb-6 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          {t("profile.back") || "Volver"}
-        </button>
-
         <div className="rounded-xl border border-border bg-card p-6">
           <div className="mb-6 flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/20">
