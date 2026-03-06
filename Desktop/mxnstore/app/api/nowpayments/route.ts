@@ -72,7 +72,6 @@ export async function POST(request: NextRequest) {
     const paymentData = {
       price_amount: selectedPackage.price,
       price_currency: "usd",
-      pay_currency: "usdt",
       order_id: orderId,
       order_description: `${selectedPackage.mxn} MxN Points`,
       ipn_callback_url: NOWPAYMENTS_IPN_URL 
