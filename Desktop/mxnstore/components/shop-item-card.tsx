@@ -261,9 +261,9 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
       setRedeeming(false);
       setFortniteUsername("");
       
-      // Open mis-compras in new tab with the purchase selected
+      // Open purchases in new tab with the purchase selected
       if (data.purchaseId) {
-        window.open(`/mis-compras?purchase=${data.purchaseId}`, '_blank');
+        window.open(`/purchases?purchase=${data.purchaseId}`, '_blank');
       }
       
       // Close dialog after short delay

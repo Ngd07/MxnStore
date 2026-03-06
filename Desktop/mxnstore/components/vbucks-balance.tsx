@@ -78,7 +78,7 @@ export function VbucksBalance() {
         <span className="text-xs text-muted-foreground">{t("profile.vbucks")}</span>
       </div>
       <a
-        href="/agregar-amigo"
+        href="/add-friend"
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center justify-center gap-2 rounded-xl border border-blue-500/50 bg-blue-500/10 px-4 py-3 hover:bg-blue-500/20 transition-colors"

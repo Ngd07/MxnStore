@@ -169,7 +169,7 @@ export function ProfilePanel() {
 
           {/* Agregar a cuentas FNLB */}
           <a
-            href="/agregar-amigo"
+            href="/add-friend"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 rounded-xl border border-blue-500/50 bg-blue-500/10 p-4 hover:bg-blue-500/20 transition-colors"
@@ -180,7 +180,7 @@ export function ProfilePanel() {
 
           {/* Mis Compras Button */}
           <a
-            href="/mis-compras"
+            href="/purchases"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 rounded-xl border border-green-500/50 bg-green-500/10 p-4 hover:bg-green-500/20 transition-colors"
