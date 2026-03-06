@@ -79,9 +79,11 @@ export async function POST(request: NextRequest) {
         : `${APP_URL}/api/nowpayments-webhook?user_id=${userId}&mxn=${selectedPackage.mxn}`,
       success_url: `${APP_URL}/buy-vbucks?payment=success&order=${orderId}`,
       cancel_url: `${APP_URL}/buy-vbucks?payment=cancelled`,
+      is_fee_paid_by_user: true,
     };
 
-    const response = await fetch("https://api.nowpayments.io/v1/payment", {
+    // Try invoice API instead
+    const response = await fetch("https://api.nowpayments.io/v1/invoice", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -107,7 +109,7 @@ export async function POST(request: NextRequest) {
       .insert({
         user_id: userId,
         order_id: orderId,
-        payment_id: paymentResponse.payment_id,
+        payment_id: paymentResponse.invoice_id || paymentResponse.payment_id,
         mxn_amount: selectedPackage.mxn,
         usd_amount: selectedPackage.price,
         status: "pending",
@@ -119,7 +121,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      paymentUrl: paymentResponse.payment_url,
+      paymentUrl: paymentResponse.invoice_url || paymentResponse.payment_url,
       paymentId: paymentResponse.payment_id,
       orderId: orderId,
     });
