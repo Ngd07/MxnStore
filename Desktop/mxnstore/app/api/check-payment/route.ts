@@ -47,18 +47,20 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Check status with NOWPayments API
-    const checkPaymentId = paymentId || payment.payment_id;
-    if (checkPaymentId) {
+    // Check status with NOWPayments API using order_id
+    if (payment.order_id) {
       try {
+        // Search for payment by order_id
         const response = await fetch(
-          `https://api.nowpayments.io/v1/payment/${checkPaymentId}`,
+          `https://api.nowpayments.io/v1/payment?order_id=${payment.order_id}`,
           {
             headers: {
               "x-api-key": NOWPAYMENTS_API_KEY,
             },
           }
         );
+        
+        console.log("NOWPayments response status:", response.status);
         const paymentData = await response.json();
         console.log("NOWPayments payment status:", paymentData);
 
