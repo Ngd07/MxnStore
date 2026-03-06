@@ -73,6 +73,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "profile.epicIdPlaceholder": "Tu Epic ID o nombre de usuario",
     "profile.epicIdRequired": "Ingresa tu Epic ID",
     "profile.friendRequestSent": "Solicitud enviada a {username}",
+    "profile.requestSaved": "Solicitud guardada. Se enviara cuando los bots esten activos.",
     "profile.errorSaving": "Error al guardar",
     "profile.saving": "Guardando...",
     "profile.saveAndAdd": "Enviar ID",
@@ -228,6 +229,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "profile.epicIdPlaceholder": "Your Epic ID or username",
     "profile.epicIdRequired": "Enter your Epic ID",
     "profile.friendRequestSent": "Friend request sent to {username}",
+    "profile.requestSaved": "Request saved. It will be sent when the bots are active.",
     "profile.errorSaving": "Error saving",
     "profile.saving": "Saving...",
     "profile.saveAndAdd": "Send ID",
@@ -374,6 +376,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "redeem.processing": "Einloesen...",
     "redeem.yourBalance": "Dein Kontostand",
     "profile.friendRequestSent": "Freundschaftsanfrage gesendet an {username}",
+    "profile.requestSaved": "Anfrage gespeichert. Sie wird gesendet, wenn die Bots aktiv sind.",
   },
   ru: {
     "shop.title": "Maгaзин Fortnite",
@@ -512,6 +515,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "redeem.processing": "Обмен...",
     "redeem.yourBalance": "Ваш баланс",
     "profile.friendRequestSent": "Zayavka v drugst otpravlena {username}",
+    "profile.requestSaved": "Zayavka soyhranena. Ona budet otpravлена, kogda boty budut aktivny.",
   },
 };
 
