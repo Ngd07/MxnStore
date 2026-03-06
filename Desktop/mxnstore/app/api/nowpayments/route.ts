@@ -19,6 +19,10 @@ const PACKAGES: PackageInfo[] = [
 
 export async function POST(request: NextRequest) {
   try {
+    console.log("NOWPayments API Key loaded:", NOWPAYMENTS_API_KEY ? "YES" : "NO");
+    console.log("NOWPayments IPN URL:", NOWPAYMENTS_IPN_URL);
+    console.log("APP URL:", APP_URL);
+    
     if (!NOWPAYMENTS_API_KEY) {
       return NextResponse.json(
         { error: "NOWPayments API key not configured" },
@@ -68,7 +72,9 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(paymentData),
     });
 
+    console.log("NOWPayments response status:", response.status);
     const paymentResponse = await response.json();
+    console.log("NOWPayments response:", paymentResponse);
 
     if (!response.ok || paymentResponse.error) {
       console.error("NOWPayments API error:", paymentResponse);
