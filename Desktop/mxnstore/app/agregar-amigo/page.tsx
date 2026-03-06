@@ -80,7 +80,7 @@ export default function AgregarAmigoPage() {
 
       for (const bot of BOT_ACCOUNTS) {
         try {
-          await fetch(`https://api.fnlb.net/v1/bots/${bot.id}/commands/run/`, {
+          const response = await fetch(`https://api.fnlb.net/v1/bots/${bot.id}/commands/run/`, {
             method: "POST",
             headers: {
               "Authorization": FNLB_API_KEY,
@@ -91,6 +91,11 @@ export default function AgregarAmigoPage() {
               args: epicId.trim(),
             }),
           });
+          
+          if (!response.ok) {
+            const errorData = await response.json();
+            console.error(`Error from FNLB API for bot ${bot.id}:`, errorData);
+          }
         } catch (e) {
           console.error(`Error adding friend to bot ${bot.id}:`, e);
         }
