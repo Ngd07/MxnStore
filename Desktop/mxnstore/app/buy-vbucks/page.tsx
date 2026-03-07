@@ -2,18 +2,18 @@
 
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Coins, ArrowLeft, Copy, Check, Upload, Loader2 } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import { useI18n } from '@/lib/i18n'
 
-const PACKAGES: { mxn: number; price: number; popular: boolean; bestPrice?: boolean }[] = [
-  { mxn: 2000, price: 8.00, popular: false },
-  { mxn: 5000, price: 18.00, popular: false },
-  { mxn: 10000, price: 35.00, popular: false },
-  { mxn: 13500, price: 45.00, popular: true, bestPrice: true },
+const PACKAGES: { mxn: number; price: number; popular: boolean; bestPrice?: boolean; paymentLink: string }[] = [
+  { mxn: 2000, price: 8.00, popular: false, paymentLink: "https://app.takenos.com/pay/53020cef-71b2-42f7-ac76-9bc871d5036c" },
+  { mxn: 5000, price: 18.00, popular: false, paymentLink: "https://app.takenos.com/pay/9e8d117d-2224-41c3-92dc-d96aa42a6f30" },
+  { mxn: 10000, price: 35.00, popular: false, paymentLink: "https://app.takenos.com/pay/adf34f8c-55c8-4fcc-97ab-5578991b5acd" },
+  { mxn: 13500, price: 45.00, popular: true, bestPrice: true, paymentLink: "https://app.takenos.com/pay/ae20b72f-9084-4ef6-a6ee-91864ff19ba6" },
 ]
 
 export default function BuyVbucksPage() {
@@ -21,13 +21,7 @@ export default function BuyVbucksPage() {
   const { t } = useI18n()
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [copied, setCopied] = useState(false)
-  const [showPaymentInfo, setShowPaymentInfo] = useState(false)
-  const [selectedPackage, setSelectedPackage] = useState<{ mxn: number; price: number; popular: boolean; bestPrice?: boolean } | null>(null)
-  const [receiptFile, setReceiptFile] = useState<File | null>(null)
-  const [uploading, setUploading] = useState(false)
-  const [uploadSuccess, setUploadSuccess] = useState(false)
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [selectedPackage, setSelectedPackage] = useState<{ mxn: number; price: number; popular: boolean; bestPrice?: boolean; paymentLink: string } | null>(null)
 
   useEffect(() => {
     const checkUser = async () => {
@@ -37,48 +31,6 @@ export default function BuyVbucksPage() {
     }
     checkUser()
   }, [])
-
-  const handleCopyCVU = () => {
-    navigator.clipboard.writeText('0000003100058974123456')
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setReceiptFile(e.target.files[0])
-    }
-  }
-
-  const handleSubmitReceipt = async () => {
-    if (!selectedPackage || !user || !receiptFile) return
-
-    setUploading(true)
-    try {
-      const formData = new FormData()
-      formData.append('mxnAmount', String(selectedPackage.mxn))
-      formData.append('usdAmount', String(selectedPackage.price))
-      formData.append('receipt', receiptFile)
-      formData.append('userId', user.id)
-
-      const response = await fetch('/api/upload-receipt', {
-        method: 'POST',
-        body: formData,
-      })
-
-      const data = await response.json()
-
-      if (data.success) {
-        setUploadSuccess(true)
-      } else {
-        alert(data.error || 'Error al subir comprobante')
-      }
-    } catch (error) {
-      alert('Error al subir comprobante')
-    } finally {
-      setUploading(false)
-    }
-  }
 
   if (loading) {
     return (
@@ -176,94 +128,26 @@ export default function BuyVbucksPage() {
         </div>
 
         {/* Payment Info */}
-        {selectedPackage && !showPaymentInfo && (
-          <div className="text-center">
-            <Button 
-              onClick={() => setShowPaymentInfo(true)}
-              className="bg-green-600 hover:bg-green-700 text-lg px-8 py-6"
-            >
-              {t("buy.selectAmount")}
-            </Button>
-          </div>
-        )}
-
-        {showPaymentInfo && !uploadSuccess && (
+        {selectedPackage && (
           <Card className="max-w-md mx-auto">
             <CardHeader>
-              <CardTitle>Datos para transferir</CardTitle>
+              <CardTitle>{selectedPackage.mxn} MxN Points</CardTitle>
               <CardDescription>
-                {selectedPackage?.mxn} MxN Points - ${selectedPackage?.price} USD
+                ${selectedPackage.price} USD
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="bg-muted p-4 rounded-lg">
-                <p className="text-sm text-muted-foreground mb-1">CVU / Alias:</p>
-                <div className="flex items-center gap-2">
-                  <code className="flex-1 text-foreground font-mono">0000003100058974123456</code>
-                  <button
-                    onClick={handleCopyCVU}
-                    className="p-2 hover:bg-accent rounded"
-                  >
-                    {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <div className="bg-yellow-500/10 border border-yellow-500/30 p-4 rounded-lg">
-                <p className="text-sm text-yellow-500 font-medium">
-                  Una vez que transfieras, sube el comprobante de pago:
-                </p>
-              </div>
-
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-foreground">
-                  Comprobante de pago:
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  ref={fileInputRef}
-                  className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-yellow-500 file:text-black hover:file:bg-yellow-600"
-                />
-              </div>
-
-              <Button
-                onClick={handleSubmitReceipt}
-                disabled={!receiptFile || uploading}
-                className="w-full bg-yellow-500 hover:bg-yellow-600 text-black"
+              <a
+                href={selectedPackage.paymentLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-4 rounded-lg font-medium text-lg"
               >
-                {uploading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Subiendo...
-                  </>
-                ) : (
-                  <>
-                    <Upload className="mr-2 h-4 w-4" />
-                    Enviar comprobante
-                  </>
-                )}
-              </Button>
+                Ir a pagar
+              </a>
 
               <p className="text-xs text-muted-foreground text-center">
-                Te notificaremos cuando tu pago sea aprobado
-              </p>
-            </CardContent>
-          </Card>
-        )}
-
-        {uploadSuccess && (
-          <Card className="max-w-md mx-auto">
-            <CardContent className="pt-6 text-center">
-              <div className="flex justify-center mb-4">
-                <div className="h-16 w-16 rounded-full bg-green-500/20 flex items-center justify-center">
-                  <Check className="h-8 w-8 text-green-500" />
-                </div>
-              </div>
-              <h3 className="text-xl font-bold text-green-500 mb-2">Comprobante enviado!</h3>
-              <p className="text-muted-foreground">
-                Tu pago esta siendo verificado. Te notificaremos cuando sea aprobado.
+                Seras redirigido a Takenos para completar el pago
               </p>
             </CardContent>
           </Card>
