@@ -53,6 +53,7 @@ interface ManualPayment {
   package_id: string
   mxn_amount: number
   usd_amount: number
+  receipt_url?: string
   status: string
   created_at: string
   last_message?: string
@@ -421,7 +422,28 @@ export default function AdminChatsPage() {
           </Card>
 
           <Card className="lg:col-span-2 flex flex-col">
-            {selectedPurchase ? (
+            {/* Show receipt for payments */}
+            {activeTab === 'recargas' && selectedPayment && selectedPayment.receipt_url && (
+              <Card className="m-4 mb-0">
+                <CardContent className="pt-4">
+                  <p className="text-sm text-muted-foreground mb-2">Comprobante de pago:</p>
+                  <a 
+                    href={selectedPayment.receipt_url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="block"
+                  >
+                    <img 
+                      src={selectedPayment.receipt_url} 
+                      alt="Comprobante" 
+                      className="max-w-full h-auto rounded-lg border cursor-pointer hover:opacity-90"
+                    />
+                  </a>
+                </CardContent>
+              </Card>
+            )}
+
+            {activeTab === 'compras' && selectedPurchase ? (
               <>
                 {/* Purchase Details */}
               <Card className="m-4 mb-0">
@@ -471,15 +493,62 @@ export default function AdminChatsPage() {
                     </div>
                   </CardContent>
                 </Card>
+              </>
+            ) : activeTab === 'recargas' && selectedPayment ? (
+              <>
+                {/* Payment Details */}
+                <Card className="m-4 mb-0">
+                  <CardContent className="pt-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <p className="text-sm text-muted-foreground">Paquete</p>
+                        <p className="font-bold text-foreground">{selectedPayment.mxn_amount} MxN</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Monto</p>
+                        <p className="font-bold text-yellow-500">${selectedPayment.usd_amount} USD</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Email</p>
+                        <p className="font-medium text-foreground text-sm">{selectedPayment.email || '-'}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-muted-foreground">Estado</p>
+                        <span className={`inline-block px-2 py-1 rounded-full text-xs ${
+                          selectedPayment.status === 'approved' ? 'bg-green-500/20 text-green-500' :
+                          selectedPayment.status === 'pending' ? 'bg-yellow-500/20 text-yellow-500' :
+                          selectedPayment.status === 'rejected' ? 'bg-red-500/20 text-red-500' :
+                          'bg-gray-500/20 text-gray-500'
+                        }`}>
+                          {selectedPayment.status === 'approved' ? 'Aprobado' : 
+                           selectedPayment.status === 'pending' ? 'Pendiente' :
+                           selectedPayment.status === 'rejected' ? 'Rechazado' : selectedPayment.status}
+                        </span>
+                      </div>
+                      <div className="col-span-2">
+                        <p className="text-sm text-muted-foreground">Fecha</p>
+                        <p className="font-medium text-foreground">
+                          {new Date(selectedPayment.created_at).toLocaleString('es-AR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
-                {/* Chat */}
+                {/* Chat for Payments */}
                 <Card className="m-4 mt-4 flex flex-col">
                   <div className="p-3 border-b">
                     <h3 className="font-bold text-foreground">Chat de Soporte</h3>
                   </div>
                   <CardContent className="flex-1 flex flex-col p-0">
                     <div className="max-h-[30vh] overflow-y-auto p-4 space-y-3">
-                      {purchaseMessages.map((msg) => (
+                      {paymentMessages.map((msg) => (
                         <div
                           key={msg.id}
                           className={`flex ${msg.sender_id === 'admin' || msg.sender_id === adminUser?.id ? 'justify-end' : 'justify-start'}`}
