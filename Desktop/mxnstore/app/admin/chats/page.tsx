@@ -235,6 +235,13 @@ export default function AdminChatsPage() {
   const sendMessage = async () => {
     if (!newMessage.trim()) return
     
+    if (activeTab === 'compras' && !selectedPurchase) {
+      return
+    }
+    if (activeTab === 'recargas' && !selectedPayment) {
+      return
+    }
+    
     setSending(true)
     
     const { data: { user } } = await supabase.auth.getUser()
@@ -254,6 +261,8 @@ export default function AdminChatsPage() {
         setPurchaseMessages([...purchaseMessages, data])
         setNewMessage('')
         loadPurchases()
+      } else {
+        console.error('Error:', error)
       }
     } else if (activeTab === 'recargas' && selectedPayment) {
       const { data, error } = await supabase
@@ -270,6 +279,8 @@ export default function AdminChatsPage() {
         setPaymentMessages([...paymentMessages, data])
         setNewMessage('')
         loadPayments()
+      } else {
+        console.error('Error:', error)
       }
     }
     
