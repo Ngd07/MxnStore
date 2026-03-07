@@ -2,10 +2,10 @@
 
 import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Coins, ArrowLeft, Copy, Check, MessageCircle } from 'lucide-react'
+import { Coins, ArrowLeft, Copy, Check, Upload, Loader2 } from 'lucide-react'
 import Image from 'next/image'
 import { useI18n } from '@/lib/i18n'
 
@@ -24,6 +24,10 @@ export default function BuyVbucksPage() {
   const [copied, setCopied] = useState(false)
   const [showPaymentInfo, setShowPaymentInfo] = useState(false)
   const [selectedPackage, setSelectedPackage] = useState<{ mxn: number; price: number; popular: boolean; bestPrice?: boolean } | null>(null)
+  const [receiptFile, setReceiptFile] = useState<File | null>(null)
+  const [uploading, setUploading] = useState(false)
+  const [uploadSuccess, setUploadSuccess] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     const checkUser = async () => {
@@ -40,21 +44,41 @@ export default function BuyVbucksPage() {
     setTimeout(() => setCopied(false), 2000)
   }
 
-  const handlePaymentConfirm = async () => {
-    if (!selectedPackage || !user) return
-
-    try {
-      await supabase.from('transactions').insert({
-        user_id: user.id,
-        type: 'purchase',
-        amount: selectedPackage.mxn,
-        status: 'pending'
-      })
-    alert(t("buy.whatsapp"))
-  } catch (error) {
-    alert(t("buy.whatsapp"))
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setReceiptFile(e.target.files[0])
+    }
   }
-}
+
+  const handleSubmitReceipt = async () => {
+    if (!selectedPackage || !user || !receiptFile) return
+
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('mxnAmount', String(selectedPackage.mxn))
+      formData.append('usdAmount', String(selectedPackage.price))
+      formData.append('receipt', receiptFile)
+      formData.append('userId', user.id)
+
+      const response = await fetch('/api/upload-receipt', {
+        method: 'POST',
+        body: formData,
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        setUploadSuccess(true)
+      } else {
+        alert(data.error || 'Error al subir comprobante')
+      }
+    } catch (error) {
+      alert('Error al subir comprobante')
+    } finally {
+      setUploading(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -163,12 +187,12 @@ export default function BuyVbucksPage() {
           </div>
         )}
 
-        {showPaymentInfo && (
+        {showPaymentInfo && !uploadSuccess && (
           <Card className="max-w-md mx-auto">
             <CardHeader>
-              <CardTitle>{t("buy.transferDetails")}</CardTitle>
+              <CardTitle>Datos para transferir</CardTitle>
               <CardDescription>
-                {t("buy.step2")} ${selectedPackage?.price} USD
+                {selectedPackage?.mxn} MxN Points - ${selectedPackage?.price} USD
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -187,22 +211,59 @@ export default function BuyVbucksPage() {
 
               <div className="bg-yellow-500/10 border border-yellow-500/30 p-4 rounded-lg">
                 <p className="text-sm text-yellow-500 font-medium">
-                  {t("buy.step3")}
+                  Una vez que transfieras, sube el comprobante de pago:
                 </p>
               </div>
 
-              <a
-                href="https://wa.me/5491166666666"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-medium"
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-foreground">
+                  Comprobante de pago:
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  ref={fileInputRef}
+                  className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-yellow-500 file:text-black hover:file:bg-yellow-600"
+                />
+              </div>
+
+              <Button
+                onClick={handleSubmitReceipt}
+                disabled={!receiptFile || uploading}
+                className="w-full bg-yellow-500 hover:bg-yellow-600 text-black"
               >
-                <MessageCircle className="h-5 w-5" />
-                {t("buy.whatsapp")}
-              </a>
+                {uploading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Subiendo...
+                  </>
+                ) : (
+                  <>
+                    <Upload className="mr-2 h-4 w-4" />
+                    Enviar comprobante
+                  </>
+                )}
+              </Button>
 
               <p className="text-xs text-muted-foreground text-center">
-                {t("buy.step4")}
+                Te notificaremos cuando tu pago sea aprobado
+              </p>
+            </CardContent>
+          </Card>
+        )}
+
+        {uploadSuccess && (
+          <Card className="max-w-md mx-auto">
+            <CardContent className="pt-6 text-center">
+              <div className="flex justify-center mb-4">
+                <div className="h-16 w-16 rounded-full bg-green-500/20 flex items-center justify-center">
+                  <Check className="h-8 w-8 text-green-500" />
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-green-500 mb-2">Comprobante enviado!</h3>
+              <p className="text-muted-foreground">
+                Tu pago esta siendo verificado. Te notificaremos cuando sea aprobado.
               </p>
             </CardContent>
           </Card>
