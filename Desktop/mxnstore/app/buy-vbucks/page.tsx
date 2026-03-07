@@ -9,19 +9,26 @@ import { ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import { useI18n } from '@/lib/i18n'
 
-const PACKAGES: { mxn: number; price: number; popular: boolean; bestPrice?: boolean; paymentLink: string }[] = [
-  { mxn: 2000, price: 8.00, popular: false, paymentLink: "https://app.takenos.com/pay/53020cef-71b2-42f7-ac76-9bc871d5036c" },
-  { mxn: 5000, price: 18.00, popular: false, paymentLink: "https://app.takenos.com/pay/9e8d117d-2224-41c3-92dc-d96aa42a6f30" },
-  { mxn: 10000, price: 35.00, popular: false, paymentLink: "https://app.takenos.com/pay/adf34f8c-55c8-4fcc-97ab-5578991b5acd" },
-  { mxn: 13500, price: 45.00, popular: true, bestPrice: true, paymentLink: "https://app.takenos.com/pay/ae20b72f-9084-4ef6-a6ee-91864ff19ba6" },
+const PACKAGES: { id: string; mxn: number; price: number; popular: boolean; bestPrice?: boolean }[] = [
+  { id: '53020cef-71b2-42f7-ac76-9bc871d5036c', mxn: 2000, price: 8.00, popular: false },
+  { id: '9e8d117d-2224-41c3-92dc-d96aa42a6f30', mxn: 5000, price: 18.00, popular: false },
+  { id: 'adf34f8c-55c8-4fcc-97ab-5578991b5acd', mxn: 10000, price: 35.00, popular: false },
+  { id: 'ae20b72f-9084-4ef6-a6ee-91864ff19ba6', mxn: 13500, price: 45.00, popular: true, bestPrice: true },
 ]
+
+const PAYMENT_LINKS: Record<string, string> = {
+  '53020cef-71b2-42f7-ac76-9bc871d5036c': 'https://app.takenos.com/pay/53020cef-71b2-42f7-ac76-9bc871d5036c',
+  '9e8d117d-2224-41c3-92dc-d96aa42a6f30': 'https://app.takenos.com/pay/9e8d117d-2224-41c3-92dc-d96aa42a6f30',
+  'adf34f8c-55c8-4fcc-97ab-5578991b5acd': 'https://app.takenos.com/pay/adf34f8c-55c8-4fcc-97ab-5578991b5acd',
+  'ae20b72f-9084-4ef6-a6ee-91864ff19ba6': 'https://app.takenos.com/pay/ae20b72f-9084-4ef6-a6ee-91864ff19ba6',
+}
 
 export default function BuyVbucksPage() {
   const router = useRouter()
   const { t } = useI18n()
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [selectedPackage, setSelectedPackage] = useState<{ mxn: number; price: number; popular: boolean; bestPrice?: boolean; paymentLink: string } | null>(null)
+  const [selectedPackage, setSelectedPackage] = useState<{ id: string; mxn: number; price: number; popular: boolean; bestPrice?: boolean } | null>(null)
 
   useEffect(() => {
     const checkUser = async () => {
@@ -138,7 +145,7 @@ export default function BuyVbucksPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <a
-                href={selectedPackage.paymentLink}
+                href={`/pagar/${selectedPackage.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-4 rounded-lg font-medium text-lg"

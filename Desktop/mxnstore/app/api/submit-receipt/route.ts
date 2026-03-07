@@ -9,6 +9,9 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const email = formData.get("email") as string;
     const receipt = formData.get("receipt") as File;
+    const packageId = formData.get("packageId") as string;
+    const mxnStr = formData.get("mxn") as string;
+    const priceStr = formData.get("price") as string;
 
     if (!email || !receipt) {
       return NextResponse.json(
@@ -16,6 +19,9 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+
+    const mxn = mxnStr ? parseInt(mxnStr) : 0;
+    const price = priceStr ? parseFloat(priceStr) : 0;
 
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
@@ -56,8 +62,10 @@ export async function POST(request: NextRequest) {
       .from("manual_payments")
       .insert({
         user_id: userId,
-        mxn_amount: 0,
-        usd_amount: 0,
+        email: email.toLowerCase(),
+        mxn_amount: mxn,
+        usd_amount: price,
+        package_id: packageId,
         receipt_url: receiptUrl,
         status: "pending",
       })
