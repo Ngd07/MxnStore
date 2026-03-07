@@ -200,7 +200,12 @@ function PurchasesContent() {
   }, [selectedPayment, activeTab])
 
   const sendPurchaseMessage = async () => {
-    if (!newMessage.trim() || !selectedPurchase || !user) return
+    if (!newMessage.trim() || !selectedPurchase) return
+    
+    if (!user) {
+      alert('Debes iniciar sesión para enviar mensajes')
+      return
+    }
     
     setSending(true)
     
@@ -217,13 +222,20 @@ function PurchasesContent() {
     if (!error && data) {
       setPurchaseMessages([...purchaseMessages, data])
       setNewMessage('')
+    } else {
+      console.error('Error sending message:', error)
     }
     
     setSending(false)
   }
 
   const sendPaymentMessage = async () => {
-    if (!newMessage.trim() || !selectedPayment || !user) return
+    if (!newMessage.trim() || !selectedPayment) return
+
+    if (!user) {
+      alert('Debes iniciar sesión para enviar mensajes')
+      return
+    }
     
     setSending(true)
     
@@ -240,6 +252,8 @@ function PurchasesContent() {
     if (!error && data) {
       setPaymentMessages([...paymentMessages, data])
       setNewMessage('')
+    } else {
+      console.error('Error sending message:', error)
     }
     
     setSending(false)
