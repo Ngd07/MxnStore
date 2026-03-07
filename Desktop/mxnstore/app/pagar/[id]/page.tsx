@@ -1,12 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, Upload, Loader2, Check, Send } from 'lucide-react'
+import { Loader2, Check, Send } from 'lucide-react'
 import Image from 'next/image'
 
 const PACKAGES = [
@@ -16,31 +15,29 @@ const PACKAGES = [
   { id: 'ae20b72f-9084-4ef6-a6ee-91864ff19ba6', mxn: 13500, price: 45.00, paymentLink: 'https://app.takenos.com/pay/ae20b72f-9084-4ef6-a6ee-91864ff19ba6' },
 ]
 
-export default function PaymentPage({ params }: { params: { id: string } }) {
+interface PageProps {
+  params: Promise<{ id: string }>
+}
+
+export default function PaymentPage({ params }: PageProps) {
   const router = useRouter()
-  const pkg = PACKAGES.find(p => p.id === params.id)
-  
+  const [pkg, setPkg] = useState<typeof PACKAGES[0] | null>(null)
+  const [loading, setLoading] = useState(true)
   const [email, setEmail] = useState('')
   const [receiptFile, setReceiptFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
-  const [uploadSuccess, setUploadSuccess] = useState(false)
-  const [error, setError] = useState('')
   const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
 
-  if (!pkg) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <Card>
-          <CardContent className="pt-6">
-            <p>Paquete no encontrado</p>
-            <Button onClick={() => router.push('/')} className="mt-4">
-              Volver al inicio
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
-  }
+  useEffect(() => {
+    async function loadParams() {
+      const { id } = await params
+      const found = PACKAGES.find(p => p.id === id)
+      setPkg(found || null)
+      setLoading(false)
+    }
+    loadParams()
+  }, [params])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -49,7 +46,7 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
   }
 
   const handleSubmit = async () => {
-    if (!email.trim() || !receiptFile) {
+    if (!pkg || !email.trim() || !receiptFile) {
       setError('Completa todos los campos')
       return
     }
@@ -82,6 +79,29 @@ export default function PaymentPage({ params }: { params: { id: string } }) {
     } finally {
       setUploading(false)
     }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-yellow-500" />
+      </div>
+    )
+  }
+
+  if (!pkg) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center p-4">
+        <Card>
+          <CardContent className="pt-6">
+            <p className="text-center mb-4">Paquete no encontrado</p>
+            <Button onClick={() => router.push('/buy-vucks')} className="w-full">
+              Volver a la tienda
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   if (submitted) {
