@@ -12,6 +12,7 @@ export async function POST(request: NextRequest) {
     const packageId = formData.get("packageId") as string;
     const mxnStr = formData.get("mxn") as string;
     const priceStr = formData.get("price") as string;
+    const userIdFromForm = formData.get("userId") as string;
 
     if (!email || !receipt) {
       return NextResponse.json(
@@ -48,14 +49,18 @@ export async function POST(request: NextRequest) {
 
     const receiptUrl = urlData.publicUrl;
 
-    // Find user by email
-    const { data: users } = await supabaseAdmin
-      .from("user_profiles")
-      .select("*")
-      .eq("email", email.toLowerCase())
-      .limit(1);
+    // If userId is provided, use it directly; otherwise find by email
+    let userId = userIdFromForm;
+    
+    if (!userId) {
+      const { data: users } = await supabaseAdmin
+        .from("user_profiles")
+        .select("*")
+        .eq("email", email.toLowerCase())
+        .limit(1);
 
-    let userId = users && users.length > 0 ? users[0].user_id : null;
+      userId = users && users.length > 0 ? users[0].user_id : null;
+    }
 
     // Create payment record
     const { data: payment, error: insertError } = await supabaseAdmin
