@@ -44,6 +44,7 @@ interface ManualPayment {
   package_id: string
   mxn_amount: number
   usd_amount: number
+  receipt_url?: string
   status: string
   created_at: string
 }
@@ -549,6 +550,27 @@ function PurchasesContent() {
 
               {selectedPayment && (
                 <div className="lg:col-span-2">
+                  {/* Receipt Image */}
+                  {selectedPayment.receipt_url && (
+                    <Card className="mb-4">
+                      <CardContent className="pt-4">
+                        <p className="text-sm text-muted-foreground mb-2">Tu comprobante:</p>
+                        <a 
+                          href={selectedPayment.receipt_url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="block"
+                        >
+                          <img 
+                            src={selectedPayment.receipt_url} 
+                            alt="Comprobante" 
+                            className="max-w-full h-auto rounded-lg border cursor-pointer hover:opacity-90"
+                          />
+                        </a>
+                      </CardContent>
+                    </Card>
+                  )}
+
                   <Card className="mb-4">
                     <CardContent className="pt-4">
                       <div className="grid grid-cols-2 gap-4">
