@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -23,6 +24,7 @@ export default function PaymentPage({ params }: PageProps) {
   const router = useRouter()
   const [pkg, setPkg] = useState<typeof PACKAGES[0] | null>(null)
   const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<any>(null)
   const [email, setEmail] = useState('')
   const [receiptFile, setReceiptFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
@@ -34,6 +36,24 @@ export default function PaymentPage({ params }: PageProps) {
       const { id } = await params
       const found = PACKAGES.find(p => p.id === id)
       setPkg(found || null)
+      
+      // Check if user is logged in
+      const { data: { user } } = await supabase.auth.getUser()
+      setUser(user)
+      
+      // If logged in, pre-fill email from profile
+      if (user) {
+        const { data: profile } = await supabase
+          .from('user_profiles')
+          .select('email')
+          .eq('user_id', user.id)
+          .maybeSingle()
+        
+        if (profile?.email) {
+          setEmail(profile.email)
+        }
+      }
+      
       setLoading(false)
     }
     loadParams()
@@ -61,6 +81,9 @@ export default function PaymentPage({ params }: PageProps) {
       formData.append('packageId', pkg.id)
       formData.append('mxn', String(pkg.mxn))
       formData.append('price', String(pkg.price))
+      if (user?.id) {
+        formData.append('userId', user.id)
+      }
 
       const response = await fetch('/api/submit-receipt', {
         method: 'POST',
