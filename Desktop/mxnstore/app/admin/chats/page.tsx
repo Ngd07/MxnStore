@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { createClient } from '@supabase/supabase-js'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
@@ -10,29 +9,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 const ADMIN_EMAILS = ['nleonelli0@gmail.com', 'juancruzgc10@gmail.com']
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
-const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
-
-interface Message {
-  id: string
-  chat_id: string
-  sender_id: string
-  content: string
-  is_read: boolean
-  created_at: string
-}
-
-interface Chat {
-  id: string
-  user_id: string
-  status: string
-  created_at: string
-  updated_at: string
-  user_email?: string
-  last_message?: string
-}
 
 interface PurchaseMessage {
   id: string
@@ -80,7 +56,6 @@ export default function AdminChatsPage() {
   const [isAuthorized, setIsAuthorized] = useState(false)
   const [checkingAuth, setCheckingAuth] = useState(true)
   const [adminUser, setAdminUser] = useState<any>(null)
-  const [chats, setChats] = useState<Chat[]>([])
   const [activeTab, setActiveTab] = useState<'compras' | 'recargas'>('compras')
   
   // Purchases state
@@ -99,10 +74,12 @@ export default function AdminChatsPage() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { user } } = await supabaseAdmin.auth.getUser()
-      setAdminUser(user)
-      if (user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase())) {
+      const response = await fetch('/api/auth/user')
+      const data = await response.json()
+      
+      if (data.user?.email && ADMIN_EMAILS.includes(data.user.email.toLowerCase())) {
         setIsAuthorized(true)
+        setAdminUser(data.user)
         loadPurchases()
         loadPayments()
       }
@@ -112,104 +89,40 @@ export default function AdminChatsPage() {
   }, [])
 
   const loadPurchases = async () => {
-    const { data: purchasesData } = await supabaseAdmin
-      .from('purchases')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (purchasesData) {
-      const userIds = [...new Set(purchasesData.map((p: any) => p.user_id))]
-      const { data: profiles } = await supabaseAdmin
-        .from('profiles')
-        .select('id, email')
-        .in('id', userIds)
-      
-      const profileMap = new Map(profiles?.map((p: any) => [p.id, p.email]) || [])
-
-      const purchaseIds = purchasesData.map((p: any) => p.id)
-      const { data: lastMessages } = await supabaseAdmin
-        .from('purchase_messages')
-        .select('purchase_id, content')
-        .in('purchase_id', purchaseIds)
-        .order('created_at', { ascending: false })
-      
-      const lastMsgMap = new Map()
-      lastMessages?.forEach((msg: any) => {
-        if (!lastMsgMap.has(msg.purchase_id)) {
-          lastMsgMap.set(msg.purchase_id, msg.content)
-        }
-      })
-
-      const purchasesWithEmail = purchasesData.map((purchase: any) => ({
-        ...purchase,
-        user_email: profileMap.get(purchase.user_id) || 'Unknown',
-        last_message: lastMsgMap.get(purchase.id) || ''
-      }))
-      
-      setPurchases(purchasesWithEmail)
+    const response = await fetch('/api/admin/messages?type=purchases')
+    const data = await response.json()
+    if (data.purchases) {
+      setPurchases(data.purchases)
     }
   }
 
   const loadPayments = async () => {
-    const { data: paymentsData } = await supabaseAdmin
-      .from('manual_payments')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (paymentsData) {
-      const paymentIds = paymentsData.map((p: any) => p.id)
-      const { data: lastMessages } = await supabaseAdmin
-        .from('payment_messages')
-        .select('payment_id, content')
-        .in('payment_id', paymentIds)
-        .order('created_at', { ascending: false })
-      
-      const lastMsgMap = new Map()
-      lastMessages?.forEach((msg: any) => {
-        if (!lastMsgMap.has(msg.payment_id)) {
-          lastMsgMap.set(msg.payment_id, msg.content)
-        }
-      })
-
-      const paymentsWithLastMsg = paymentsData.map((payment: any) => ({
-        ...payment,
-        last_message: lastMsgMap.get(payment.id) || ''
-      }))
-      
-      setPayments(paymentsWithLastMsg)
+    const response = await fetch('/api/admin/messages?type=payments')
+    const data = await response.json()
+    if (data.payments) {
+      setPayments(data.payments)
     }
   }
 
   const loadPurchaseMessages = async (purchaseId: string) => {
-    const { data } = await supabaseAdmin
-      .from('purchase_messages')
-      .select('*')
-      .eq('purchase_id', purchaseId)
-      .order('created_at', { ascending: true })
-
-    if (data) {
-      setPurchaseMessages(data)
+    const response = await fetch(`/api/admin/messages?type=purchase_messages&purchaseId=${purchaseId}`)
+    const data = await response.json()
+    if (data.messages) {
+      setPurchaseMessages(data.messages)
     }
   }
 
   const loadPaymentMessages = async (paymentId: string) => {
-    const { data } = await supabaseAdmin
-      .from('payment_messages')
-      .select('*')
-      .eq('payment_id', paymentId)
-      .order('created_at', { ascending: true })
-
-    if (data) {
-      setPaymentMessages(data)
+    const response = await fetch(`/api/admin/messages?type=payment_messages&paymentId=${paymentId}`)
+    const data = await response.json()
+    if (data.messages) {
+      setPaymentMessages(data.messages)
     }
   }
-
-  const [lastMessageCount, setLastMessageCount] = useState(0)
 
   useEffect(() => {
     if (activeTab === 'compras' && selectedPurchase) {
       loadPurchaseMessages(selectedPurchase.id)
-      setLastMessageCount(0)
       const interval = setInterval(() => {
         loadPurchaseMessages(selectedPurchase.id)
       }, 3000)
@@ -220,7 +133,6 @@ export default function AdminChatsPage() {
   useEffect(() => {
     if (activeTab === 'recargas' && selectedPayment) {
       loadPaymentMessages(selectedPayment.id)
-      setLastMessageCount(0)
       const interval = setInterval(() => {
         loadPaymentMessages(selectedPayment.id)
       }, 3000)
@@ -228,63 +140,44 @@ export default function AdminChatsPage() {
     }
   }, [selectedPayment, activeTab])
 
-  useEffect(() => {
-    const currentCount = activeTab === 'compras' ? purchaseMessages.length : paymentMessages.length
-    if (currentCount > lastMessageCount) {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-      setLastMessageCount(currentCount)
-    }
-  }, [purchaseMessages, paymentMessages, lastMessageCount, activeTab])
-
   const sendMessage = async () => {
     if (!newMessage.trim()) return
     
-    if (activeTab === 'compras' && !selectedPurchase) {
-      return
-    }
-    if (activeTab === 'recargas' && !selectedPayment) {
-      return
-    }
-    
     setSending(true)
     
-    const { data: { user } } = await supabaseAdmin.auth.getUser()
-    
     if (activeTab === 'compras' && selectedPurchase) {
-      const { data, error } = await supabaseAdmin
-        .from('purchase_messages')
-        .insert({
-          purchase_id: selectedPurchase.id,
-          sender_id: user?.id || 'admin',
+      const response = await fetch('/api/admin/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'purchase_message',
+          purchaseId: selectedPurchase.id,
           content: newMessage.trim()
         })
-        .select()
-        .single()
-
-      if (!error && data) {
-        setPurchaseMessages([...purchaseMessages, data])
+      })
+      const data = await response.json()
+      
+      if (data.success) {
+        setPurchaseMessages([...purchaseMessages, data.data])
         setNewMessage('')
         loadPurchases()
-      } else {
-        console.error('Error:', error)
       }
     } else if (activeTab === 'recargas' && selectedPayment) {
-      const { data, error } = await supabaseAdmin
-        .from('payment_messages')
-        .insert({
-          payment_id: selectedPayment.id,
-          sender_id: user?.id || 'admin',
+      const response = await fetch('/api/admin/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'payment_message',
+          paymentId: selectedPayment.id,
           content: newMessage.trim()
         })
-        .select()
-        .single()
-
-      if (!error && data) {
-        setPaymentMessages([...paymentMessages, data])
+      })
+      const data = await response.json()
+      
+      if (data.success) {
+        setPaymentMessages([...paymentMessages, data.data])
         setNewMessage('')
         loadPayments()
-      } else {
-        console.error('Error:', error)
       }
     }
     
@@ -387,18 +280,6 @@ export default function AdminChatsPage() {
                       <p className="font-medium text-foreground truncate">{purchase.user_email}</p>
                       <p className="text-sm text-purple-500 truncate font-medium">{purchase.skin_name}</p>
                       <p className="text-sm text-muted-foreground truncate">{purchase.last_message || 'Sin mensajes'}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className={`px-2 py-0.5 rounded-full text-xs ${
-                          purchase.status === 'completed' ? 'bg-green-500/20 text-green-500' :
-                          purchase.status === 'pending' ? 'bg-yellow-500/20 text-yellow-500' :
-                          purchase.status === 'processing' ? 'bg-blue-500/20 text-blue-500' :
-                          'bg-red-500/20 text-red-500'
-                        }`}>
-                          {purchase.status === 'completed' ? 'Entregado' : 
-                           purchase.status === 'pending' ? 'Pendiente' :
-                           purchase.status === 'processing' ? 'Procesando' : 'Cancelado'}
-                        </span>
-                      </div>
                     </button>
                   ))
                 )
@@ -417,18 +298,6 @@ export default function AdminChatsPage() {
                       <p className="font-medium text-foreground truncate">{payment.email}</p>
                       <p className="text-sm text-green-500 truncate font-medium">{payment.mxn_amount} MxN - ${payment.usd_amount} USD</p>
                       <p className="text-sm text-muted-foreground truncate">{payment.last_message || 'Sin mensajes'}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className={`px-2 py-0.5 rounded-full text-xs ${
-                          payment.status === 'approved' ? 'bg-green-500/20 text-green-500' :
-                          payment.status === 'pending' ? 'bg-yellow-500/20 text-yellow-500' :
-                          payment.status === 'rejected' ? 'bg-red-500/20 text-red-500' :
-                          'bg-gray-500/20 text-gray-500'
-                        }`}>
-                          {payment.status === 'approved' ? 'Aprobado' : 
-                           payment.status === 'pending' ? 'Pendiente' :
-                           payment.status === 'rejected' ? 'Rechazado' : payment.status}
-                        </span>
-                      </div>
                     </button>
                   ))
                 )
@@ -436,32 +305,11 @@ export default function AdminChatsPage() {
             </CardContent>
           </Card>
 
+          {/* Chat Details */}
           <Card className="lg:col-span-2 flex flex-col">
-            {/* Show receipt for payments */}
-            {activeTab === 'recargas' && selectedPayment && selectedPayment.receipt_url && (
-              <Card className="m-4 mb-0">
-                <CardContent className="pt-4">
-                  <p className="text-sm text-muted-foreground mb-2">Comprobante de pago:</p>
-                  <a 
-                    href={selectedPayment.receipt_url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="block"
-                  >
-                    <img 
-                      src={selectedPayment.receipt_url} 
-                      alt="Comprobante" 
-                      className="max-w-full h-auto rounded-lg border cursor-pointer hover:opacity-90"
-                    />
-                  </a>
-                </CardContent>
-              </Card>
-            )}
-
             {activeTab === 'compras' && selectedPurchase ? (
               <>
-                {/* Purchase Details */}
-              <Card className="m-4 mb-0">
+                <Card className="m-4 mb-0">
                   <CardContent className="pt-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
@@ -493,25 +341,71 @@ export default function AdminChatsPage() {
                            selectedPurchase.status === 'processing' ? 'Procesando' : 'Cancelado'}
                         </span>
                       </div>
-                      <div className="col-span-2">
-                        <p className="text-sm text-muted-foreground">Fecha</p>
-                        <p className="font-medium text-foreground">
-                          {new Date(selectedPurchase.created_at).toLocaleString('es-AR', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </p>
-                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="m-4 mt-4 flex flex-col">
+                  <div className="p-3 border-b">
+                    <h3 className="font-bold text-foreground">Chat de Soporte</h3>
+                  </div>
+                  <CardContent className="flex-1 flex flex-col p-0">
+                    <div className="max-h-[30vh] overflow-y-auto p-4 space-y-3">
+                      {purchaseMessages.map((msg) => (
+                        <div
+                          key={msg.id}
+                          className={`flex ${msg.sender_id === 'admin' || msg.sender_id === adminUser?.id ? 'justify-end' : 'justify-start'}`}
+                        >
+                          <div
+                            className={`max-w-[70%] rounded-lg px-3 py-2 ${
+                              msg.sender_id === 'admin' || msg.sender_id === adminUser?.id
+                                ? 'bg-yellow-500 text-black'
+                                : 'bg-blue-500 text-white'
+                            }`}
+                          >
+                            <p className="text-sm">{msg.content}</p>
+                          </div>
+                        </div>
+                      ))}
+                      <div ref={messagesEndRef} />
+                    </div>
+
+                    <div className="p-3 border-t flex gap-2">
+                      <Input
+                        placeholder="Escribe un mensaje..."
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        className="flex-1"
+                      />
+                      <Button 
+                        onClick={sendMessage} 
+                        disabled={sending || !newMessage.trim()}
+                        className="bg-yellow-500 hover:bg-yellow-600"
+                      >
+                        {sending ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Send className="h-4 w-4" />
+                        )}
+                      </Button>
                     </div>
                   </CardContent>
                 </Card>
               </>
             ) : activeTab === 'recargas' && selectedPayment ? (
               <>
-                {/* Payment Details */}
+                {selectedPayment.receipt_url && (
+                  <Card className="m-4 mb-0">
+                    <CardContent className="pt-4">
+                      <p className="text-sm text-muted-foreground mb-2">Comprobante de pago:</p>
+                      <a href={selectedPayment.receipt_url} target="_blank" rel="noopener noreferrer">
+                        <img src={selectedPayment.receipt_url} alt="Comprobante" className="max-w-full h-auto rounded-lg border" />
+                      </a>
+                    </CardContent>
+                  </Card>
+                )}
+
                 <Card className="m-4 mb-0">
                   <CardContent className="pt-4">
                     <div className="grid grid-cols-2 gap-4">
@@ -540,23 +434,10 @@ export default function AdminChatsPage() {
                            selectedPayment.status === 'rejected' ? 'Rechazado' : selectedPayment.status}
                         </span>
                       </div>
-                      <div className="col-span-2">
-                        <p className="text-sm text-muted-foreground">Fecha</p>
-                        <p className="font-medium text-foreground">
-                          {new Date(selectedPayment.created_at).toLocaleString('es-AR', {
-                            day: '2-digit',
-                            month: '2-digit',
-                            year: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                        </p>
-                      </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                {/* Chat for Payments */}
                 <Card className="m-4 mt-4 flex flex-col">
                   <div className="p-3 border-b">
                     <h3 className="font-bold text-foreground">Chat de Soporte</h3>
@@ -576,14 +457,6 @@ export default function AdminChatsPage() {
                             }`}
                           >
                             <p className="text-sm">{msg.content}</p>
-                            <p className={`text-[10px] mt-1 ${
-                              msg.sender_id === 'admin' || msg.sender_id === adminUser?.id ? 'text-black/70' : 'text-white/70'
-                            }`}>
-                              {new Date(msg.created_at).toLocaleTimeString('es-AR', { 
-                                hour: '2-digit', 
-                                minute: '2-digit' 
-                              })}
-                            </p>
                           </div>
                         </div>
                       ))}
