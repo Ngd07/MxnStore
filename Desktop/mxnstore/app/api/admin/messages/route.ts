@@ -124,14 +124,16 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { type, purchaseId, paymentId, content } = body;
 
+    // Get current user for auth (or use admin)
     const { data: { user } } = await supabaseAdmin.auth.getUser();
+    const senderId = user?.id || "admin";
 
     if (type === "purchase_message" && purchaseId) {
       const { data, error } = await supabaseAdmin
         .from("purchase_messages")
         .insert({
           purchase_id: purchaseId,
-          sender_id: user?.id || "admin",
+          sender_id: senderId,
           content: content,
         })
         .select()
