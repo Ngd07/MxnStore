@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
@@ -10,6 +10,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 const ADMIN_EMAILS = ['nleonelli0@gmail.com', 'juancruzgc10@gmail.com']
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
 
 interface Message {
   id: string
@@ -95,7 +99,7 @@ export default function AdminChatsPage() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
+      const { data: { user } } = await supabaseAdmin.auth.getUser()
       setAdminUser(user)
       if (user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase())) {
         setIsAuthorized(true)
@@ -108,35 +112,35 @@ export default function AdminChatsPage() {
   }, [])
 
   const loadPurchases = async () => {
-    const { data: purchasesData } = await supabase
+    const { data: purchasesData } = await supabaseAdmin
       .from('purchases')
       .select('*')
       .order('created_at', { ascending: false })
 
     if (purchasesData) {
-      const userIds = [...new Set(purchasesData.map(p => p.user_id))]
-      const { data: profiles } = await supabase
+      const userIds = [...new Set(purchasesData.map((p: any) => p.user_id))]
+      const { data: profiles } = await supabaseAdmin
         .from('profiles')
         .select('id, email')
         .in('id', userIds)
       
-      const profileMap = new Map(profiles?.map(p => [p.id, p.email]) || [])
+      const profileMap = new Map(profiles?.map((p: any) => [p.id, p.email]) || [])
 
-      const purchaseIds = purchasesData.map(p => p.id)
-      const { data: lastMessages } = await supabase
+      const purchaseIds = purchasesData.map((p: any) => p.id)
+      const { data: lastMessages } = await supabaseAdmin
         .from('purchase_messages')
         .select('purchase_id, content')
         .in('purchase_id', purchaseIds)
         .order('created_at', { ascending: false })
       
       const lastMsgMap = new Map()
-      lastMessages?.forEach(msg => {
+      lastMessages?.forEach((msg: any) => {
         if (!lastMsgMap.has(msg.purchase_id)) {
           lastMsgMap.set(msg.purchase_id, msg.content)
         }
       })
 
-      const purchasesWithEmail = purchasesData.map(purchase => ({
+      const purchasesWithEmail = purchasesData.map((purchase: any) => ({
         ...purchase,
         user_email: profileMap.get(purchase.user_id) || 'Unknown',
         last_message: lastMsgMap.get(purchase.id) || ''
@@ -147,27 +151,27 @@ export default function AdminChatsPage() {
   }
 
   const loadPayments = async () => {
-    const { data: paymentsData } = await supabase
+    const { data: paymentsData } = await supabaseAdmin
       .from('manual_payments')
       .select('*')
       .order('created_at', { ascending: false })
 
     if (paymentsData) {
-      const paymentIds = paymentsData.map(p => p.id)
-      const { data: lastMessages } = await supabase
+      const paymentIds = paymentsData.map((p: any) => p.id)
+      const { data: lastMessages } = await supabaseAdmin
         .from('payment_messages')
         .select('payment_id, content')
         .in('payment_id', paymentIds)
         .order('created_at', { ascending: false })
       
       const lastMsgMap = new Map()
-      lastMessages?.forEach(msg => {
+      lastMessages?.forEach((msg: any) => {
         if (!lastMsgMap.has(msg.payment_id)) {
           lastMsgMap.set(msg.payment_id, msg.content)
         }
       })
 
-      const paymentsWithLastMsg = paymentsData.map(payment => ({
+      const paymentsWithLastMsg = paymentsData.map((payment: any) => ({
         ...payment,
         last_message: lastMsgMap.get(payment.id) || ''
       }))
@@ -177,7 +181,7 @@ export default function AdminChatsPage() {
   }
 
   const loadPurchaseMessages = async (purchaseId: string) => {
-    const { data } = await supabase
+    const { data } = await supabaseAdmin
       .from('purchase_messages')
       .select('*')
       .eq('purchase_id', purchaseId)
@@ -189,7 +193,7 @@ export default function AdminChatsPage() {
   }
 
   const loadPaymentMessages = async (paymentId: string) => {
-    const { data } = await supabase
+    const { data } = await supabaseAdmin
       .from('payment_messages')
       .select('*')
       .eq('payment_id', paymentId)
@@ -244,10 +248,10 @@ export default function AdminChatsPage() {
     
     setSending(true)
     
-    const { data: { user } } = await supabase.auth.getUser()
+    const { data: { user } } = await supabaseAdmin.auth.getUser()
     
     if (activeTab === 'compras' && selectedPurchase) {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from('purchase_messages')
         .insert({
           purchase_id: selectedPurchase.id,
@@ -265,7 +269,7 @@ export default function AdminChatsPage() {
         console.error('Error:', error)
       }
     } else if (activeTab === 'recargas' && selectedPayment) {
-      const { data, error } = await supabase
+      const { data, error } = await supabaseAdmin
         .from('payment_messages')
         .insert({
           payment_id: selectedPayment.id,
