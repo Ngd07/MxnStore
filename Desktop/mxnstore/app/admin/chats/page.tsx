@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
@@ -74,12 +75,12 @@ export default function AdminChatsPage() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const response = await fetch('/api/auth/user')
-      const data = await response.json()
+      const { data: { user } } = await supabase.auth.getUser()
+      console.log('User:', user?.email)
       
-      if (data.user?.email && ADMIN_EMAILS.includes(data.user.email.toLowerCase())) {
+      if (user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase())) {
         setIsAuthorized(true)
-        setAdminUser(data.user)
+        setAdminUser(user)
         loadPurchases()
         loadPayments()
       }
