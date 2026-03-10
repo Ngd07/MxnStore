@@ -37,8 +37,20 @@ interface Purchase {
   email?: string
 }
 
+interface Recarga {
+  id: string
+  user_id: string
+  email: string
+  package_id: string
+  mxn_amount: number
+  usd_amount: number
+  receipt_url?: string
+  status: string
+  created_at: string
+}
+
 export default function AdminPanelPage() {
-  const [activeTab, setActiveTab] = useState<'add-points' | 'transactions' | 'purchases'>('add-points')
+  const [activeTab, setActiveTab] = useState<'add-points' | 'transactions' | 'purchases' | 'recargas'>('add-points')
   const [userEmail, setUserEmail] = useState('')
   const [targetEmail, setTargetEmail] = useState('')
   const [amount, setAmount] = useState('')
@@ -50,6 +62,8 @@ export default function AdminPanelPage() {
   const [txLoading, setTxLoading] = useState(true)
   const [purchases, setPurchases] = useState<Purchase[]>([])
   const [purchasesLoading, setPurchasesLoading] = useState(true)
+  const [recargas, setRecargas] = useState<Recarga[]>([])
+  const [recargasLoading, setRecargasLoading] = useState(true)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -74,72 +88,89 @@ export default function AdminPanelPage() {
     if (activeTab === 'purchases' && isAuthorized) {
       fetchPurchases()
     }
+    if (activeTab === 'recargas' && isAuthorized) {
+      fetchRecargas()
+    }
   }, [activeTab, isAuthorized])
 
   const fetchTransactions = async () => {
     setTxLoading(true)
-    
-    const res = await fetch('/api/admin/transactions')
-    const data = await res.json()
-    
-    if (data && !data.error) {
-      setTransactions(data)
-    }
-    
-    setTxLoading(false)
-  }
-
-  const updateStatus = async (id: string, status: string) => {
-    const transaction = transactions.find(t => t.id === id)
-    
-    if (status === 'cancelled' && transaction) {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('mxn_points')
-        .eq('id', transaction.user_id)
-        .maybeSingle()
-      
-      const currentPoints = profile?.mxn_points || 0
-      await supabase
-        .from('profiles')
-        .update({ mxn_points: currentPoints + transaction.amount })
-        .eq('id', transaction.user_id)
-    }
-    
-    await supabase
+    const { data, error } = await supabase
       .from('transactions')
-      .update({ status })
-      .eq('id', id)
-    fetchTransactions()
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (!error && data) {
+      const userIds = [...new Set(data.map(t => t.user_id))]
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, email')
+        .in('id', userIds)
+      
+      const profileMap = new Map(profiles?.map(p => [p.id, p.email]) || [])
+
+      const transactionsWithEmail = data.map(t => ({
+        ...t,
+        email: profileMap.get(t.user_id) || 'Unknown'
+      }))
+      
+      setTransactions(transactionsWithEmail)
+    }
+    setTxLoading(false)
   }
 
   const fetchPurchases = async () => {
     setPurchasesLoading(true)
-    
-    const res = await fetch('/api/admin/purchases')
-    const data = await res.json()
-    
-    if (data && !data.error) {
-      setPurchases(data)
+    const { data } = await supabase
+      .from('purchases')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (data) {
+      const userIds = [...new Set(data.map(p => p.user_id))]
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('id, email')
+        .in('id', userIds)
+      
+      const profileMap = new Map(profiles?.map(p => [p.id, p.email]) || [])
+
+      const purchasesWithEmail = data.map(p => ({
+        ...p,
+        email: profileMap.get(p.user_id) || 'Unknown'
+      }))
+      
+      setPurchases(purchasesWithEmail)
     }
-    
     setPurchasesLoading(false)
   }
 
+  const fetchRecargas = async () => {
+    setRecargasLoading(true)
+    const { data } = await supabase
+      .from('manual_payments')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (data) {
+      setRecargas(data)
+    }
+    setRecargasLoading(false)
+  }
+
+  const updateRecargaStatus = async (id: string, status: string) => {
+    await supabase
+      .from('manual_payments')
+      .update({ status })
+      .eq('id', id)
+    fetchRecargas()
+  }
+
   const updatePurchaseStatus = async (id: string, status: string) => {
-    const purchase = purchases.find(p => p.id === id)
-    
-    await fetch('/api/admin/update-purchase', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        purchase_id: id,
-        status,
-        refund_amount: status === 'cancelled' ? purchase?.skin_price : null,
-        user_id: purchase?.user_id
-      })
-    })
-    
+    await supabase
+      .from('purchases')
+      .update({ status })
+      .eq('id', id)
     fetchPurchases()
   }
 
@@ -173,6 +204,14 @@ export default function AdminPanelPage() {
     }
 
     setLoading(false)
+  }
+
+  const updateStatus = async (id: string, status: string) => {
+    await supabase
+      .from('transactions')
+      .update({ status })
+      .eq('id', id)
+    fetchTransactions()
   }
 
   if (checkingAuth) {
@@ -256,6 +295,17 @@ export default function AdminPanelPage() {
           >
             <Package className="inline-block mr-2 h-4 w-4" />
             Compras
+          </button>
+          <button
+            onClick={() => setActiveTab('recargas')}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              activeTab === 'recargas' 
+                ? 'bg-green-500 text-white' 
+                : 'bg-secondary text-foreground hover:bg-secondary/80'
+            }`}
+          >
+            <Coins className="inline-block mr-2 h-4 w-4" />
+            Recargas
           </button>
         </div>
 
@@ -343,7 +393,6 @@ export default function AdminPanelPage() {
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Tipo</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Cantidad</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Skin</th>
-                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">Monto</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Usuario Fortnite</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Estado</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Acciones</th>
@@ -377,7 +426,6 @@ export default function AdminPanelPage() {
                           </td>
                           <td className="p-3 text-sm font-bold text-yellow-500">{t.amount}</td>
                           <td className="p-3 text-sm text-foreground">{t.skin_name || '-'}</td>
-                          <td className="p-3 text-sm font-bold text-yellow-500">{t.amount} MXN</td>
                           <td className="p-3 text-sm text-foreground">{t.fortnite_username || '-'}</td>
                           <td className="p-3 text-sm">
                             <span className={`px-2 py-1 rounded-full text-xs ${
@@ -438,7 +486,6 @@ export default function AdminPanelPage() {
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Fecha</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Usuario</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Skin</th>
-                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">Monto</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Usuario Fortnite</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Estado</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Acciones</th>
@@ -458,7 +505,6 @@ export default function AdminPanelPage() {
                           </td>
                           <td className="p-3 text-sm text-foreground">{p.email}</td>
                           <td className="p-3 text-sm font-bold text-purple-500">{p.skin_name}</td>
-                          <td className="p-3 text-sm font-bold text-yellow-500">{p.skin_price} MXN</td>
                           <td className="p-3 text-sm text-foreground">{p.fortnite_username || '-'}</td>
                           <td className="p-3 text-sm">
                             <span className={`px-2 py-1 rounded-full text-xs ${
@@ -527,6 +573,98 @@ export default function AdminPanelPage() {
                   </table>
                   {purchases.length === 0 && (
                     <p className="text-center text-muted-foreground py-8">No hay compras</p>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Recargas Tab */}
+        {activeTab === 'recargas' && (
+          <Card>
+            <CardContent className="pt-6">
+              {recargasLoading ? (
+                <div className="flex justify-center py-8">
+                  <Loader2 className="h-8 w-8 animate-spin" />
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full border-collapse">
+                    <thead>
+                      <tr className="border-b border-border">
+                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">Fecha</th>
+                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">Email</th>
+                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">Paquete</th>
+                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">MxN</th>
+                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">USD</th>
+                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">Comprobante</th>
+                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">Estado</th>
+                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">Acciones</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {recargas.map((r) => (
+                        <tr key={r.id} className="border-b border-border/50">
+                          <td className="p-3 text-sm text-foreground">
+                            {new Date(r.created_at).toLocaleDateString('es-AR', {
+                              day: '2-digit',
+                              month: '2-digit',
+                              year: 'numeric',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </td>
+                          <td className="p-3 text-sm text-foreground">{r.email || '-'}</td>
+                          <td className="p-3 text-sm text-foreground">{r.package_id || '-'}</td>
+                          <td className="p-3 text-sm font-bold text-yellow-500">{r.mxn_amount}</td>
+                          <td className="p-3 text-sm text-foreground">${r.usd_amount}</td>
+                          <td className="p-3 text-sm">
+                            {r.receipt_url ? (
+                              <a href={r.receipt_url} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                                Ver
+                              </a>
+                            ) : '-'}
+                          </td>
+                          <td className="p-3 text-sm">
+                            <span className={`px-2 py-1 rounded-full text-xs ${
+                              r.status === 'approved' ? 'bg-green-500/20 text-green-500' :
+                              r.status === 'pending' ? 'bg-yellow-500/20 text-yellow-500' :
+                              r.status === 'rejected' ? 'bg-red-500/20 text-red-500' :
+                              'bg-gray-500/20 text-gray-500'
+                            }`}>
+                              {r.status === 'approved' ? 'Aprobado' : 
+                               r.status === 'pending' ? 'Pendiente' :
+                               r.status === 'rejected' ? 'Rechazado' : r.status}
+                            </span>
+                          </td>
+                          <td className="p-3">
+                            {r.status === 'pending' && (
+                              <div className="flex gap-1">
+                                <Button
+                                  size="sm"
+                                  onClick={() => updateRecargaStatus(r.id, 'approved')}
+                                  className="bg-green-500 hover:bg-green-600 text-xs"
+                                >
+                                  ✓
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  onClick={() => updateRecargaStatus(r.id, 'rejected')}
+                                  variant="destructive"
+                                  className="text-xs"
+                                >
+                                  ✗
+                                </Button>
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                  {recargas.length === 0 && (
+                    <p className="text-center text-muted-foreground py-8">No hay recargas</p>
                   )}
                 </div>
               )}
