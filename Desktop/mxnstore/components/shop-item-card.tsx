@@ -17,7 +17,6 @@ import { Input } from "@/components/ui/input";
 import { Coins, Gift, User } from "lucide-react";
 import { supabase } from '@/lib/supabase'
 
-const MXN_TO_USD = 0.0045;
 
 interface ShopItemCardProps {
   entry: ShopEntry;
@@ -171,7 +170,6 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
   const [user, setUser] = useState<any>(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
   const [justRedeemed, setJustRedeemed] = useState(false);
-  const [redeeming, setRedeeming] = useState(false);
   const { t } = useI18n();
   
   const image = getItemImage(entry);
@@ -235,7 +233,6 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
       return;
     }
     setRedeemMessage(t("redeem.processing"));
-    setRedeeming(true);
     
     try {
       const res = await fetch('/api/redeem', {
@@ -246,7 +243,6 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
       const data = await res.json();
       if (!res.ok) {
         setRedeemMessage(data?.error || 'Error canje');
-        setRedeeming(false);
         return;
       }
       const newBalance = data.balance ?? vbucksBalance;
@@ -258,23 +254,22 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
         window.dispatchEvent(new CustomEvent('mxn-balance-updated', { detail: { balance: newBalance } }));
       }
       
-      setRedeeming(false);
+      setRedeemMessage(t("redeem.success") + "! Te contactaremos en WhatsApp");
       setFortniteUsername("");
       
-      // Open purchases in new tab with the purchase selected
-      if (data.purchaseId) {
-        window.open(`/purchases?purchase=${data.purchaseId}`, '_blank');
-      }
+      // Refresh balance from server after a short delay to ensure consistency
+      setTimeout(() => {
+        fetchBalance();
+      }, 500);
       
       // Close dialog after short delay
       setTimeout(() => {
         setShowDialog(false);
         setRedeemMessage("");
         setJustRedeemed(false);
-      }, 1500);
+      }, 2000);
     } catch (err) {
       setRedeemMessage("Error al canjear. Intenta de nuevo.");
-      setRedeeming(false);
     }
   };
 
@@ -362,9 +357,6 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
                 </span>
               )}
             </div>
-            <span className="text-[10px] text-muted-foreground pl-[22px]">
-              {"$"}{(entry.finalPrice * MXN_TO_USD).toFixed(2)} USD
-            </span>
           </div>
         </div>
       </div>
@@ -425,10 +417,10 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium text-foreground flex items-center gap-2">
                   <User className="h-4 w-4" />
-                  {t("redeem.fortniteUser")}
+                  Usuario de Fortnite
                 </label>
                 <Input
-                  placeholder={t("redeem.fortnitePlaceholder")}
+                  placeholder="Tu nombre de usuario en Fortnite"
                   value={fortniteUsername}
                   onChange={(e) => setFortniteUsername(e.target.value)}
                   className="bg-secondary"
@@ -441,23 +433,21 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
             )}
           </div>
 
-          <DialogFooter className="relative">
+          <DialogFooter>
+            {redeemMessage && (
+              <p className={`text-sm text-center w-full mb-2 ${redeemMessage.includes("Error") || redeemMessage.includes("No tienes") ? "text-red-500" : "text-green-500"}`}>
+                {redeemMessage}
+              </p>
+            )}
             {isLoggedIn ? (
-              <>
-                <Button
-                  onClick={handleRedeem}
-                  disabled={!canAfford || redeeming || !fortniteUsername.trim()}
-                  className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50"
-                >
-                  <Gift className="mr-2 h-4 w-4" />
-                  {redeeming ? t("redeem.processing") : `Canjear ${price.toLocaleString()} MxN Points`}
-                </Button>
-                {!fortniteUsername.trim() && !redeeming && (
-                  <p className="text-sm text-center text-red-500 font-medium absolute -bottom-6 w-full">
-                    {t("redeem.usernameRequired")}
-                  </p>
-                )}
-              </>
+              <Button
+                onClick={handleRedeem}
+                disabled={!canAfford}
+                className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50"
+              >
+                <Gift className="mr-2 h-4 w-4" />
+                Canjear {price.toLocaleString()} MxN Points
+              </Button>
             ) : (
               <Button
                 onClick={() => window.location.href = '/login'}

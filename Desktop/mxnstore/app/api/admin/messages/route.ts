@@ -124,9 +124,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { type, purchaseId, paymentId, content } = body;
 
-    // Get current user for auth (or use admin)
-    const { data: { user } } = await supabaseAdmin.auth.getUser();
-    const senderId = user?.id || "admin";
+    const senderId = "admin";
 
     if (type === "purchase_message" && purchaseId) {
       const { data, error } = await supabaseAdmin
@@ -140,6 +138,7 @@ export async function POST(request: NextRequest) {
         .single();
 
       if (error) {
+        console.error("Insert error purchase:", error);
         return NextResponse.json({ error: error.message }, { status: 500 });
       }
 
@@ -151,13 +150,14 @@ export async function POST(request: NextRequest) {
         .from("payment_messages")
         .insert({
           payment_id: paymentId,
-          sender_id: user?.id || "admin",
+          sender_id: senderId,
           content: content,
         })
         .select()
         .single();
 
       if (error) {
+        console.error("Insert error payment:", error);
         return NextResponse.json({ error: error.message }, { status: 500 });
       }
 
@@ -167,6 +167,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid request" }, { status: 400 });
   } catch (error) {
     console.error("Error:", error);
-    return NextResponse.json({ error: "Internal error" }, { status: 500 });
+    return NextResponse.json({ error: "Internal error", err: String(error) }, { status: 500 });
   }
 }

@@ -24,12 +24,8 @@ CREATE INDEX IF NOT EXISTS idx_manual_payments_email ON manual_payments(email);
 -- Enable RLS
 ALTER TABLE manual_payments ENABLE ROW LEVEL SECURITY;
 
--- Users can view their own payments
-CREATE POLICY "Users can view own manual payments"
-  ON manual_payments FOR SELECT
-  USING (auth.uid() = user_id);
-
--- Service role can do everything
-CREATE POLICY "Service role full access to manual payments"
+-- Allow all operations
+CREATE POLICY "Allow all for manual_payments"
   ON manual_payments FOR ALL
-  USING (auth.role() = 'service_role');
+  USING (true)
+  WITH CHECK (true);
