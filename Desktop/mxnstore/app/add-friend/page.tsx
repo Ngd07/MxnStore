@@ -185,21 +185,21 @@ export default function AgregarAmigoPage() {
             </div>
             <div>
               <h1 className="text-lg sm:text-xl font-bold text-foreground">
-                {t("profile.addFriendTitle") || "Agregar a nuestros bots"}
+                {t("profile.addFriendTitle")}
               </h1>
               <p className="text-xs sm:text-sm text-muted-foreground">
-                {t("profile.addFriendDesc") || "Ingresa tu Epic ID para que nuestros bots te agreguen"}
+                {t("profile.addFriendDesc")}
               </p>
             </div>
           </div>
 
           <div className="mb-4 sm:mb-6">
             <label className="mb-2 block text-sm font-medium text-foreground">
-              {t("profile.epicId") || "Epic ID"}
+              {t("profile.epicId")}
             </label>
             <Input
               type="text"
-              placeholder={t("profile.epicIdPlaceholder") || "Tu Epic ID o nombre de usuario"}
+              placeholder={t("profile.epicIdPlaceholder")}
               value={epicId}
               onChange={(e) => setEpicId(e.target.value)}
               className="bg-secondary text-foreground border-border"
@@ -224,11 +224,11 @@ export default function AgregarAmigoPage() {
             className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
           >
             {loading ? (
-              t("profile.saving") || "Guardando..."
+              t("profile.saving")
             ) : (
               <>
                 <Check className="mr-2 h-4 w-4" />
-                {t("profile.saveAndAdd") || "Enviar ID"}
+                {t("profile.saveAndAdd")}
               </>
             )}
           </Button>
