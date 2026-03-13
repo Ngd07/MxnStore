@@ -376,13 +376,13 @@ export function ShopClient() {
                 />
               </div>
               <div className="text-center">
-                <p className="font-bold text-lg text-foreground">{selectedAccount.name}</p>
-                <p className="text-sm text-muted-foreground mt-1">{selectedAccount.description}</p>
-                <p className="text-2xl font-bold text-yellow-500 mt-2">{selectedAccount.price.toLocaleString()} MxN</p>
+                <p className="font-bold text-xl text-foreground">{selectedAccount.name}</p>
+                <p className="text-base text-muted-foreground mt-1">{selectedAccount.description}</p>
               </div>
               
-              <div>
-                <p className="text-sm font-medium mb-1">Tu saldo: <span className="text-yellow-500">{balanceLoading ? "..." : balance.toLocaleString()} MxN</span></p>
+              <div className="flex justify-between items-center">
+                <p className="text-sm font-medium">Tu saldo: <span className="text-yellow-500">{balanceLoading ? "..." : balance.toLocaleString()} MxN</span></p>
+                <p className="text-sm font-medium">Precio: <span className="text-yellow-500">{selectedAccount.price.toLocaleString()} MxN</span></p>
               </div>
 
               <div>
