@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { User, Settings, Mail, Bell, Check, LogIn, LogOut, Coins, ShoppingBag, UserPlus } from "lucide-react";
+import { User, Settings, Mail, Bell, Check, LogIn, LogOut, Coins, ShoppingBag, UserPlus, RefreshCw } from "lucide-react";
 import Image from "next/image";
 import {
   Sheet,
@@ -174,6 +174,15 @@ export function ProfilePanel() {
           >
             <ShoppingBag className="h-5 w-5 text-green-500" />
             <span className="text-sm font-medium text-foreground">{t("profile.myPurchases")}</span>
+          </button>
+
+          {/* Recargar Button */}
+          <button
+            onClick={() => router.push('/buy-vbucks')}
+            className="flex items-center justify-center gap-2 rounded-xl border border-purple-500/50 bg-purple-500/10 p-4 hover:bg-purple-500/20 transition-colors"
+          >
+            <RefreshCw className="h-5 w-5 text-purple-500" />
+            <span className="text-sm font-medium text-foreground">{t("profile.recharge")}</span>
           </button>
 
           {/* Agregar Bots Button */}
