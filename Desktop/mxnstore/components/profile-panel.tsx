@@ -194,6 +194,13 @@ export function ProfilePanel() {
             <span className="text-sm font-medium text-foreground">{t("profile.myPurchases")}</span>
           </button>
 
+          {/* Creator Code */}
+          <div className="py-2">
+            <span className="flex justify-center text-sm font-bold text-white uppercase tracking-widest drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]">
+              {t("profile.creatorCode")} MXNSTORE
+            </span>
+          </div>
+
           {/* Email section */}
           <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
             <div className="flex items-center gap-2">
@@ -257,13 +264,6 @@ export function ProfilePanel() {
             <LogOut className="h-4 w-4" />
             <span className="text-sm font-medium">{t("profile.logout")}</span>
           </button>
-
-          {/* Creator Code - at bottom */}
-          <div className="mt-auto pt-8">
-            <span className="flex justify-center text-sm font-bold text-white uppercase tracking-widest drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]">
-              {t("profile.creatorCode")} MXNSTORE
-            </span>
-          </div>
         </div>
       </SheetContent>
     </Sheet>
