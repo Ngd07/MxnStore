@@ -11,9 +11,19 @@ import { ProfilePanel } from "@/components/profile-panel";
 import { VbucksBalance } from "@/components/vbucks-balance";
 import { NotificationsBell } from "@/components/notifications-bell";
 import type { ShopData, ShopEntry } from "@/lib/types";
-import { Store } from "lucide-react";
+import { Store, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useI18n } from "@/lib/i18n";
+import { supabase } from "@/lib/supabase";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Card, CardContent } from "@/components/ui/card";
 
 const ACCOUNT_ITEMS = [
   { id: "account-13500", name: "Cuenta Fortnite 13,500 MxN", price: 13500, description: "Cuenta con 13,500 MxN Points" },
@@ -65,6 +75,33 @@ export function ShopClient() {
   const { t, dateLocale } = useI18n();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRarity, setSelectedRarity] = useState("all");
+  const [user, setUser] = useState<any>(null);
+  const [balance, setBalance] = useState(0);
+  const [balanceLoading, setBalanceLoading] = useState(true);
+  
+  // Account purchase dialog
+  const [selectedAccount, setSelectedAccount] = useState<typeof ACCOUNT_ITEMS[0] | null>(null);
+  const [fortniteUsername, setFortniteUsername] = useState("");
+  const [purchasing, setPurchasing] = useState(false);
+  const [purchaseMessage, setPurchaseMessage] = useState("");
+
+  // Get user and balance
+  useEffect(() => {
+    async function loadUser() {
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+      if (user) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("mxn_points")
+          .eq("id", user.id)
+          .single();
+        setBalance(profile?.mxn_points ?? 0);
+      }
+      setBalanceLoading(false);
+    }
+    loadUser();
+  }, []);
 
   // Get account items filtered by search
   const filteredAccountItems = useMemo(() => {
@@ -72,6 +109,55 @@ export function ShopClient() {
       item.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [searchQuery]);
+
+  const handleBuyAccount = async () => {
+    if (!user) {
+      setPurchaseMessage("Debes iniciar sesión para comprar");
+      return;
+    }
+    if (!fortniteUsername.trim()) {
+      setPurchaseMessage("Ingresa tu usuario de Fortnite");
+      return;
+    }
+    if (balance < selectedAccount!.price) {
+      setPurchaseMessage("No tienes suficientes MxN Points");
+      return;
+    }
+
+    setPurchasing(true);
+    setPurchaseMessage("");
+
+    try {
+      const res = await fetch("/api/redeem", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          itemName: selectedAccount!.name,
+          price: selectedAccount!.price,
+          fortniteUsername: fortniteUsername.trim(),
+          userId: user.id,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setPurchaseMessage("✓ Canjeado exitosamente!");
+        setBalance(data.balance);
+        setTimeout(() => {
+          setSelectedAccount(null);
+          setFortniteUsername("");
+          setPurchaseMessage("");
+        }, 2000);
+      } else {
+        setPurchaseMessage(data.error || "Error al canjear");
+      }
+    } catch {
+      setPurchaseMessage("Error de conexión");
+    }
+
+    setPurchasing(false);
+  }
 
   const entries = data?.data?.entries ?? [];
   const vbuckIcon = data?.data?.vbuckIcon ?? "";
@@ -247,12 +333,12 @@ export function ShopClient() {
                       <p className="text-sm text-muted-foreground mb-3">{item.description}</p>
                       <div className="flex items-center justify-between">
                         <span className="text-lg font-bold text-yellow-500">{item.price.toLocaleString()} MxN</span>
-                        <a
-                          href={`/pagar/${item.id}`}
+                        <button
+                          onClick={() => setSelectedAccount(item)}
                           className="px-4 py-2 bg-yellow-500 text-black font-medium rounded-lg hover:bg-yellow-600 transition-colors"
                         >
                           Comprar
-                        </a>
+                        </button>
                       </div>
                     </div>
                   ))}
@@ -272,6 +358,57 @@ export function ShopClient() {
           </div>
         )}
       </main>
+
+      {/* Account Purchase Dialog */}
+      <Dialog open={!!selectedAccount} onOpenChange={(open) => !open && setSelectedAccount(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Comprar Cuenta Fortnite</DialogTitle>
+          </DialogHeader>
+          {selectedAccount && (
+            <div className="space-y-4">
+              <div className="text-center p-4 bg-muted rounded-lg">
+                <p className="font-bold text-lg text-foreground">{selectedAccount.name}</p>
+                <p className="text-2xl font-bold text-yellow-500">{selectedAccount.price.toLocaleString()} MxN</p>
+              </div>
+              
+              <div>
+                <p className="text-sm font-medium mb-1">Tu saldo: <span className="text-yellow-500">{balanceLoading ? "..." : balance.toLocaleString()} MxN</span></p>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium">Usuario de Fortnite:</label>
+                <Input
+                  placeholder="Tu usuario en Fortnite"
+                  value={fortniteUsername}
+                  onChange={(e) => setFortniteUsername(e.target.value)}
+                />
+              </div>
+
+              {purchaseMessage && (
+                <p className={`text-sm text-center ${purchaseMessage.includes("✓") ? "text-green-500" : "text-red-500"}`}>
+                  {purchaseMessage}
+                </p>
+              )}
+
+              <Button
+                onClick={handleBuyAccount}
+                disabled={purchasing || !fortniteUsername.trim() || balance < selectedAccount.price}
+                className="w-full bg-yellow-500 hover:bg-yellow-600 text-black"
+              >
+                {purchasing ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Canjeando...
+                  </>
+                ) : (
+                  `Canjear por ${selectedAccount.price.toLocaleString()} MxN`
+                )}
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
 
       {/* Footer */}
       <footer className="border-t border-border py-6">
