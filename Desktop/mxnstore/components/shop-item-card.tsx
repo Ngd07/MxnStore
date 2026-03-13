@@ -90,7 +90,11 @@ function getItemImage(entry: ShopEntry): string | null {
     entry.newDisplayAsset.renderImages.length > 0
   ) {
     const img = entry.newDisplayAsset.renderImages[0].image;
-    if (img && img.includes('http')) return img;
+    if (img) {
+      // Handle both http URLs and relative paths
+      if (img.startsWith('http')) return img;
+      if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
+    }
   }
 
   // Try materialInstances images
@@ -98,7 +102,10 @@ function getItemImage(entry: ShopEntry): string | null {
     for (const mat of entry.newDisplayAsset.materialInstances) {
       if (mat.images) {
         const img = mat.images['featured'] || mat.images['icon'] || mat.images['smallIcon'] || mat.images['Background'] || Object.values(mat.images)[0];
-        if (img && img.includes('http')) return img;
+        if (img) {
+          if (img.startsWith('http')) return img;
+          if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
+        }
       }
     }
   }
@@ -106,13 +113,19 @@ function getItemImage(entry: ShopEntry): string | null {
   if (entry.brItems && entry.brItems.length > 0) {
     const item = entry.brItems[0];
     const img = item.images.featured || item.images.icon || item.images.smallIcon;
-    if (img && img.includes('http')) return img;
+    if (img) {
+      if (img.startsWith('http')) return img;
+      if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
+    }
   }
 
   // Try bundle image
   if (entry.bundle?.image) {
     const img = entry.bundle.image;
-    if (img && img.includes('http')) return img;
+    if (img) {
+      if (img.startsWith('http')) return img;
+      if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
+    }
   }
 
   return null;
