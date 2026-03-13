@@ -26,9 +26,9 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 
 const ACCOUNT_ITEMS = [
-  { id: "account-13500", name: "Cuenta Fortnite 13,500 MxN", price: 13500, description: "Cuenta con 13,500 MxN Points" },
-  { id: "account-27000", name: "Cuenta Fortnite 27,000 MxN", price: 27000, description: "Cuenta con 27,000 MxN Points" },
-  { id: "account-40500", name: "Cuenta Fortnite 40,500 MxN", price: 40500, description: "Cuenta con 40,500 MxN Points" },
+  { id: "account-13500", name: "Cuenta Fortnite 13,500 V-Bucks", price: 13500, description: "13500 MxN" },
+  { id: "account-27000", name: "Cuenta Fortnite 27,000 V-Bucks", price: 26000, description: "26000 MxN" },
+  { id: "account-40500", name: "Cuenta Fortnite 40,500 V-Bucks", price: 37000, description: "37000 MxN" },
 ];
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -307,7 +307,7 @@ export function ShopClient() {
 
         {isLoading && <ShopSkeleton />}
 
-        {!isLoading && !error && sections.length === 0 && (
+        {!isLoading && !error && sections.length === 0 && selectedRarity !== "accounts" && (
           <div className="flex flex-col items-center justify-center gap-2 py-20">
             <p className="text-lg font-medium text-foreground">
               {t("shop.noResults")}
