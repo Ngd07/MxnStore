@@ -112,7 +112,7 @@ export function ShopClient() {
 
   const handleBuyAccount = async () => {
     if (!user) {
-      setPurchaseMessage("Debes iniciar sesión para comprar");
+      setPurchaseMessage(t("profile.login"));
       return;
     }
     if (!fortniteUsername.trim()) {
@@ -120,7 +120,7 @@ export function ShopClient() {
       return;
     }
     if (balance < selectedAccount!.price) {
-      setPurchaseMessage("No tienes suficientes MxN Points");
+      setPurchaseMessage(t("shop.accountInsufficient"));
       return;
     }
 
@@ -153,7 +153,7 @@ export function ShopClient() {
         setPurchaseMessage(data.error || "Error al canjear");
       }
     } catch {
-      setPurchaseMessage("Error de conexión");
+      setPurchaseMessage(t("shop.accountError"));
     }
 
     setPurchasing(false);
@@ -322,7 +322,7 @@ export function ShopClient() {
           <div className="flex flex-col gap-10">
             {selectedRarity === "accounts" ? (
               <div>
-                <h2 className="text-xl font-bold text-foreground mb-4">Cuentas Fortnite</h2>
+                <h2 className="text-xl font-bold text-foreground mb-4">{t("shop.accounts")}</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredAccountItems.map((item) => (
                     <div 
@@ -381,14 +381,14 @@ export function ShopClient() {
               </div>
               
               <div className="flex justify-between items-center">
-                <p className="text-sm font-medium">Tu saldo: <span className="text-yellow-500">{balanceLoading ? "..." : balance.toLocaleString()} MxN</span></p>
+                <p className="text-sm font-medium">{t("shop.accountYourBalance")} <span className="text-yellow-500">{balanceLoading ? "..." : balance.toLocaleString()} MxN</span></p>
                 <p className="text-sm font-medium">Precio: <span className="text-yellow-500">{selectedAccount.price.toLocaleString()} MxN</span></p>
               </div>
 
               <div>
-                <label className="text-sm font-medium">Usuario de Fortnite:</label>
+                <label className="text-sm font-medium">{t("shop.accountFortniteUser")}</label>
                 <Input
-                  placeholder="Tu usuario en Fortnite"
+                  placeholder={t("shop.accountFortnitePlaceholder")}
                   value={fortniteUsername}
                   onChange={(e) => setFortniteUsername(e.target.value)}
                 />
@@ -411,7 +411,7 @@ export function ShopClient() {
                     Canjeando...
                   </>
                 ) : (
-                  `Canjear por ${selectedAccount.price.toLocaleString()} MxN`
+                  t("shop.accountRedeem", { price: selectedAccount.price.toLocaleString() })
                 )}
               </Button>
             </div>

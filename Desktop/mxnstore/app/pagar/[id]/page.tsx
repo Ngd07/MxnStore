@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Loader2, Check, Send } from 'lucide-react'
 import Image from 'next/image'
+import { useI18n } from '@/lib/i18n'
 
 const PACKAGES = [
   { id: '53020cef-71b2-42f7-ac76-9bc871d5036c', mxn: 2000, price: 8.00, paymentLink: 'https://app.takenos.com/pay/53020cef-71b2-42f7-ac76-9bc871d5036c' },
@@ -26,6 +27,7 @@ interface PageProps {
 
 export default function PaymentPage({ params }: PageProps) {
   const router = useRouter()
+  const { t } = useI18n()
   const [pkg, setPkg] = useState<typeof PACKAGES[0] | null>(null)
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
@@ -140,15 +142,15 @@ export default function PaymentPage({ params }: PageProps) {
                 <Check className="h-8 w-8 text-green-500" />
               </div>
             </div>
-            <h3 className="text-xl font-bold text-green-500 mb-2">Listo!</h3>
+            <h3 className="text-xl font-bold text-green-500 mb-2">{t("payment.successTitle")}</h3>
             <p className="text-muted-foreground mb-4">
-              Tu comprobante fue enviado. Te avisaremos por el chat cuando tu pago sea aprobado y tus {pkg.mxn} MxN Points sean acreditados.
+              {t("payment.successMessage", { amount: pkg.mxn })}
             </p>
             <Button 
               onClick={() => router.push(paymentId ? `/purchases?payment=${paymentId}` : '/purchases')} 
               className="w-full bg-purple-600 hover:bg-purple-700 text-white"
             >
-              Continuar al chat
+              {t("payment.continueToChat")}
             </Button>
           </CardContent>
         </Card>

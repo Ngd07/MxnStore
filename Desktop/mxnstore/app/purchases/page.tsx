@@ -356,7 +356,7 @@ function PurchasesContent() {
             height={32}
             className="rounded"
           />
-          <h1 className="text-2xl font-bold text-foreground">Mis Compras</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t("purchases.title")}</h1>
         </div>
 
         {/* Tabs */}
@@ -370,7 +370,7 @@ function PurchasesContent() {
             }`}
           >
             <ShoppingBag className="h-4 w-4" />
-            Tus canjes
+            {t("purchases.yourRedeems")}
           </button>
           <button
             onClick={() => setActiveTab('recargas')}
@@ -381,7 +381,7 @@ function PurchasesContent() {
             }`}
           >
             <Coins className="h-4 w-4" />
-            Tus recargas
+            {t("purchases.yourRecargas")}
           </button>
         </div>
 
