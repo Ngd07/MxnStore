@@ -119,6 +119,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "purchases.empty": "No tienes compras todavia",
     "purchases.login": "Inicia sesion para ver tus compras",
     "purchases.yourRedeems": "Tus canjes",
+    "purchases.yourRecargas": "Tus recargas",
     "purchases.skin": "Skin",
     "purchases.price": "Precio",
     "purchases.fortniteUser": "Usuario Fortnite",
