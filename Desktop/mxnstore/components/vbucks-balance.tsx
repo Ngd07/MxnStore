@@ -62,8 +62,9 @@ export function VbucksBalance() {
   }
 
   return (
-    <div className="flex items-center justify-between rounded-xl border border-yellow-500/50 bg-yellow-500/10 px-4 py-2">
-      <div className="flex items-center gap-3">
+    <div className="flex items-center rounded-xl border border-yellow-500/50 bg-yellow-500/10 px-4 py-2">
+      {/* Left: Balance */}
+      <div className="flex items-center gap-3 shrink-0">
         <Image
           src="/logomxnpoints.png"
           alt="MxN Points"
@@ -79,10 +80,14 @@ export function VbucksBalance() {
           <span className="text-xs text-muted-foreground">{t("profile.vbucks")}</span>
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <span className="text-xs font-bold text-white uppercase tracking-wider drop-shadow-[0_0_8px_rgba(255,255,255,0.7)] shrink-0">
-          CODIGO DE CREADOR: MXNSTORE
-        </span>
+
+      {/* Center: Creator Code */}
+      <span className="flex-1 text-center text-xs font-bold text-white uppercase tracking-wider drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]">
+        CODIGO DE CREADOR: MXNSTORE
+      </span>
+
+      {/* Right: Buttons */}
+      <div className="flex items-center gap-2 shrink-0">
         <button
           onClick={() => router.push('/add-friend')}
           className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-blue-700"
