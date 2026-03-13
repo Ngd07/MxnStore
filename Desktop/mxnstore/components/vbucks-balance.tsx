@@ -63,19 +63,21 @@ export function VbucksBalance() {
 
   return (
     <div className="flex items-center justify-between rounded-xl border border-yellow-500/50 bg-yellow-500/10 px-4 py-2">
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
-          <Image
-            src="/logomxnpoints.png"
-            alt="MxN Points"
-            width={24}
-            height={24}
-            className="rounded"
-          />
-          <span className="text-sm font-medium text-foreground">{t("profile.mxnPoints")}</span>
-          <span className="text-lg font-bold text-yellow-500">{vbucksBalance}</span>
+      <div className="flex items-center gap-3">
+        <Image
+          src="/logomxnpoints.png"
+          alt="MxN Points"
+          width={24}
+          height={24}
+          className="rounded"
+        />
+        <div className="flex flex-col gap-0.5">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-foreground">{t("profile.mxnPoints")}</span>
+            <span className="text-lg font-bold text-yellow-500">{vbucksBalance}</span>
+          </div>
+          <span className="text-xs text-muted-foreground">{t("profile.vbucks")}</span>
         </div>
-        <span className="text-xs text-muted-foreground">{t("profile.vbucks")}</span>
       </div>
       <div className="flex items-center gap-2">
         <span className="text-xs font-bold text-white uppercase tracking-wider drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]">
