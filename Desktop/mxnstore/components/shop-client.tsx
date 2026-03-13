@@ -273,7 +273,7 @@ export function ShopClient() {
           </div>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-3 bg-gradient-to-r from-yellow-500/20 to-purple-500/20 border border-yellow-500/30 rounded-lg px-4 py-2">
-              <span className="text-sm font-bold text-yellow-500 whitespace-nowrap">{t("shop.countdown")}</span>
+              <span className="text-sm font-bold text-yellow-500 uppercase tracking-wide">{t("shop.countdown")}</span>
               <div className="flex items-center">
                 <span className="text-xl font-bold text-yellow-500 font-mono tabular-nums">
                   {String(timeLeft.hours).padStart(2, '0')}<span className="text-yellow-500/60">:</span>{String(timeLeft.minutes).padStart(2, '0')}<span className="text-yellow-500/60">:</span>{String(timeLeft.seconds).padStart(2, '0')}
