@@ -145,7 +145,7 @@ export default function PaymentPage({ params }: PageProps) {
               Tu comprobante fue enviado. Te avisaremos por el chat cuando tu pago sea aprobado y tus {pkg.mxn} MxN Points sean acreditados.
             </p>
             <Button 
-              onClick={() => router.push(paymentId ? `/purchases?chat=${paymentId}` : '/purchases')} 
+              onClick={() => router.push(paymentId ? `/purchases?payment=${paymentId}` : '/purchases')} 
               className="w-full bg-purple-600 hover:bg-purple-700 text-white"
             >
               Continuar al chat
