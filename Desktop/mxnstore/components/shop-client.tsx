@@ -26,9 +26,9 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 
 const ACCOUNT_ITEMS = [
-  { id: "account-13500", name: "Cuenta Fortnite 13,500 V-Bucks", price: 13500, description: "13500 MxN" },
-  { id: "account-27000", name: "Cuenta Fortnite 27,000 V-Bucks", price: 26000, description: "26000 MxN" },
-  { id: "account-40500", name: "Cuenta Fortnite 40,500 V-Bucks", price: 37000, description: "37000 MxN" },
+  { id: "account-13500", name: "Cuenta con 13,500 V-Bucks - 13,500 MxN", price: 13500, description: "" },
+  { id: "account-27000", name: "Cuenta con 27,000 V-Bucks - 26,000 MxN", price: 26000, description: "" },
+  { id: "account-40500", name: "Cuenta con 40,500 V-Bucks - 37,000 MxN", price: 37000, description: "" },
 ];
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -329,8 +329,6 @@ export function ShopClient() {
                       <div className="aspect-square relative mb-3 bg-muted rounded-lg flex items-center justify-center">
                         <Store className="h-16 w-16 text-muted-foreground" />
                       </div>
-                      <h3 className="font-bold text-foreground mb-1">{item.name}</h3>
-                      <p className="text-sm text-muted-foreground mb-3">{item.description}</p>
                       <div className="flex items-center justify-between">
                         <span className="text-lg font-bold text-yellow-500">{item.price.toLocaleString()} MxN</span>
                         <button
