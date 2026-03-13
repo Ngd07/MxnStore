@@ -14,6 +14,10 @@ const PACKAGES = [
   { id: '9e8d117d-2224-41c3-92dc-d96aa42a6f30', mxn: 5000, price: 18.00, paymentLink: 'https://app.takenos.com/pay/9e8d117d-2224-41c3-92dc-d96aa42a6f30' },
   { id: 'adf34f8c-55c8-4fcc-97ab-5578991b5acd', mxn: 10000, price: 35.00, paymentLink: 'https://app.takenos.com/pay/adf34f8c-55c8-4fcc-97ab-5578991b5acd' },
   { id: 'ae20b72f-9084-4ef6-a6ee-91864ff19ba6', mxn: 13500, price: 45.00, paymentLink: 'https://app.takenos.com/pay/ae20b72f-9084-4ef6-a6ee-91864ff19ba6' },
+  // Account packages
+  { id: 'account-13500', mxn: 13500, price: 45.00, paymentLink: '', isAccount: true },
+  { id: 'account-27000', mxn: 27000, price: 85.00, paymentLink: '', isAccount: true },
+  { id: 'account-40500', mxn: 40500, price: 125.00, paymentLink: '', isAccount: true },
 ]
 
 interface PageProps {
@@ -26,6 +30,7 @@ export default function PaymentPage({ params }: PageProps) {
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
   const [email, setEmail] = useState('')
+  const [fortniteUsername, setFortniteUsername] = useState('')
   const [receiptFile, setReceiptFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -83,6 +88,10 @@ export default function PaymentPage({ params }: PageProps) {
       formData.append('price', String(pkg.price))
       if (user?.id) {
         formData.append('userId', user.id)
+      }
+      if (pkg.isAccount && fortniteUsername.trim()) {
+        formData.append('fortniteUsername', fortniteUsername.trim())
+        formData.append('isAccount', 'true')
       }
 
       const response = await fetch('/api/submit-receipt', {
@@ -170,27 +179,41 @@ export default function PaymentPage({ params }: PageProps) {
       </header>
 
       <main className="mx-auto max-w-md px-4 py-8 space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-center">${pkg.price} USD</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <a
-              href={pkg.paymentLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-4 rounded-lg font-medium text-lg"
-            >
-              Ir a pagar
-            </a>
-            <p className="text-xs text-center text-muted-foreground mt-2">
-              Se abrirá Takenos en una nueva ventana
-            </p>
-          </CardContent>
-        </Card>
+        {pkg.isAccount ? (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-center">{pkg.mxn.toLocaleString()} MxN Points</CardTitle>
+              <p className="text-center text-2xl font-bold text-yellow-500">${pkg.price} USD</p>
+            </CardHeader>
+            <CardContent>
+              <p className="text-center text-muted-foreground mb-4">
+                Cuenta Fortnite con {pkg.mxn.toLocaleString()} MxN Points
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-center">${pkg.price} USD</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <a
+                href={pkg.paymentLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-4 rounded-lg font-medium text-lg"
+              >
+                Ir a pagar
+              </a>
+              <p className="text-xs text-center text-muted-foreground mt-2">
+                Se abrirá Takenos en una nueva ventana
+              </p>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="text-center">
-          <p className="text-muted-foreground">Una vez que pagues, completa tus datos:</p>
+          <p className="text-muted-foreground">{pkg.isAccount ? 'Completa tus datos para la cuenta:' : 'Una vez que pagues, completa tus datos:'}</p>
         </div>
 
         <Card>
@@ -214,6 +237,18 @@ export default function PaymentPage({ params }: PageProps) {
               />
             </div>
 
+            {pkg.isAccount && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium">Usuario de Fortnite:</label>
+                <Input
+                  type="text"
+                  placeholder="Tu usuario en Fortnite"
+                  value={fortniteUsername}
+                  onChange={(e) => setFortniteUsername(e.target.value)}
+                />
+              </div>
+            )}
+
             <div className="space-y-2">
               <label className="text-sm font-medium">Comprobante de pago:</label>
               <input
@@ -226,7 +261,7 @@ export default function PaymentPage({ params }: PageProps) {
 
             <Button
               onClick={handleSubmit}
-              disabled={!email.trim() || !receiptFile || uploading}
+              disabled={!email.trim() || (pkg.isAccount && !fortniteUsername.trim()) || !receiptFile || uploading}
               className="w-full bg-yellow-500 hover:bg-yellow-600 text-black"
             >
               {uploading ? (

@@ -45,6 +45,7 @@ interface Recarga {
   mxn_amount: number
   usd_amount: number
   receipt_url?: string
+  fortnite_username?: string
   status: string
   created_at: string
 }
@@ -595,6 +596,7 @@ export default function AdminPanelPage() {
                       <tr className="border-b border-border">
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Fecha</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Email</th>
+                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">Usuario Fortnite</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Paquete</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">MxN</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">USD</th>
@@ -616,6 +618,7 @@ export default function AdminPanelPage() {
                             })}
                           </td>
                           <td className="p-3 text-sm text-foreground">{r.email || '-'}</td>
+                          <td className="p-3 text-sm text-foreground">{r.fortnite_username || '-'}</td>
                           <td className="p-3 text-sm text-foreground">{r.package_id || '-'}</td>
                           <td className="p-3 text-sm font-bold text-yellow-500">{r.mxn_amount}</td>
                           <td className="p-3 text-sm text-foreground">${r.usd_amount}</td>

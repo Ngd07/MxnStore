@@ -13,6 +13,8 @@ export async function POST(request: NextRequest) {
     const mxnStr = formData.get("mxn") as string;
     const priceStr = formData.get("price") as string;
     const userIdFromForm = formData.get("userId") as string;
+    const fortniteUsername = formData.get("fortniteUsername") as string;
+    const isAccount = formData.get("isAccount") === "true";
 
     if (!email || !receipt) {
       return NextResponse.json(
@@ -72,6 +74,7 @@ export async function POST(request: NextRequest) {
         usd_amount: price,
         package_id: packageId,
         receipt_url: receiptUrl,
+        fortnite_username: isAccount ? fortniteUsername : null,
         status: "pending",
       })
       .select()

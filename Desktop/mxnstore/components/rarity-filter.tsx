@@ -24,6 +24,7 @@ const rarityColors: Record<string, string> = {
   frozen: "bg-sky-300/20 text-sky-300 border-sky-300/40 hover:bg-sky-300/30",
   lava: "bg-orange-500/20 text-orange-400 border-orange-500/40 hover:bg-orange-500/30",
   dark: "bg-fuchsia-700/20 text-fuchsia-300 border-fuchsia-700/40 hover:bg-fuchsia-700/30",
+  accounts: "bg-green-500/20 text-green-400 border-green-500/40 hover:bg-green-500/30",
 };
 
 const rarityLabels: Record<string, string> = {
@@ -42,6 +43,7 @@ const rarityLabels: Record<string, string> = {
   frozen: "Frozen",
   lava: "Lava",
   dark: "Dark",
+  accounts: "Cuentas",
 };
 
 export function RarityFilter({ rarities, selected, onChange }: RarityFilterProps) {
