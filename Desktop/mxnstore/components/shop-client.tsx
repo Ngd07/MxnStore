@@ -28,8 +28,14 @@ import { Card, CardContent } from "@/components/ui/card";
 const ACCOUNT_ITEMS = [
   { id: "account-13500", name: "Cuenta con 13,500 V-Bucks", price: 13500, description: "Cuenta totalmente nueva con 13.500 V-Bucks. Lista para usarla o para enviar regalos." },
   { id: "account-27000", name: "Cuenta con 27,000 V-Bucks", price: 26000, description: "Cuenta totalmente nueva con 27.000 V-Bucks. Lista para usarla o para enviar regalos." },
-  { id: "account-40500", name: "Cuenta con 40,500 V-Bucks", price: 37000, description: "Cuenta totalmente nueva con 40.500 V-Bucks. Lista para usarla o para enviar regalos." },
+  { id: "account-40500", name: "Cuenta con 40,500 V-Bucks", price: 37000, description: "Cuenta totally nueva con 40.500 V-Bucks. Lista para usarla o para enviar regalos." },
 ];
+
+const getAccountItems = (t: any) => ACCOUNT_ITEMS.map(item => ({
+  ...item,
+  name: t(`shop.${item.id}Name`) !== `shop.${item.id}Name` ? t(`shop.${item.id}Name`) : item.name,
+  description: t(`shop.${item.id}Desc`) !== `shop.${item.id}Desc` ? t(`shop.${item.id}Desc`) : item.description,
+}));
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -80,7 +86,7 @@ export function ShopClient() {
   const [balanceLoading, setBalanceLoading] = useState(true);
   
   // Account purchase dialog
-  const [selectedAccount, setSelectedAccount] = useState<typeof ACCOUNT_ITEMS[0] | null>(null);
+  const [selectedAccount, setSelectedAccount] = useState<{ id: string; name: string; price: number; description: string } | null>(null);
   const [fortniteUsername, setFortniteUsername] = useState("");
   const [purchasing, setPurchasing] = useState(false);
   const [purchaseMessage, setPurchaseMessage] = useState("");
@@ -104,11 +110,12 @@ export function ShopClient() {
   }, []);
 
   // Get account items filtered by search
+  const accountItems = getAccountItems(t);
   const filteredAccountItems = useMemo(() => {
-    return ACCOUNT_ITEMS.filter(item => 
+    return accountItems.filter(item => 
       item.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
-  }, [searchQuery]);
+  }, [searchQuery, accountItems]);
 
   const handleBuyAccount = async () => {
     if (!user) {
