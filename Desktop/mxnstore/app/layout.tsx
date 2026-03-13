@@ -1,17 +1,11 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
-import { Bangers } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import { I18nProvider } from '@/lib/i18n'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
-const _bangers = Bangers({ 
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-bangers"
-});
 
 export const metadata: Metadata = {
   title: 'MxNStore - Tienda de Fortnite',
@@ -41,7 +35,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${_geist.className} ${_bangers.variable} font-sans antialiased`}>
+      <body className={`${_geist.className} font-sans antialiased`}>
         <I18nProvider>
           {children}
         </I18nProvider>
