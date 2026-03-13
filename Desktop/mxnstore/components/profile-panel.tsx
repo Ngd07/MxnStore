@@ -259,7 +259,7 @@ export function ProfilePanel() {
           </button>
 
           {/* Creator Code - at bottom */}
-          <div className="mt-auto pt-4">
+          <div className="mt-auto pt-8">
             <span className="flex justify-center text-sm font-bold text-white uppercase tracking-widest drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]">
               {t("profile.creatorCode")} MXNSTORE
             </span>
