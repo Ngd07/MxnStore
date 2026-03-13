@@ -84,6 +84,15 @@ const rarityLabels: Record<string, string> = {
 };
 
 function getItemImage(entry: ShopEntry): string | null {
+  // For bundles, prioritize bundle image
+  if (entry.bundle?.image) {
+    const img = entry.bundle.image;
+    if (img) {
+      if (img.startsWith('http')) return img;
+      if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
+    }
+  }
+
   // Collect all possible images from different sources
   const images: string[] = [];
   
@@ -91,15 +100,6 @@ function getItemImage(entry: ShopEntry): string | null {
   if (entry.brItems && entry.brItems.length > 0) {
     const item = entry.brItems[0];
     const img = item.images.featured || item.images.icon || item.images.smallIcon;
-    if (img) {
-      if (img.startsWith('http')) images.push(img);
-      else if (img.startsWith('/')) images.push(`https://fortnite-api.com${img}`);
-    }
-  }
-
-  // Try bundle image
-  if (entry.bundle?.image) {
-    const img = entry.bundle.image;
     if (img) {
       if (img.startsWith('http')) images.push(img);
       else if (img.startsWith('/')) images.push(`https://fortnite-api.com${img}`);
