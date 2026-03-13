@@ -271,13 +271,15 @@ export function ShopClient() {
               </h1>
             </div>
           </div>
-          <div className="flex items-center gap-1 bg-secondary rounded-lg px-3 py-1.5">
-            <span className="text-xs text-muted-foreground">{t("shop.countdown")}</span>
-            <span className="text-sm font-bold text-yellow-500 font-mono">
-              {String(timeLeft.hours).padStart(2, '0')}:
-              {String(timeLeft.minutes).padStart(2, '0')}:
-              {String(timeLeft.seconds).padStart(2, '0')}
-            </span>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 bg-gradient-to-r from-yellow-500/20 to-purple-500/20 border border-yellow-500/30 rounded-lg px-3 py-1.5">
+              <div className="flex flex-col items-center">
+                <span className="text-[10px] uppercase text-muted-foreground tracking-wider">{t("shop.countdown")}</span>
+                <span className="text-lg font-bold text-yellow-500 font-mono tabular-nums">
+                  {String(timeLeft.hours).padStart(2, '0')}<span className="text-yellow-500/60">:</span>{String(timeLeft.minutes).padStart(2, '0')}<span className="text-yellow-500/60">:</span>{String(timeLeft.seconds).padStart(2, '0')}
+                </span>
+              </div>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <NotificationsBell />
