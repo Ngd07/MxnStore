@@ -439,7 +439,7 @@ function PurchasesContent() {
                           <p className="font-medium text-foreground">{selectedPurchase.fortnite_username || '-'}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground">Estado</p>
+                          <p className="text-sm text-muted-foreground">{t("purchases.status")}</p>
                           <span className={`inline-block px-2 py-1 rounded-full text-xs ${getStatusColor(selectedPurchase.status)}`}>
                             {getStatusText(selectedPurchase.status)}
                           </span>
@@ -594,7 +594,7 @@ function PurchasesContent() {
                           <p className="font-medium text-foreground text-sm">{selectedPayment.email || '-'}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground">Estado</p>
+                          <p className="text-sm text-muted-foreground">{t("purchases.status")}</p>
                           <span className={`inline-block px-2 py-1 rounded-full text-xs ${getStatusColor(selectedPayment.status)}`}>
                             {getStatusText(selectedPayment.status)}
                           </span>
