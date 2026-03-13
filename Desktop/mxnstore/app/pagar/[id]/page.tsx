@@ -34,6 +34,7 @@ export default function PaymentPage({ params }: PageProps) {
   const [receiptFile, setReceiptFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [paymentId, setPaymentId] = useState<string | null>(null)
   const [error, setError] = useState('')
 
   useEffect(() => {
@@ -94,6 +95,7 @@ export default function PaymentPage({ params }: PageProps) {
       const data = await response.json()
 
       if (data.success) {
+        setPaymentId(data.payment?.id || null)
         setSubmitted(true)
       } else {
         setError(data.error || 'Error al enviar')
@@ -140,10 +142,13 @@ export default function PaymentPage({ params }: PageProps) {
             </div>
             <h3 className="text-xl font-bold text-green-500 mb-2">Listo!</h3>
             <p className="text-muted-foreground mb-4">
-              Tu comprobante fue enviado. Te avisaremos por email cuando tu pago sea aprobado y tus {pkg.mxn} MxN Points sean acreditados.
+              Tu comprobante fue enviado. Te avisaremos por el chat cuando tu pago sea aprobado y tus {pkg.mxn} MxN Points sean acreditados.
             </p>
-            <Button onClick={() => window.close()} className="w-full">
-              Cerrar
+            <Button 
+              onClick={() => router.push(paymentId ? `/purchases?chat=${paymentId}` : '/purchases')} 
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+            >
+              Continuar al chat
             </Button>
           </CardContent>
         </Card>
