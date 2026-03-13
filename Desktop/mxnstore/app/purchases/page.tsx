@@ -61,6 +61,7 @@ function PurchasesContent() {
   const { t } = useI18n()
   const searchParams = useSearchParams()
   const purchaseId = searchParams.get('purchase')
+  const paymentId = searchParams.get('payment')
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
   const [activeTab, setActiveTab] = useState<'canjes' | 'recargas'>('canjes')
@@ -126,7 +127,13 @@ function PurchasesContent() {
         if (paymentsData) {
           setPayments(paymentsData)
           if (paymentsData.length > 0) {
-            setSelectedPayment(paymentsData[0])
+            if (paymentId) {
+              const found = paymentsData.find(p => p.id === paymentId)
+              setSelectedPayment(found || paymentsData[0])
+              setActiveTab('recargas')
+            } else {
+              setSelectedPayment(paymentsData[0])
+            }
           }
         }
       }
