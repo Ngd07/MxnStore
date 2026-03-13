@@ -26,9 +26,9 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 
 const ACCOUNT_ITEMS = [
-  { id: "account-13500", name: "Cuenta con 13,500 V-Bucks - 13,500 MxN", price: 13500 },
-  { id: "account-27000", name: "Cuenta con 27,000 V-Bucks - 26,000 MxN", price: 26000 },
-  { id: "account-40500", name: "Cuenta con 40,500 V-Bucks - 37,000 MxN", price: 37000 },
+  { id: "account-13500", name: "Cuenta con 13,500 V-Bucks", price: 13500 },
+  { id: "account-27000", name: "Cuenta con 27,000 V-Bucks", price: 26000 },
+  { id: "account-40500", name: "Cuenta con 40,500 V-Bucks", price: 37000 },
 ];
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -339,7 +339,10 @@ export function ShopClient() {
                         />
                       </div>
                       <h3 className="font-bold text-foreground mb-1">{item.name}</h3>
-                      <span className="text-lg font-bold text-yellow-500">{item.price.toLocaleString()} MxN</span>
+                      <div className="flex items-center gap-1">
+                        <Image src="/logomxnpoints.png" alt="MxN" width={20} height={20} className="rounded" />
+                        <span className="text-lg font-bold text-yellow-500">{item.price.toLocaleString()} MxN</span>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -399,7 +402,7 @@ export function ShopClient() {
               <Button
                 onClick={handleBuyAccount}
                 disabled={purchasing || !fortniteUsername.trim() || balance < selectedAccount.price}
-                className="w-full bg-yellow-500 hover:bg-yellow-600 text-black"
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white"
               >
                 {purchasing ? (
                   <>
