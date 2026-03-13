@@ -10,11 +10,16 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { ProfilePanel } from "@/components/profile-panel";
 import { VbucksBalance } from "@/components/vbucks-balance";
 import { NotificationsBell } from "@/components/notifications-bell";
-import { ShopCountdown } from "@/components/shop-countdown";
 import type { ShopData, ShopEntry } from "@/lib/types";
-import { RotateCw } from "lucide-react";
+import { Store } from "lucide-react";
 import Image from "next/image";
 import { useI18n } from "@/lib/i18n";
+
+const ACCOUNT_ITEMS = [
+  { id: "account-13500", name: "Cuenta Fortnite 13,500 MxN", price: 13500, description: "Cuenta con 13,500 MxN Points" },
+  { id: "account-27000", name: "Cuenta Fortnite 27,000 MxN", price: 27000, description: "Cuenta con 27,000 MxN Points" },
+  { id: "account-40500", name: "Cuenta Fortnite 40,500 MxN", price: 40500, description: "Cuenta con 40,500 MxN Points" },
+];
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -61,6 +66,13 @@ export function ShopClient() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRarity, setSelectedRarity] = useState("all");
 
+  // Get account items filtered by search
+  const filteredAccountItems = useMemo(() => {
+    return ACCOUNT_ITEMS.filter(item => 
+      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery]);
+
   const entries = data?.data?.entries ?? [];
   const vbuckIcon = data?.data?.vbuckIcon ?? "";
   const shopDate = data?.data?.date ?? "";
@@ -85,7 +97,7 @@ export function ShopClient() {
 
   // Get unique rarities
   const rarities = useMemo(() => {
-    const raritySet = new Set<string>();
+    const raritySet = new Set<string>(["accounts"]);
     entries.forEach((entry) => {
       raritySet.add(getItemRarity(entry));
     });
@@ -140,28 +152,30 @@ export function ShopClient() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto max-w-7xl px-2 sm:px-4 py-2 sm:py-4">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <Image
-                src="/logo.png"
-                alt="MxNStore"
-                width={32}
-                height={32}
-                className="rounded-lg object-cover"
-              />
-              <h1 className="text-lg sm:text-2xl font-bold text-foreground">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+          <div className="flex items-center gap-3">
+            <Image
+              src="/logo.png"
+              alt="MxNStore"
+              width={40}
+              height={40}
+              className="rounded-lg object-cover"
+            />
+            <div>
+              <h1 className="text-lg font-bold text-foreground">
                 MxNStore
               </h1>
+              {formattedDate && (
+                <p className="text-xs text-muted-foreground capitalize">
+                  {formattedDate}
+                </p>
+              )}
             </div>
-            <div className="hidden sm:flex-1 sm:flex sm:justify-center">
-              <ShopCountdown />
-            </div>
-            <div className="flex items-center gap-1 sm:gap-2">
-              <NotificationsBell />
-              <LanguageSwitcher />
-              <ProfilePanel />
-            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <NotificationsBell />
+            <LanguageSwitcher />
+            <ProfilePanel />
           </div>
         </div>
       </header>
@@ -198,9 +212,8 @@ export function ShopClient() {
             </p>
             <button
               onClick={() => mutate()}
-              className="mt-4 flex items-center gap-3 rounded-lg bg-primary px-12 py-5 text-xl font-bold text-primary-foreground transition-colors hover:bg-primary/90 hover:scale-105 active:scale-95"
+              className="mt-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
             >
-              <RotateCw className="h-8 w-8" />
               {t("shop.retry")}
             </button>
           </div>
@@ -221,15 +234,41 @@ export function ShopClient() {
 
         {!isLoading && !error && (
           <div className="flex flex-col gap-10">
-            {sections.map(([sectionName, sectionEntries], sectionIndex) => (
-              <ShopSection
-                key={sectionName}
-                name={sectionName}
-                entries={sectionEntries}
-                vbuckIcon={vbuckIcon}
-                isFirstSection={sectionIndex === 0}
-              />
-            ))}
+            {selectedRarity === "accounts" ? (
+              <div>
+                <h2 className="text-xl font-bold text-foreground mb-4">Cuentas Fortnite</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredAccountItems.map((item) => (
+                    <div key={item.id} className="border border-border rounded-lg p-4 bg-card hover:bg-secondary/50 transition-colors">
+                      <div className="aspect-square relative mb-3 bg-muted rounded-lg flex items-center justify-center">
+                        <Store className="h-16 w-16 text-muted-foreground" />
+                      </div>
+                      <h3 className="font-bold text-foreground mb-1">{item.name}</h3>
+                      <p className="text-sm text-muted-foreground mb-3">{item.description}</p>
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg font-bold text-yellow-500">{item.price.toLocaleString()} MxN</span>
+                        <a
+                          href={`/pagar/${item.id}`}
+                          className="px-4 py-2 bg-yellow-500 text-black font-medium rounded-lg hover:bg-yellow-600 transition-colors"
+                        >
+                          Comprar
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              sections.map(([sectionName, sectionEntries], sectionIndex) => (
+                <ShopSection
+                  key={sectionName}
+                  name={sectionName}
+                  entries={sectionEntries}
+                  vbuckIcon={vbuckIcon}
+                  isFirstSection={sectionIndex === 0}
+                />
+              ))
+            )}
           </div>
         )}
       </main>
