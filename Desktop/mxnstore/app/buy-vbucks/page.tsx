@@ -5,25 +5,30 @@ import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Coins, ArrowLeft, Copy, Check, MessageCircle } from 'lucide-react'
+import { ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import { useI18n } from '@/lib/i18n'
 
-const PACKAGES = [
-  { mxn: 1000, price: 8.99, popular: false },
-  { mxn: 2800, price: 22.99, popular: true },
-  { mxn: 5000, price: 37.99, popular: false },
-  { mxn: 10000, price: 69.99, popular: false },
+const PACKAGES: { id: string; mxn: number; price: number; popular: boolean; bestPrice?: boolean }[] = [
+  { id: '53020cef-71b2-42f7-ac76-9bc871d5036c', mxn: 2000, price: 8.00, popular: false },
+  { id: '9e8d117d-2224-41c3-92dc-d96aa42a6f30', mxn: 5000, price: 18.00, popular: false },
+  { id: 'adf34f8c-55c8-4fcc-97ab-5578991b5acd', mxn: 10000, price: 35.00, popular: false },
+  { id: 'ae20b72f-9084-4ef6-a6ee-91864ff19ba6', mxn: 13500, price: 45.00, popular: true, bestPrice: true },
 ]
+
+const PAYMENT_LINKS: Record<string, string> = {
+  '53020cef-71b2-42f7-ac76-9bc871d5036c': 'https://app.takenos.com/pay/53020cef-71b2-42f7-ac76-9bc871d5036c',
+  '9e8d117d-2224-41c3-92dc-d96aa42a6f30': 'https://app.takenos.com/pay/9e8d117d-2224-41c3-92dc-d96aa42a6f30',
+  'adf34f8c-55c8-4fcc-97ab-5578991b5acd': 'https://app.takenos.com/pay/adf34f8c-55c8-4fcc-97ab-5578991b5acd',
+  'ae20b72f-9084-4ef6-a6ee-91864ff19ba6': 'https://app.takenos.com/pay/ae20b72f-9084-4ef6-a6ee-91864ff19ba6',
+}
 
 export default function BuyVbucksPage() {
   const router = useRouter()
   const { t } = useI18n()
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [copied, setCopied] = useState(false)
-  const [showPaymentInfo, setShowPaymentInfo] = useState(false)
-  const [selectedPackage, setSelectedPackage] = useState<any>(null)
+  const [selectedPackage, setSelectedPackage] = useState<{ id: string; mxn: number; price: number; popular: boolean; bestPrice?: boolean } | null>(null)
 
   useEffect(() => {
     const checkUser = async () => {
@@ -33,28 +38,6 @@ export default function BuyVbucksPage() {
     }
     checkUser()
   }, [])
-
-  const handleCopyCVU = () => {
-    navigator.clipboard.writeText('0000003100058974123456')
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
-  const handlePaymentConfirm = async () => {
-    if (!selectedPackage || !user) return
-
-    try {
-      await supabase.from('transactions').insert({
-        user_id: user.id,
-        type: 'purchase',
-        amount: selectedPackage.mxn,
-        status: 'pending'
-      })
-    alert(t("buy.whatsapp"))
-  } catch (error) {
-    alert(t("buy.whatsapp"))
-  }
-}
 
   if (loading) {
     return (
@@ -129,8 +112,8 @@ export default function BuyVbucksPage() {
               onClick={() => setSelectedPackage(pkg)}
             >
               {pkg.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full z-10">
-                  {t("buy.popular").toUpperCase()}
+                <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-yellow-500 text-black text-[10px] font-bold px-3 py-1 rounded-full z-10">
+                  {pkg.bestPrice ? "MEJOR PRECIO" : t("buy.popular").toUpperCase()}
                 </div>
               )}
               <CardContent className="pt-8 text-center">
@@ -152,57 +135,26 @@ export default function BuyVbucksPage() {
         </div>
 
         {/* Payment Info */}
-        {selectedPackage && !showPaymentInfo && (
-          <div className="text-center">
-            <Button 
-              onClick={() => setShowPaymentInfo(true)}
-              className="bg-green-600 hover:bg-green-700 text-lg px-8 py-6"
-            >
-              {t("buy.continueToPayment")}
-            </Button>
-          </div>
-        )}
-
-        {showPaymentInfo && (
+        {selectedPackage && (
           <Card className="max-w-md mx-auto">
             <CardHeader>
-              <CardTitle>{t("buy.transferDetails")}</CardTitle>
+              <CardTitle>{selectedPackage.mxn} MxN Points</CardTitle>
               <CardDescription>
-                {t("buy.step2")} ${selectedPackage.price} USD
+                ${selectedPackage.price} USD
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="bg-muted p-4 rounded-lg">
-                <p className="text-sm text-muted-foreground mb-1">CVU / Alias:</p>
-                <div className="flex items-center gap-2">
-                  <code className="flex-1 text-foreground font-mono">0000003100058974123456</code>
-                  <button
-                    onClick={handleCopyCVU}
-                    className="p-2 hover:bg-accent rounded"
-                  >
-                    {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <div className="bg-yellow-500/10 border border-yellow-500/30 p-4 rounded-lg">
-                <p className="text-sm text-yellow-500 font-medium">
-                  {t("buy.step3")}
-                </p>
-              </div>
-
               <a
-                href="https://wa.me/5491166666666"
+                href={`/pagar/${selectedPackage.id}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-medium"
+                className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-4 rounded-lg font-medium text-lg"
               >
-                <MessageCircle className="h-5 w-5" />
-                {t("buy.whatsapp")}
+                Continuar al pago
               </a>
 
               <p className="text-xs text-muted-foreground text-center">
-                {t("buy.step4")}
+                {t("buy.seAbrira")}
               </p>
             </CardContent>
           </Card>
