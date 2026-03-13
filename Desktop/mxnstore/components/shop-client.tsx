@@ -362,12 +362,17 @@ export function ShopClient() {
       {/* Account Purchase Dialog */}
       <Dialog open={!!selectedAccount} onOpenChange={(open) => !open && setSelectedAccount(null)}>
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Comprar Cuenta Fortnite</DialogTitle>
-          </DialogHeader>
           {selectedAccount && (
             <div className="space-y-4">
-              <div className="text-center p-4 bg-muted rounded-lg">
+              <div className="relative w-full aspect-square bg-muted rounded-lg overflow-hidden">
+                <Image
+                  src="/cuentasfoto.png"
+                  alt="Cuenta Fortnite"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+              <div className="text-center">
                 <p className="font-bold text-lg text-foreground">{selectedAccount.name}</p>
                 <p className="text-2xl font-bold text-yellow-500">{selectedAccount.price.toLocaleString()} MxN</p>
               </div>
