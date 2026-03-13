@@ -67,7 +67,7 @@ export default function PaymentPage({ params }: PageProps) {
 
   const handleSubmit = async () => {
     if (!pkg || !email.trim() || !receiptFile) {
-      setError('Completa todos los campos')
+      setError(t("payment.completaCampos"))
       return
     }
 
@@ -103,7 +103,7 @@ export default function PaymentPage({ params }: PageProps) {
         setError(data.error || 'Error al enviar')
       }
     } catch (err) {
-      setError('Error al enviar')
+      setError(t("payment.errorEnviar"))
     } finally {
       setUploading(false)
     }
@@ -122,9 +122,9 @@ export default function PaymentPage({ params }: PageProps) {
       <div className="min-h-screen bg-background flex items-center justify-center p-4">
         <Card>
           <CardContent className="pt-6">
-            <p className="text-center mb-4">Paquete no encontrado</p>
+            <p className="text-center mb-4">{t("payment.notFound")}</p>
             <Button onClick={() => router.push('/buy-vucks')} className="w-full">
-              Volver a la tienda
+              {t("payment.volverTienda")}
             </Button>
           </CardContent>
         </Card>
@@ -186,7 +186,7 @@ export default function PaymentPage({ params }: PageProps) {
             </CardHeader>
             <CardContent>
               <p className="text-center text-muted-foreground mb-4">
-                Cuenta Fortnite con {pkg.mxn.toLocaleString()} MxN Points
+                {t("buy.cuentaFortnite", { amount: pkg.mxn.toLocaleString() })}
               </p>
             </CardContent>
           </Card>
@@ -205,19 +205,19 @@ export default function PaymentPage({ params }: PageProps) {
                 Ir a pagar
               </a>
               <p className="text-xs text-center text-muted-foreground mt-2">
-                Se abrirá Takenos en una nueva ventana
+                {t("buy.seAbrira")}
               </p>
             </CardContent>
           </Card>
         )}
 
         <div className="text-center">
-          <p className="text-muted-foreground">{pkg.isAccount ? 'Completa tus datos para la cuenta:' : 'Una vez que pagues, completa tus datos:'}</p>
+          <p className="text-muted-foreground">{t("buy.unaVezQuePagues")}</p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Datos para acreditar</CardTitle>
+            <CardTitle>{t("payment.accreditData")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {error && (
@@ -227,10 +227,10 @@ export default function PaymentPage({ params }: PageProps) {
             )}
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Tu email:</label>
+              <label className="text-sm font-medium">{t("payment.yourEmail")}</label>
               <Input
                 type="email"
-                placeholder="tu@email.com"
+                placeholder={t("payment.emailPlaceholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -238,10 +238,10 @@ export default function PaymentPage({ params }: PageProps) {
 
             {pkg.isAccount && (
               <div className="space-y-2">
-                <label className="text-sm font-medium">Usuario de Fortnite:</label>
+                <label className="text-sm font-medium">{t("payment.fortniteUser")}</label>
                 <Input
                   type="text"
-                  placeholder="Tu usuario en Fortnite"
+                  placeholder={t("payment.fortnitePlaceholder")}
                   value={fortniteUsername}
                   onChange={(e) => setFortniteUsername(e.target.value)}
                 />
@@ -249,7 +249,7 @@ export default function PaymentPage({ params }: PageProps) {
             )}
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Comprobante de pago:</label>
+              <label className="text-sm font-medium">{t("payment.receipt")}</label>
               <input
                 type="file"
                 accept="image/*,.pdf"
@@ -266,12 +266,12 @@ export default function PaymentPage({ params }: PageProps) {
               {uploading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Enviando...
+                  {t("payment.enviando")}
                 </>
               ) : (
                 <>
                   <Send className="mr-2 h-4 w-4" />
-                  Enviar comprobante
+                  {t("payment.enviarComprobante")}
                 </>
               )}
             </Button>
