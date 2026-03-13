@@ -202,7 +202,7 @@ export default function PaymentPage({ params }: PageProps) {
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-4 rounded-lg font-medium text-lg"
               >
-                Ir a pagar
+                {t("buy.irAPagar")}
               </a>
               <p className="text-xs text-center text-muted-foreground mt-2">
                 {t("buy.seAbrira")}
