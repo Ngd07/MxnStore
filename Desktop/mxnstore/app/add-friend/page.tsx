@@ -116,7 +116,7 @@ export default function AgregarAmigoPage() {
 
   const handleSaveAndAdd = async () => {
     if (!epicId.trim()) {
-      setMessage(t("profile.epicIdRequired") || "Ingresa tu Epic ID");
+      setMessage(t("profile.epicIdRequired"));
       setMessageType("error");
       return;
     }
@@ -154,7 +154,7 @@ export default function AgregarAmigoPage() {
         
         if (insertError) {
           console.error("Error saving pending request:", insertError);
-          setMessage(t("profile.errorSaving") || "Error al guardar");
+          setMessage(t("profile.errorSaving"));
           setMessageType("error");
         } else {
           setMessage(t("profile.requestSaved") || "Solicitud guardada. Se enviara cuando los bots esten activos.");
