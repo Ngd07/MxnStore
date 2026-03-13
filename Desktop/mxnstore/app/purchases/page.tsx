@@ -298,12 +298,12 @@ function PurchasesContent() {
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case 'pending': return 'Pendiente'
-      case 'processing': return 'Procesando'
-      case 'completed': return 'Entregado'
-      case 'approved': return 'Aprobado'
-      case 'rejected': return 'Rechazado'
-      case 'cancelled': return 'Cancelado'
+      case 'pending': return t("purchases.statusPending")
+      case 'processing': return t("purchases.statusProcessing")
+      case 'completed': return t("purchases.statusCompleted")
+      case 'approved': return t("purchases.statusApproved")
+      case 'rejected': return t("purchases.statusRejected")
+      case 'cancelled': return t("purchases.statusCancelled")
       default: return status
     }
   }
@@ -332,8 +332,8 @@ function PurchasesContent() {
         <Card className="w-full max-w-md">
           <CardContent className="pt-6 text-center">
             <ShoppingBag className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-foreground mb-2">Inicia sesión</h2>
-            <p className="text-muted-foreground">Debes iniciar sesión para ver tus compras</p>
+            <h2 className="text-xl font-bold text-foreground mb-2">{t("profile.login")}</h2>
+            <p className="text-muted-foreground">{t("purchases.login")}</p>
           </CardContent>
         </Card>
       </div>
@@ -427,15 +427,15 @@ function PurchasesContent() {
                     <CardContent className="pt-4">
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <p className="text-sm text-muted-foreground">Skin</p>
+                          <p className="text-sm text-muted-foreground">{t("purchases.skin")}</p>
                           <p className="font-bold text-foreground">{selectedPurchase.skin_name}</p>
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground">Precio</p>
+                          <p className="text-sm text-muted-foreground">{t("purchases.price")}</p>
                           <p className="font-bold text-yellow-500">{selectedPurchase.skin_price} MxN</p>
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground">Usuario Fortnite</p>
+                          <p className="text-sm text-muted-foreground">{t("purchases.fortniteUser")}</p>
                           <p className="font-medium text-foreground">{selectedPurchase.fortnite_username || '-'}</p>
                         </div>
                         <div>
@@ -512,7 +512,7 @@ function PurchasesContent() {
             <Card>
               <CardContent className="pt-6 text-center">
                 <ShoppingBag className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">No tienes canjes todavía</p>
+                <p className="text-muted-foreground">{t("purchases.noCanjes")}</p>
               </CardContent>
             </Card>
           )
@@ -561,7 +561,7 @@ function PurchasesContent() {
                   {selectedPayment.receipt_url && (
                     <Card className="mb-4">
                       <CardContent className="pt-4">
-                        <p className="text-sm text-muted-foreground mb-2">Tu comprobante:</p>
+                        <p className="text-sm text-muted-foreground mb-2">{t("payment.yourReceipt")}</p>
                         <a 
                           href={selectedPayment.receipt_url} 
                           target="_blank" 
@@ -582,15 +582,15 @@ function PurchasesContent() {
                     <CardContent className="pt-4">
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <p className="text-sm text-muted-foreground">Paquete</p>
+                          <p className="text-sm text-muted-foreground">{t("purchases.package")}</p>
                           <p className="font-bold text-foreground">{getPackageName(selectedPayment.package_id)} MxN</p>
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground">Monto</p>
+                          <p className="text-sm text-muted-foreground">{t("purchases.amount")}</p>
                           <p className="font-bold text-yellow-500">${selectedPayment.usd_amount} USD</p>
                         </div>
                         <div>
-                          <p className="text-sm text-muted-foreground">Email</p>
+                          <p className="text-sm text-muted-foreground">{t("purchases.email")}</p>
                           <p className="font-medium text-foreground text-sm">{selectedPayment.email || '-'}</p>
                         </div>
                         <div>
@@ -667,7 +667,7 @@ function PurchasesContent() {
             <Card>
               <CardContent className="pt-6 text-center">
                 <Coins className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <p className="text-muted-foreground">No tienes recargas todavía</p>
+                <p className="text-muted-foreground">{t("purchases.noRecargas")}</p>
               </CardContent>
             </Card>
           )

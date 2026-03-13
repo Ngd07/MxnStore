@@ -6,10 +6,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input'
 import { Coins, UserPlus, Check, AlertCircle, Lock } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { useI18n } from '@/lib/i18n'
 
 const ADMIN_EMAILS = ['nleonelli0@gmail.com', 'juancruzgc10@gmail.com']
 
 export default function AdminPage() {
+  const { t } = useI18n()
   const [email, setEmail] = useState('')
   const [amount, setAmount] = useState('')
   const [loading, setLoading] = useState(false)
@@ -26,7 +28,7 @@ export default function AdminPage() {
       const adminList = ADMIN_EMAILS.map(e => e.toLowerCase())
       if (userEmail && adminList.includes(userEmail)) {
         setIsAuthorized(true)
-        setCurrentUserEmail(user?.email || '')
+        setCurrentUserEmail(user.email)
       }
       setCheckingAuth(false)
     }
@@ -36,7 +38,7 @@ export default function AdminPage() {
   if (checkingAuth) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <p className="text-muted-foreground">Verificando...</p>
+        <p className="text-muted-foreground">{t("admin.verify")}</p>
       </div>
     )
   }
@@ -47,8 +49,8 @@ export default function AdminPage() {
         <Card className="max-w-md w-full mx-4">
           <CardContent className="pt-6 text-center">
             <Lock className="h-12 w-12 text-red-500 mx-auto mb-4" />
-            <h2 className="text-xl font-bold text-foreground mb-2">Acceso Denegado</h2>
-            <p className="text-muted-foreground">No tenés acceso a esta página.</p>
+            <h2 className="text-xl font-bold text-foreground mb-2">{t("admin.accessDenied")}</h2>
+            <p className="text-muted-foreground">{t("admin.notAdmin")}</p>
           </CardContent>
         </Card>
       </div>
@@ -98,8 +100,8 @@ export default function AdminPage() {
             <Coins className="h-6 w-6 text-yellow-500" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Admin Panel</h1>
-            <p className="text-muted-foreground">Agregar MxN Points a usuarios</p>
+            <h1 className="text-2xl font-bold text-foreground">{t("admin.title")}</h1>
+            <p className="text-muted-foreground">{t("admin.addPoints")}</p>
           </div>
         </div>
 
@@ -107,20 +109,20 @@ export default function AdminPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <UserPlus className="h-5 w-5" />
-              Agregar MxN Points
+              {t("admin.addPoints")}
             </CardTitle>
             <CardDescription>
-              Ingresa el email del usuario y la cantidad de MxN Points
+              {t("admin.userEmail")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
               <label className="text-sm font-medium text-foreground mb-1 block">
-                Email del usuario
+                {t("admin.userEmail")}
               </label>
               <Input
                 type="email"
-                placeholder="usuario@email.com"
+                placeholder={t("admin.userEmailPlaceholder")}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -128,11 +130,11 @@ export default function AdminPage() {
 
             <div>
               <label className="text-sm font-medium text-foreground mb-1 block">
-                Cantidad de MxN Points
+                {t("admin.points")}
               </label>
               <Input
                 type="number"
-                placeholder="1000"
+                placeholder={t("admin.pointsPlaceholder")}
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
               />
@@ -157,7 +159,7 @@ export default function AdminPage() {
               disabled={loading || !email || !amount}
               className="w-full bg-yellow-600 hover:bg-yellow-700"
             >
-              {loading ? 'Agregando...' : 'Agregar MxN Points'}
+              {loading ? t("admin.adding") : t("admin.addPoints")}
             </Button>
           </CardContent>
         </Card>
