@@ -250,12 +250,15 @@ export default function PaymentPage({ params }: PageProps) {
 
             <div className="space-y-2">
               <label className="text-sm font-medium">{t("payment.receipt")}</label>
-              <input
-                type="file"
-                accept="image/*,.pdf"
-                onChange={handleFileChange}
-                className="block w-full text-sm text-muted-foreground file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-yellow-500 file:text-black hover:file:bg-yellow-600"
-              />
+              <label className="flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-black py-2 px-4 rounded-full cursor-pointer transition-colors">
+                <input
+                  type="file"
+                  accept="image/*,.pdf"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+                {receiptFile ? receiptFile.name : t("payment.selectFile")}
+              </label>
             </div>
 
             <Button
