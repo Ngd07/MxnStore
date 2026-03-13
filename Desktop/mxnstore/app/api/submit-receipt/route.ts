@@ -54,14 +54,18 @@ export async function POST(request: NextRequest) {
     // If userId is provided, use it directly; otherwise find by email
     let userId = userIdFromForm;
     
-    if (!userId) {
-      const { data: users } = await supabaseAdmin
-        .from("user_profiles")
-        .select("*")
-        .eq("email", email.toLowerCase())
-        .limit(1);
+    if (!userId && email) {
+      try {
+        const { data: users } = await supabaseAdmin
+          .from("profiles")
+          .select("id")
+          .eq("email", email.toLowerCase())
+          .limit(1);
 
-      userId = users && users.length > 0 ? users[0].user_id : null;
+        userId = users && users.length > 0 ? users[0].id : null;
+      } catch (e) {
+        console.log("Profile lookup failed, continuing without userId");
+      }
     }
 
     // Create payment record

@@ -46,17 +46,9 @@ export default function PaymentPage({ params }: PageProps) {
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
       
-      // If logged in, pre-fill email from profile
-      if (user) {
-        const { data: profile } = await supabase
-          .from('user_profiles')
-          .select('email')
-          .eq('user_id', user.id)
-          .maybeSingle()
-        
-        if (profile?.email) {
-          setEmail(profile.email)
-        }
+      // If logged in, pre-fill email from auth
+      if (user?.email) {
+        setEmail(user.email)
       }
       
       setLoading(false)
