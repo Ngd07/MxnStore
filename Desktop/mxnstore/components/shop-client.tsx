@@ -31,11 +31,15 @@ const ACCOUNT_ITEMS = [
   { id: "account-40500", name: "Cuenta con 40,500 V-Bucks", price: 37000, description: "Cuenta totally nueva con 40.500 V-Bucks. Lista para usarla o para enviar regalos." },
 ];
 
-const getAccountItems = (t: any) => ACCOUNT_ITEMS.map(item => ({
-  ...item,
-  name: t(`shop.${item.id}Name`) !== `shop.${item.id}Name` ? t(`shop.${item.id}Name`) : item.name,
-  description: t(`shop.${item.id}Desc`) !== `shop.${item.id}Desc` ? t(`shop.${item.id}Desc`) : item.description,
-}));
+const getAccountItems = (t: any) => ACCOUNT_ITEMS.map(item => {
+  const key = item.id.replace('account-', 'accountItem') + 'Name';
+  const descKey = item.id.replace('account-', 'accountItem') + 'Desc';
+  return {
+    ...item,
+    name: t(`shop.${key}`) !== `shop.${key}` ? t(`shop.${key}`) : item.name,
+    description: t(`shop.${descKey}`) !== `shop.${descKey}` ? t(`shop.${descKey}`) : item.description,
+  };
+});
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
