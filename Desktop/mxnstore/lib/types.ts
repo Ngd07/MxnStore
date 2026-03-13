@@ -34,7 +34,7 @@ export interface ShopEntry {
   } | null;
   newDisplayAsset: {
     id: string;
-    cosmeticId: string;
+    cosmeticId?: string;
     materialInstances: Array<{
       id: string;
       images: Record<string, string>;

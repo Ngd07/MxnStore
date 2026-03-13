@@ -91,7 +91,6 @@ function getItemImage(entry: ShopEntry): string | null {
   ) {
     const img = entry.newDisplayAsset.renderImages[0].image;
     if (img) {
-      // Handle both http URLs and relative paths
       if (img.startsWith('http')) return img;
       if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
     }
@@ -110,6 +109,7 @@ function getItemImage(entry: ShopEntry): string | null {
     }
   }
 
+  // Try brItems images
   if (entry.brItems && entry.brItems.length > 0) {
     const item = entry.brItems[0];
     const img = item.images.featured || item.images.icon || item.images.smallIcon;
@@ -126,6 +126,20 @@ function getItemImage(entry: ShopEntry): string | null {
       if (img.startsWith('http')) return img;
       if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
     }
+  }
+
+  // Try to get image from display asset path - fallback to fnbr.co
+  if (entry.newDisplayAsset?.id) {
+    // Try getting the cosmetic by ID from fnbr.co
+    const cosmeticId = entry.newDisplayAsset.cosmeticId;
+    if (cosmeticId) {
+      return `https://image.fnbr.co/cosmetic/${cosmeticId}-icon.png`;
+    }
+  }
+
+  // Try using offerId for image
+  if (entry.offerId) {
+    return `https://image.fnbr.co/${entry.offerId}-icon.png`;
   }
 
   return null;
