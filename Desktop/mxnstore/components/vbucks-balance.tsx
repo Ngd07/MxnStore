@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { Coins, RefreshCw } from "lucide-react";
+import { Coins, RefreshCw, UserPlus } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
@@ -77,13 +77,22 @@ export function VbucksBalance() {
         </div>
         <span className="text-xs text-muted-foreground">{t("profile.vbucks")}</span>
       </div>
-      <button
-        onClick={() => router.push('/buy-vbucks')}
-        className="flex items-center gap-1.5 rounded-lg bg-purple-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-purple-700"
-      >
-        <RefreshCw className="h-3.5 w-3.5" />
-        {t("profile.recharge")}
-      </button>
+      <div className="flex items-center gap-2">
+        <button
+          onClick={() => router.push('/add-friend')}
+          className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-blue-700"
+        >
+          <UserPlus className="h-3.5 w-3.5" />
+          {t("profile.addFriend")}
+        </button>
+        <button
+          onClick={() => router.push('/buy-vbucks')}
+          className="flex items-center gap-1.5 rounded-lg bg-purple-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-purple-700"
+        >
+          <RefreshCw className="h-3.5 w-3.5" />
+          {t("profile.recharge")}
+        </button>
+      </div>
     </div>
   );
 }
