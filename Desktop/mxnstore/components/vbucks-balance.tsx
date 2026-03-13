@@ -82,7 +82,7 @@ export function VbucksBalance() {
       </div>
 
       {/* Center: Creator Code */}
-      <span className="flex-1 text-center text-xs font-bold text-white uppercase tracking-wider drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]">
+      <span className="flex-1 text-center text-xs font-extrabold italic text-white uppercase tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.9)]">
         CODIGO DE CREADOR: MXNSTORE
       </span>
 
