@@ -150,7 +150,7 @@ export default function BuyVbucksPage() {
                 rel="noopener noreferrer"
                 className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-4 rounded-lg font-medium text-lg"
               >
-                Continuar al pago
+                {t("buy.continueToPayment")}
               </a>
 
               <p className="text-xs text-muted-foreground text-center">
