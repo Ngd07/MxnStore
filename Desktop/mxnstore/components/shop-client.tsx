@@ -248,14 +248,9 @@ export function ShopClient() {
               className="rounded-lg object-cover"
             />
             <div>
-              <h1 className="text-lg font-bold text-foreground">
+              <h1 className="text-2xl font-bold text-foreground">
                 MxNStore
               </h1>
-              {formattedDate && (
-                <p className="text-xs text-muted-foreground capitalize">
-                  {formattedDate}
-                </p>
-              )}
             </div>
           </div>
           <div className="flex items-center gap-2">
