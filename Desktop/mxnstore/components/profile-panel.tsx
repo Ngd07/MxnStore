@@ -167,6 +167,13 @@ export function ProfilePanel() {
             <span className="text-xs text-muted-foreground">{t("profile.vbucks")}</span>
           </div>
 
+          {/* Creator Code */}
+          <div className="py-2">
+            <span className="flex justify-center text-sm font-bold text-white uppercase tracking-widest drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]">
+              {t("profile.creatorCode")} MXNSTORE
+            </span>
+          </div>
+
           {/* Agregar Bots Button */}
           <button
             onClick={() => router.push('/add-friend')}
@@ -193,13 +200,6 @@ export function ProfilePanel() {
             <ShoppingBag className="h-5 w-5 text-green-500" />
             <span className="text-sm font-medium text-foreground">{t("profile.myPurchases")}</span>
           </button>
-
-          {/* Creator Code */}
-          <div className="py-2">
-            <span className="flex justify-center text-sm font-bold text-white uppercase tracking-widest drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]">
-              {t("profile.creatorCode")} MXNSTORE
-            </span>
-          </div>
 
           {/* Email section */}
           <div className="flex flex-col gap-3 rounded-xl border border-border bg-card p-4">
