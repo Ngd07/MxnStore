@@ -234,6 +234,24 @@ export function ShopClient() {
       })
     : "";
 
+  const [timeLeft, setTimeLeft] = useState<{ hours: number; minutes: number; seconds: number }>({ hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const updateTimer = () => {
+      const now = new Date();
+      const nextShop = new Date(now);
+      nextShop.setUTCHours(24, 0, 0, 0);
+      const diff = nextShop.getTime() - now.getTime();
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      setTimeLeft({ hours, minutes, seconds });
+    };
+    updateTimer();
+    const timer = setInterval(updateTimer, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -252,6 +270,14 @@ export function ShopClient() {
                 MxNStore
               </h1>
             </div>
+          </div>
+          <div className="flex items-center gap-1 bg-secondary rounded-lg px-3 py-1.5">
+            <span className="text-xs text-muted-foreground">{t("shop.countdown")}</span>
+            <span className="text-sm font-bold text-yellow-500 font-mono">
+              {String(timeLeft.hours).padStart(2, '0')}:
+              {String(timeLeft.minutes).padStart(2, '0')}:
+              {String(timeLeft.seconds).padStart(2, '0')}
+            </span>
           </div>
           <div className="flex items-center gap-2">
             <NotificationsBell />
