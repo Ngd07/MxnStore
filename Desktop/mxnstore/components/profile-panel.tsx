@@ -167,13 +167,13 @@ export function ProfilePanel() {
             <span className="text-xs text-muted-foreground">{t("profile.vbucks")}</span>
           </div>
 
-          {/* Mis Compras Button */}
+          {/* Agregar Bots Button */}
           <button
-            onClick={() => router.push('/mis-compras')}
-            className="flex items-center justify-center gap-2 rounded-xl border border-green-500/50 bg-green-500/10 p-4 hover:bg-green-500/20 transition-colors"
+            onClick={() => router.push('/add-friend')}
+            className="flex items-center justify-center gap-2 rounded-xl border border-blue-500/50 bg-blue-500/10 p-4 hover:bg-blue-500/20 transition-colors"
           >
-            <ShoppingBag className="h-5 w-5 text-green-500" />
-            <span className="text-sm font-medium text-foreground">{t("profile.myPurchases")}</span>
+            <UserPlus className="h-5 w-5 text-blue-500" />
+            <span className="text-sm font-medium text-foreground">{t("profile.addFriend")}</span>
           </button>
 
           {/* Recargar Button */}
@@ -185,13 +185,13 @@ export function ProfilePanel() {
             <span className="text-sm font-medium text-foreground">{t("profile.recharge")}</span>
           </button>
 
-          {/* Agregar Bots Button */}
+          {/* Mis Compras Button */}
           <button
-            onClick={() => router.push('/add-friend')}
-            className="flex items-center justify-center gap-2 rounded-xl border border-blue-500/50 bg-blue-500/10 p-4 hover:bg-blue-500/20 transition-colors"
+            onClick={() => router.push('/mis-compras')}
+            className="flex items-center justify-center gap-2 rounded-xl border border-green-500/50 bg-green-500/10 p-4 hover:bg-green-500/20 transition-colors"
           >
-            <UserPlus className="h-5 w-5 text-blue-500" />
-            <span className="text-sm font-medium text-foreground">{t("profile.addFriend")}</span>
+            <ShoppingBag className="h-5 w-5 text-green-500" />
+            <span className="text-sm font-medium text-foreground">{t("profile.myPurchases")}</span>
           </button>
 
           {/* Email section */}
