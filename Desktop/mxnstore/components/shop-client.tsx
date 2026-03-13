@@ -325,7 +325,11 @@ export function ShopClient() {
                 <h2 className="text-xl font-bold text-foreground mb-4">Cuentas Fortnite</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredAccountItems.map((item) => (
-                    <div key={item.id} className="border border-border rounded-lg p-4 bg-card hover:bg-secondary/50 transition-colors">
+                    <div 
+                      key={item.id} 
+                      className="border border-border rounded-lg p-4 bg-card hover:bg-secondary/50 transition-colors cursor-pointer"
+                      onClick={() => setSelectedAccount(item)}
+                    >
                       <div className="aspect-square relative mb-3 bg-muted rounded-lg flex items-center justify-center overflow-hidden">
                         <Image
                           src="/cuentasfoto.png"
@@ -335,15 +339,7 @@ export function ShopClient() {
                         />
                       </div>
                       <h3 className="font-bold text-foreground mb-1">{item.name}</h3>
-                      <div className="flex items-center justify-between">
-                        <span className="text-lg font-bold text-yellow-500">{item.price.toLocaleString()} MxN</span>
-                        <button
-                          onClick={() => setSelectedAccount(item)}
-                          className="px-4 py-2 bg-yellow-500 text-black font-medium rounded-lg hover:bg-yellow-600 transition-colors"
-                        >
-                          Comprar
-                        </button>
-                      </div>
+                      <span className="text-lg font-bold text-yellow-500">{item.price.toLocaleString()} MxN</span>
                     </div>
                   ))}
                 </div>
