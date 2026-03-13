@@ -271,6 +271,9 @@ export function ShopClient() {
               </h1>
             </div>
           </div>
+          <div className="flex items-center justify-center">
+            <span className="text-sm font-bold text-yellow-500 uppercase tracking-wider">CODIGO DE CREADOR: MXNSTORE</span>
+          </div>
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-3 bg-gradient-to-r from-yellow-500/20 to-purple-500/20 border border-yellow-500/30 rounded-lg px-4 py-2">
               <span className="text-sm font-bold text-yellow-500 uppercase tracking-wide">{t("shop.countdown")}</span>
