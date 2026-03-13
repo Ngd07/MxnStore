@@ -84,6 +84,14 @@ const rarityLabels: Record<string, string> = {
 };
 
 function getItemImage(entry: ShopEntry): string | null {
+  // Try tracks (Jam Tracks)
+  if (entry.tracks && entry.tracks.length > 0) {
+    const track = entry.tracks[0];
+    if (track.albumArt) {
+      return track.albumArt;
+    }
+  }
+
   // Try renderImages first
   if (
     entry.newDisplayAsset?.renderImages &&
@@ -126,20 +134,6 @@ function getItemImage(entry: ShopEntry): string | null {
       if (img.startsWith('http')) return img;
       if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
     }
-  }
-
-  // Try to get image from display asset path - fallback to fnbr.co
-  if (entry.newDisplayAsset?.id) {
-    // Try getting the cosmetic by ID from fnbr.co
-    const cosmeticId = entry.newDisplayAsset.cosmeticId;
-    if (cosmeticId) {
-      return `https://image.fnbr.co/cosmetic/${cosmeticId}-icon.png`;
-    }
-  }
-
-  // Try using offerId for image
-  if (entry.offerId) {
-    return `https://image.fnbr.co/${entry.offerId}-icon.png`;
   }
 
   return null;

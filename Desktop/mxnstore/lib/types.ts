@@ -83,6 +83,17 @@ export interface ShopEntry {
       } | null;
     };
   }> | null;
+  tracks: Array<{
+    id: string;
+    devName: string;
+    title: string;
+    artist: string;
+    releaseYear: number;
+    bpm: number;
+    duration: number;
+    albumArt: string;
+    added: string;
+  }> | null;
 }
 
 export interface ShopData {

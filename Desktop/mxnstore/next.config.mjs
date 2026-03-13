@@ -12,6 +12,10 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "cdn.fortnite-api.com",
+      },
+      {
+        protocol: "https",
         hostname: "image.fnbr.co",
       },
     ],
