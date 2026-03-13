@@ -62,25 +62,30 @@ export function VbucksBalance() {
   }
 
   return (
-    <div className="flex items-center justify-between rounded-xl border border-yellow-500/50 bg-yellow-500/10 px-4 py-2">
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-2">
-          <Image
-            src="/logomxnpoints.png"
-            alt="MxN Points"
-            width={24}
-            height={24}
-            className="rounded"
-          />
-          <span className="text-sm font-medium text-foreground">{t("profile.mxnPoints")}</span>
-          <span className="text-lg font-bold text-yellow-500">{vbucksBalance}</span>
-        </div>
-        <span className="text-xs text-muted-foreground">{t("profile.vbucks")}</span>
-      </div>
-      <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col gap-3 rounded-xl border border-yellow-500/50 bg-yellow-500/10 px-4 py-3">
+      {/* Creator Code - centered at top */}
+      <div className="flex justify-center">
         <span className="text-sm font-bold text-white uppercase tracking-wider drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]">
           CODIGO DE CREADOR: MXNSTORE
         </span>
+      </div>
+      
+      {/* Balance and buttons row */}
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-1">
+          <div className="flex items-center gap-2">
+            <Image
+              src="/logomxnpoints.png"
+              alt="MxN Points"
+              width={24}
+              height={24}
+              className="rounded"
+            />
+            <span className="text-sm font-medium text-foreground">{t("profile.mxnPoints")}</span>
+            <span className="text-lg font-bold text-yellow-500">{vbucksBalance}</span>
+          </div>
+          <span className="text-xs text-muted-foreground">{t("profile.vbucks")}</span>
+        </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => router.push('/add-friend')}
