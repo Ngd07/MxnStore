@@ -187,7 +187,7 @@ export function ProfilePanel() {
 
           {/* Mis Compras Button */}
           <button
-            onClick={() => router.push('/mis-compras')}
+            onClick={() => router.push('/purchases')}
             className="flex items-center justify-center gap-2 rounded-xl border border-green-500/50 bg-green-500/10 p-4 hover:bg-green-500/20 transition-colors"
           >
             <ShoppingBag className="h-5 w-5 text-green-500" />
