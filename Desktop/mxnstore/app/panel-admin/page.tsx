@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Coins, UserPlus, Check, AlertCircle, Lock, Loader2, History, Gift, ShoppingCart, MessageCircle, Package } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import Image from 'next/image'
+import { useI18n } from '@/lib/i18n'
 
 const ADMIN_EMAILS = [
   'nleonelli0@gmail.com',
@@ -51,6 +52,7 @@ interface Recarga {
 }
 
 export default function AdminPanelPage() {
+  const { t } = useI18n()
   const [activeTab, setActiveTab] = useState<'add-points' | 'transactions' | 'purchases' | 'recargas'>('add-points')
   const [userEmail, setUserEmail] = useState('')
   const [targetEmail, setTargetEmail] = useState('')
