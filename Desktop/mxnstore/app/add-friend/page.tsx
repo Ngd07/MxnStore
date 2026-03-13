@@ -236,10 +236,10 @@ export default function AgregarAmigoPage() {
 
         <div className="rounded-xl border border-border bg-card p-4 sm:p-6">
           <h2 className="mb-2 sm:mb-4 text-base sm:text-lg font-semibold text-foreground">
-            {t("profile.ourAccounts") || "Nuestras cuentas"}
+            {t("profile.ourAccounts")}
           </h2>
           <p className="mb-3 sm:mb-4 text-xs sm:text-sm text-muted-foreground">
-            {t("profile.ourAccountsDesc") || "Estas son las cuentas de nuestros bots. Acepta sus solicitudes de amigo:"}
+            {t("profile.ourAccountsDesc")}
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
