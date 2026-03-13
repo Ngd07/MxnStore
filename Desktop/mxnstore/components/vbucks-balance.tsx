@@ -80,7 +80,7 @@ export function VbucksBalance() {
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <span className="text-xs font-bold text-white uppercase tracking-wider drop-shadow-[0_0_8px_rgba(255,255,255,0.7)]">
+        <span className="text-xs font-bold text-white uppercase tracking-wider drop-shadow-[0_0_8px_rgba(255,255,255,0.7)] shrink-0">
           CODIGO DE CREADOR: MXNSTORE
         </span>
         <button
