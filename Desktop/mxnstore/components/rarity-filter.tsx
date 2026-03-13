@@ -43,13 +43,15 @@ const rarityLabels: Record<string, string> = {
   frozen: "Frozen",
   lava: "Lava",
   dark: "Dark",
-  accounts: "Cuentas",
 };
 
 export function RarityFilter({ rarities, selected, onChange }: RarityFilterProps) {
   const { t } = useI18n();
 
   const getLabel = (rarity: string) => {
+    if (rarity === 'accounts') {
+      return t("rarity.accounts");
+    }
     const key = `rarity.${rarity}`;
     const translated = t(key);
     return translated !== key ? translated : (rarityLabels[rarity] || rarity);
