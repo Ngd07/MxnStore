@@ -76,7 +76,6 @@ export function VbucksBalance() {
           <span className="text-lg font-bold text-yellow-500">{vbucksBalance}</span>
         </div>
         <span className="text-xs text-muted-foreground">{t("profile.vbucks")}</span>
-        <span className="text-xs text-yellow-500 font-medium">{t("profile.creatorCode")} <span className="font-bold">MXNSTORE</span></span>
       </div>
       <button
         onClick={() => router.push('/buy-vbucks')}
