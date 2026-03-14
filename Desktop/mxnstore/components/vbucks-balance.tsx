@@ -16,14 +16,18 @@ export function VbucksBalance() {
   useEffect(() => {
     let mounted = true;
     
-    const checkSession = async () => {
+const checkSession = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
+        const { data: { session } } = await supabase.auth.getSession();
         if (!user) {
           if (mounted) setLoading(false);
           return;
         }
-        const res = await fetch(`/api/balance?userId=${user.id}&t=${Date.now()}`);
+        const token = session?.access_token;
+        const res = await fetch(`/api/balance?userId=${user.id}&t=${Date.now()}`, {
+          headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+        });
         const data = await res.json();
         if (mounted && res.ok && data.balance !== undefined) {
           setVbucksBalance(data.balance);
