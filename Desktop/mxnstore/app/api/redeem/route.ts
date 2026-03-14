@@ -3,11 +3,34 @@ import { NextResponse } from 'next/server'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabase = createClient(supabaseUrl, supabaseServiceKey)
+
+async function verifyUser(request: Request) {
+  const authHeader = request.headers.get('authorization')
+  if (!authHeader) return { error: 'No autorizado', status: 401 }
+  
+  const token = authHeader.replace('Bearer ', '')
+  
+  const { data: { user }, error } = await supabase.auth.getUser(token)
+  if (error || !user) return { error: 'Token inválido', status: 401 }
+  
+  return { user }
+}
 
 export async function POST(request: Request) {
   try {
+    const auth = await verifyUser(request)
+    if ('error' in auth) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status })
+    }
+    
     const body = await request.json()
     const { itemName, price, fortniteUsername, userId } = body
+
+    // Verify the user is redeeming for themselves
+    if (userId !== auth.user.id) {
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
+    }
 
     if (!userId) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
@@ -16,8 +39,6 @@ export async function POST(request: Request) {
     if (typeof price !== 'number' || price <= 0) {
       return NextResponse.json({ error: 'Precio inválido' }, { status: 400 })
     }
-
-    const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
     // Read current balance
     const { data: profile } = await supabase
@@ -52,15 +73,15 @@ export async function POST(request: Request) {
     })
 
     // Create purchase record
-    const { data: purchase, error: purchaseError } = await supabase.from('purchases').insert({
+    await supabase.from('purchases').insert({
       user_id: userId,
       skin_name: itemName,
       skin_price: price,
       fortnite_username: fortniteUsername,
       status: 'pending'
-    }).select().single()
+    })
 
-    return NextResponse.json({ success: true, balance: newBalance, purchaseId: purchase?.id })
+    return NextResponse.json({ success: true, balance: newBalance, message: 'Redeemed' })
   } catch (err) {
     console.error(err)
     return NextResponse.json({ error: 'Error interno' }, { status: 500 })

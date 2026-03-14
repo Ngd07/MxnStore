@@ -207,15 +207,19 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
   const isDiscounted = entry.finalPrice < entry.regularPrice;
 
   const fetchBalance = async () => {
-    setBalanceLoading(true);
+setBalanceLoading(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
+      const { data: { session } } = await supabase.auth.getSession();
       setUser(user);
       if (!user) {
         setBalanceLoading(false);
         return;
       }
-      const res = await fetch(`/api/balance?userId=${user.id}&t=${Date.now()}`);
+      const token = session?.access_token;
+      const res = await fetch(`/api/balance?userId=${user.id}&t=${Date.now()}`, {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+      });
       const data = await res.json();
       if (res.ok && data.balance !== undefined) {
         setVbucksBalance(data.balance);
@@ -257,9 +261,14 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
     setRedeemMessage(t("redeem.processing"));
     
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
       const res = await fetch('/api/redeem', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
         body: JSON.stringify({ itemName: name, price, fortniteUsername, userId: user.id })
       });
       const data = await res.json();
