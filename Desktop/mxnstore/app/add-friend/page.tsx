@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 const FNLB_API_KEY = "FNLB_aabkryf_F7p6Njy0wM8pqFJc01jihxpguFdd1NyBypcfVghqpkMAr6QJeEo.IITFUC8Gou11lHy9G76gEg";
 
 const BOT_ACCOUNTS = [
+  { id: "69b5ad49e16d2b234013a1f0", displayName: "MXNstore0" },
   { id: "69a6e589d2065d82e11e37f9", displayName: "MXNstore1" },
   { id: "69aa1d2a53c0a4720a29c1ce", displayName: "MXNstore2" },
   { id: "69aa0f1653c0a4720a29c07b", displayName: "MXNstore3" },
