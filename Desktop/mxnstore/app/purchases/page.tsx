@@ -1,12 +1,12 @@
 'use client'
 
 import { useState, useEffect, useRef, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Loader2, Send, Lock, ShoppingBag, Coins } from 'lucide-react'
+import { Loader2, Send, Lock, ShoppingBag, Coins, ArrowLeft } from 'lucide-react'
 import Image from 'next/image'
 import { useI18n } from '@/lib/i18n'
 
@@ -59,6 +59,7 @@ export default function PurchasesPage() {
 
 function PurchasesContent() {
   const { t } = useI18n()
+  const router = useRouter()
   const searchParams = useSearchParams()
   const purchaseId = searchParams.get('purchase')
   const paymentId = searchParams.get('payment')
@@ -349,6 +350,14 @@ function PurchasesContent() {
     <div className="min-h-screen bg-background p-4">
       <div className="max-w-6xl mx-auto">
         <div className="flex items-center gap-3 mb-6">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => router.back()}
+            className="shrink-0"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
           <Image
             src="/logomxnpoints.png"
             alt="MxN"
