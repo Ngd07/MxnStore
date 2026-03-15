@@ -4,13 +4,42 @@ import { createClient } from "@supabase/supabase-js";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
+const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
+
+async function verifyAuth(request: Request) {
+  const authHeader = request.headers.get('authorization')
+  if (!authHeader) return { error: 'No autorizado', status: 401 }
+  
+  const token = authHeader.replace('Bearer ', '')
+  
+  const { data: { user }, error } = await supabaseAdmin.auth.getUser(token)
+  if (error || !user) return { error: 'Token inválido', status: 401 }
+  
+  return { user }
+}
+
 export async function POST(request: NextRequest) {
   try {
+    const auth = await verifyAuth(request)
+    if ('error' in auth) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status })
+    }
+
+    const user = auth.user
+
     const formData = await request.formData();
     const mxnAmount = formData.get("mxnAmount") as string;
     const usdAmount = formData.get("usdAmount") as string;
     const receipt = formData.get("receipt") as File;
     const userId = formData.get("userId") as string;
+
+    // Verify the userId matches the authenticated user
+    if (userId && userId !== user.id) {
+      return NextResponse.json(
+        { error: "No puedes enviar recibos para otros usuarios" },
+        { status: 403 }
+      );
+    }
 
     if (!userId || !mxnAmount || !usdAmount) {
       return NextResponse.json(
@@ -18,8 +47,6 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
-
-    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
     let receiptUrl = null;
 

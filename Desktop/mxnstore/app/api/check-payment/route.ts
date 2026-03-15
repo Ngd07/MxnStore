@@ -10,7 +10,6 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const orderId = searchParams.get("orderId");
     const paymentId = searchParams.get("paymentId");
-    const forceCredit = searchParams.get("forceCredit");
 
     if (!orderId && !paymentId) {
       return NextResponse.json(
@@ -42,124 +41,15 @@ export async function GET(request: NextRequest) {
     }
 
     if (!payment) {
-      // If not found in DB but forceCredit is true, create a payment record
-      if (forceCredit === "true" && orderId) {
-        const { data: newPayment, error: insertError } = await supabaseAdmin
-          .from("crypto_payments")
-          .insert({
-            user_id: "a6d6b621-ff5b-48e3-b356-4ef874311030",
-            order_id: orderId,
-            payment_id: paymentId,
-            mxn_amount: 5000,
-            usd_amount: 18,
-            status: "pending",
-          })
-          .select()
-          .single();
-        
-        if (insertError) {
-          return NextResponse.json({ error: insertError.message }, { status: 500 });
-        }
-        
-        payment = newPayment;
-      } else {
-        return NextResponse.json(
-          { error: "Payment not found in database" },
-          { status: 404 }
-        );
-      }
-    }
-
-    // If forceCredit is true, credit directly
-    if (forceCredit === "true") {
-      console.log("Force credit mode - crediting points directly");
-      
-      const { data: profile } = await supabaseAdmin
-        .from("user_profiles")
-        .select("*")
-        .eq("user_id", payment.user_id)
-        .single();
-
-      const currentPoints = profile?.mxn_points || 0;
-      console.log("Current points:", currentPoints);
-
-      await supabaseAdmin
-        .from("user_profiles")
-        .update({
-          mxn_points: currentPoints + payment.mxn_amount,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("user_id", payment.user_id);
-
-      await supabaseAdmin
-        .from("crypto_payments")
-        .update({
-          status: "completed",
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", payment.id);
-
-      await supabaseAdmin.from("transactions").insert({
-        user_id: payment.user_id,
-        type: "purchase",
-        amount: payment.mxn_amount,
-        status: "completed",
-      });
-
-      return NextResponse.json({
-        success: true,
-        message: "Points credited!",
-        newBalance: currentPoints + payment.mxn_amount,
-      });
+      return NextResponse.json(
+        { error: "Payment not found in database" },
+        { status: 404 }
+      );
     }
 
     // Check status with NOWPayments API using order_id or payment_id
     let paymentStatus = null;
     let paymentData = null;
-    let alreadyChecked = false;
-    
-    // If forceCredit is true, skip NOWPayments check and credit directly
-    if (forceCredit === "true") {
-      console.log("Force credit mode - crediting points directly");
-      
-      const { data: profile } = await supabaseAdmin
-        .from("user_profiles")
-        .select("*")
-        .eq("user_id", payment.user_id)
-        .single();
-
-      const currentPoints = profile?.mxn_points || 0;
-      console.log("Current points:", currentPoints);
-
-      await supabaseAdmin
-        .from("user_profiles")
-        .update({
-          mxn_points: currentPoints + payment.mxn_amount,
-          updated_at: new Date().toISOString(),
-        })
-        .eq("user_id", payment.user_id);
-
-      await supabaseAdmin
-        .from("crypto_payments")
-        .update({
-          status: "completed",
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", payment.id);
-
-      await supabaseAdmin.from("transactions").insert({
-        user_id: payment.user_id,
-        type: "purchase",
-        amount: payment.mxn_amount,
-        status: "completed",
-      });
-
-      return NextResponse.json({
-        success: true,
-        message: "Points credited!",
-        newBalance: currentPoints + payment.mxn_amount,
-      });
-    }
     
     if (payment.order_id || paymentId) {
       try {
