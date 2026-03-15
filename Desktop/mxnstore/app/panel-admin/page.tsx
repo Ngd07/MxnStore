@@ -203,6 +203,11 @@ export default function AdminPanelPage() {
     
     if (res.ok) {
       fetchPurchases()
+      
+      // Notify other components to refresh balance
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('mxn-balance-updated', { detail: { refresh: true } }));
+      }
     }
   }
 

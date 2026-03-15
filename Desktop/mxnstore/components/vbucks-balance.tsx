@@ -46,11 +46,27 @@ const checkSession = async () => {
 
     checkSession();
 
-    // Listen for balance updates from shop-item-card
-    const onBalanceUpdate = (e: any) => {
+    // Listen for balance updates from shop-item-card or admin panel
+    const onBalanceUpdate = async (e: any) => {
       const bal = e?.detail?.balance;
+      const shouldRefresh = e?.detail?.refresh;
+      
       if (typeof bal === 'number') {
         setVbucksBalance(bal);
+      } else if (shouldRefresh) {
+        // Refresh balance from server
+        const { data: { session } } = await supabase.auth.getSession();
+        const user = session?.user;
+        if (user) {
+          const token = session?.access_token;
+          const res = await fetch(`/api/balance?userId=${user.id}&t=${Date.now()}`, {
+            headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+          });
+          const data = await res.json();
+          if (res.ok && data.balance !== undefined) {
+            setVbucksBalance(data.balance);
+          }
+        }
       }
     };
     window.addEventListener('mxn-balance-updated', onBalanceUpdate);
