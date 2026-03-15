@@ -13,6 +13,7 @@ import { NotificationsBell } from "@/components/notifications-bell";
 import type { ShopData, ShopEntry } from "@/lib/types";
 import { Store, Loader2 } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import { supabase } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
@@ -84,6 +85,7 @@ export function ShopClient() {
   );
 
   const { t, dateLocale } = useI18n();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedRarity, setSelectedRarity] = useState("all");
   const [user, setUser] = useState<any>(null);
@@ -167,11 +169,8 @@ export function ShopClient() {
           window.dispatchEvent(new CustomEvent('mxn-balance-updated', { detail: { balance: data.balance } }));
         }
         
-        setTimeout(() => {
-          setSelectedAccount(null);
-          setFortniteUsername("");
-          setPurchaseMessage("");
-        }, 2000);
+        // Redirect to purchases chat
+        router.push(`/purchases?purchase=${data.purchaseId}`);
       } else {
         setPurchaseMessage(data.error || "Error al canjear");
       }
