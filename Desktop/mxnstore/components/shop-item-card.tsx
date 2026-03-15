@@ -209,8 +209,8 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
   const fetchBalance = async () => {
 setBalanceLoading(true);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
       const { data: { session } } = await supabase.auth.getSession();
+      const user = session?.user;
       setUser(user);
       if (!user) {
         setBalanceLoading(false);

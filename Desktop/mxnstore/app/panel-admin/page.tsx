@@ -184,9 +184,15 @@ export default function AdminPanelPage() {
     setMessage(null)
 
     try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
+      
       const res = await fetch('/api/admin/add-points', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+        },
         body: JSON.stringify({ 
           target_email: targetEmail, 
           amount: parseInt(amount)

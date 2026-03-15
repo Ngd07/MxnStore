@@ -36,7 +36,8 @@ export function ProfilePanel() {
     let mounted = true;
     
     const checkUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { session } } = await supabase.auth.getSession();
+      const user = session?.user;
       
       if (!mounted) return;
       
@@ -44,7 +45,10 @@ export function ProfilePanel() {
         setUser(user);
         
         try {
-          const res = await fetch(`/api/balance?userId=${user.id}`);
+          const token = session?.access_token;
+          const res = await fetch(`/api/balance?userId=${user.id}`, {
+            headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+          });
           const data = await res.json();
           if (mounted && res.ok && data.balance !== undefined) {
             setVbucksBalance(data.balance);

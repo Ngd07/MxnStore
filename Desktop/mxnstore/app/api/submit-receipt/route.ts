@@ -4,8 +4,31 @@ import { createClient } from "@supabase/supabase-js";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
+const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
+
+const ADMIN_EMAILS = ['nleonelli0@gmail.com', 'juancruzgc10@gmail.com']
+
+async function verifyAuth(request: Request) {
+  const authHeader = request.headers.get('authorization')
+  if (!authHeader) return { error: 'No autorizado', status: 401 }
+  
+  const token = authHeader.replace('Bearer ', '')
+  
+  const { data: { user }, error } = await supabaseAdmin.auth.getUser(token)
+  if (error || !user) return { error: 'Token inválido', status: 401 }
+  
+  return { user }
+}
+
 export async function POST(request: NextRequest) {
   try {
+    const auth = await verifyAuth(request)
+    if ('error' in auth) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status })
+    }
+
+    const user = auth.user
+
     const formData = await request.formData();
     const email = formData.get("email") as string;
     const receipt = formData.get("receipt") as File;
@@ -25,8 +48,6 @@ export async function POST(request: NextRequest) {
 
     const mxn = mxnStr ? parseInt(mxnStr) : 0;
     const price = priceStr ? parseFloat(priceStr) : 0;
-
-    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey);
 
     // Upload receipt
     const fileName = `receipts/${Date.now()}-${receipt.name}`;
