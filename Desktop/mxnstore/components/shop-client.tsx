@@ -22,6 +22,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -411,7 +412,8 @@ export function ShopClient() {
       <Dialog open={!!selectedAccount} onOpenChange={(open) => !open && setSelectedAccount(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle className="sr-only">Canjear cuenta</DialogTitle>
+            <DialogTitle className="sr-only">{t("shop.accountBuy")}</DialogTitle>
+            <DialogDescription className="sr-only">{selectedAccount?.name}</DialogDescription>
           </DialogHeader>
           {selectedAccount && (
             <div className="space-y-4">
@@ -430,7 +432,7 @@ export function ShopClient() {
               
               <div className="flex justify-between items-center">
                 <p className="text-sm font-medium">{t("shop.accountYourBalance")} <span className="text-yellow-500">{balanceLoading ? "..." : balance.toLocaleString()} MxN</span></p>
-                <p className="text-sm font-medium">Precio: <span className="text-yellow-500">{selectedAccount.price.toLocaleString()} MxN</span></p>
+                <p className="text-sm font-medium">{t("shop.accountPrice")} <span className="text-yellow-500">{selectedAccount.price.toLocaleString()} MxN</span></p>
               </div>
 
               <div>
