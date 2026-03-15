@@ -543,6 +543,7 @@ export default function AdminPanelPage() {
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Usuario</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Skin</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Usuario Fortnite</th>
+                        <th className="text-left p-3 text-sm font-medium text-muted-foreground">Precio (MXN)</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Estado</th>
                         <th className="text-left p-3 text-sm font-medium text-muted-foreground">Acciones</th>
                       </tr>
@@ -562,6 +563,7 @@ export default function AdminPanelPage() {
                           <td className="p-3 text-sm text-foreground">{p.email}</td>
                           <td className="p-3 text-sm font-bold text-purple-500">{p.skin_name}</td>
                           <td className="p-3 text-sm text-foreground">{p.fortnite_username || '-'}</td>
+                          <td className="p-3 text-sm font-bold text-yellow-500">{p.skin_price?.toLocaleString() || '-'} MxN</td>
                           <td className="p-3 text-sm">
                             <span className={`px-2 py-1 rounded-full text-xs ${
                               p.status === 'completed' ? 'bg-green-500/20 text-green-500' :
