@@ -278,22 +278,22 @@ export function ShopClient() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-3">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-2 sm:px-4 py-2 sm:py-3 gap-2">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <Image
               src="/logo.png"
               alt="MxNStore"
-              width={40}
-              height={40}
-              className="rounded-lg object-cover"
+              width={32}
+              height={32}
+              className="rounded-lg object-cover shrink-0"
             />
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">
+            <div className="min-w-0">
+              <h1 className="text-lg sm:text-2xl font-bold text-foreground truncate">
                 MxNStore
               </h1>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="hidden sm:flex items-center gap-2">
             <div className="flex items-center gap-3 bg-gradient-to-r from-yellow-500/20 to-purple-500/20 border border-yellow-500/30 rounded-lg px-4 py-2">
               <span className="text-sm font-bold text-yellow-500 uppercase tracking-wide">{t("shop.countdown")}</span>
               <div className="flex items-center">
@@ -303,7 +303,7 @@ export function ShopClient() {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             <NotificationsBell />
             <LanguageSwitcher />
             <ProfilePanel />
@@ -312,13 +312,13 @@ export function ShopClient() {
       </header>
 
       {/* Main */}
-      <main className="mx-auto max-w-7xl px-4 py-6">
+      <main className="mx-auto max-w-7xl px-2 sm:px-4 py-4 sm:py-6">
         {/* Filters */}
-        <div className="mb-6 flex flex-col gap-4">
+        <div className="mb-4 sm:mb-6 flex flex-col gap-3 sm:gap-4">
           <VbucksBalance />
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <ShopSearch value={searchQuery} onChange={setSearchQuery} />
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground whitespace-nowrap">
               {t("shop.itemsCount", {
                 filtered: filteredEntries.length,
                 total: entries.length,
