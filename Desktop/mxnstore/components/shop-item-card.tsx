@@ -443,21 +443,21 @@ setBalanceLoading(true);
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium text-foreground flex items-center gap-2">
                   <User className="h-4 w-4" />
-                  Usuario de Fortnite
+                  {t("redeem.fortniteUser")}
                 </label>
                 <Input
-                  placeholder="Tu nombre de usuario en Fortnite"
+                  placeholder={t("redeem.fortnitePlaceholder")}
                   value={fortniteUsername}
                   onChange={(e) => setFortniteUsername(e.target.value)}
                   className="bg-secondary"
                 />
                 {!fortniteUsername.trim() && isLoggedIn && (
-                  <p className="text-sm text-red-500 mt-1">Debes colocar tu usuario para continuar</p>
+                  <p className="text-sm text-red-500 mt-1">{t("redeem.usernameRequired")}</p>
                 )}
               </div>
             ) : (
               <div className="text-center py-4 text-muted-foreground">
-                <p>Inicia sesión para canjear este item</p>
+                <p>{t("redeem.loginToRedeem")}</p>
               </div>
             )}
           </div>
@@ -470,14 +470,14 @@ setBalanceLoading(true);
                 className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50"
               >
                 <Gift className="mr-2 h-4 w-4" />
-                {redeeming ? "Canjeando..." : `Canjear ${price.toLocaleString()} MxN Points`}
+                {redeeming ? t("redeem.processing") : `${t("redeem.title")} ${price.toLocaleString()} MxN Points`}
               </Button>
-            ) : (
+              ) : (
               <Button
                 onClick={() => window.location.href = '/login'}
                 className="w-full bg-purple-600 hover:bg-purple-700"
               >
-                Iniciar sesión
+                {t("profile.login")}
               </Button>
             )}
           </DialogFooter>
