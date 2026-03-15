@@ -10,12 +10,12 @@ const ADMIN_EMAILS = ['nleonelli0@gmail.com', 'juancruzgc10@gmail.com']
 
 async function verifyAuth(request: Request) {
   const authHeader = request.headers.get('authorization')
-  if (!authHeader) return { error: 'No autorizado', status: 401 }
+  if (!authHeader) return { user: null }
   
   const token = authHeader.replace('Bearer ', '')
   
   const { data: { user }, error } = await supabaseAdmin.auth.getUser(token)
-  if (error || !user) return { error: 'Token inválido', status: 401 }
+  if (error || !user) return { user: null }
   
   return { user }
 }
@@ -23,9 +23,6 @@ async function verifyAuth(request: Request) {
 export async function POST(request: NextRequest) {
   try {
     const auth = await verifyAuth(request)
-    if ('error' in auth) {
-      return NextResponse.json({ error: auth.error }, { status: auth.status })
-    }
 
     const user = auth.user
 
