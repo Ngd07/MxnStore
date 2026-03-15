@@ -291,22 +291,8 @@ setBalanceLoading(true);
         window.dispatchEvent(new CustomEvent('mxn-balance-updated', { detail: { balance: newBalance } }));
       }
       
-      setFortniteUsername("");
-      
-      // Refresh balance from server after a short delay to ensure consistency
-      setTimeout(() => {
-        fetchBalance();
-      }, 500);
-      
-      // Close dialog and redirect to purchases chat
-      setTimeout(() => {
-        setShowDialog(false);
-        setRedeemMessage("");
-        setJustRedeemed(false);
-        setRedeeming(false);
-        // Redirect to purchases page with the purchase ID
-        router.push(`/purchases?purchase=${data.purchaseId}`);
-      }, 1500);
+      // Redirect to purchases chat immediately
+      router.push(`/purchases?purchase=${data.purchaseId}`);
     } catch (err) {
       setRedeemMessage("Error al canjear. Intenta de nuevo.");
       setRedeeming(false);
