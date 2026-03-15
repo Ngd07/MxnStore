@@ -162,19 +162,48 @@ export default function AdminPanelPage() {
   }
 
   const updateRecargaStatus = async (id: string, status: string) => {
-    await supabase
-      .from('manual_payments')
-      .update({ status })
-      .eq('id', id)
-    fetchRecargas()
+    const { data: { session } } = await supabase.auth.getSession()
+    const token = session?.access_token
+    
+    const res = await fetch('/api/admin/update-purchase', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+      },
+      body: JSON.stringify({ 
+        purchase_id: id, 
+        status,
+        is_payment: true
+      })
+    })
+    
+    if (res.ok) {
+      fetchRecargas()
+    }
   }
 
-  const updatePurchaseStatus = async (id: string, status: string) => {
-    await supabase
-      .from('purchases')
-      .update({ status })
-      .eq('id', id)
-    fetchPurchases()
+  const updatePurchaseStatus = async (id: string, status: string, userId?: string, refundAmount?: number) => {
+    const { data: { session } } = await supabase.auth.getSession()
+    const token = session?.access_token
+    
+    const res = await fetch('/api/admin/update-purchase', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+      },
+      body: JSON.stringify({ 
+        purchase_id: id, 
+        status,
+        user_id: userId,
+        refund_amount: refundAmount
+      })
+    })
+    
+    if (res.ok) {
+      fetchPurchases()
+    }
   }
 
   const handleAddPoints = async () => {
@@ -216,11 +245,24 @@ export default function AdminPanelPage() {
   }
 
   const updateStatus = async (id: string, status: string) => {
-    await supabase
-      .from('transactions')
-      .update({ status })
-      .eq('id', id)
-    fetchTransactions()
+    const { data: { session } } = await supabase.auth.getSession()
+    const token = session?.access_token
+    
+    const res = await fetch('/api/admin/transactions', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+      },
+      body: JSON.stringify({ 
+        transaction_id: id, 
+        status
+      })
+    })
+    
+    if (res.ok) {
+      fetchTransactions()
+    }
   }
 
   if (checkingAuth) {
@@ -540,14 +582,14 @@ export default function AdminPanelPage() {
                                   </Button>
                                   <Button
                                     size="sm"
-                                    onClick={() => updatePurchaseStatus(p.id, 'completed')}
+                                    onClick={() => updatePurchaseStatus(p.id, 'completed', p.user_id)}
                                     className="bg-green-500 hover:bg-green-600 text-xs"
                                   >
                                     ✓
                                   </Button>
                                   <Button
                                     size="sm"
-                                    onClick={() => updatePurchaseStatus(p.id, 'cancelled')}
+                                    onClick={() => updatePurchaseStatus(p.id, 'cancelled', p.user_id, p.skin_price)}
                                     variant="destructive"
                                     className="text-xs"
                                   >
@@ -559,14 +601,14 @@ export default function AdminPanelPage() {
                                 <>
                                   <Button
                                     size="sm"
-                                    onClick={() => updatePurchaseStatus(p.id, 'completed')}
+                                    onClick={() => updatePurchaseStatus(p.id, 'completed', p.user_id)}
                                     className="bg-green-500 hover:bg-green-600 text-xs"
                                   >
                                     ✓ Entregar
                                   </Button>
                                   <Button
                                     size="sm"
-                                    onClick={() => updatePurchaseStatus(p.id, 'cancelled')}
+                                    onClick={() => updatePurchaseStatus(p.id, 'cancelled', p.user_id, p.skin_price)}
                                     variant="destructive"
                                     className="text-xs"
                                   >

@@ -19,7 +19,7 @@ async function verifyAdmin(request: Request) {
   const { data: { user }, error } = await supabase.auth.getUser(token)
   if (error || !user) return { error: 'Token inválido', status: 401 }
   
-  if (!ADMIN_EMAILS.includes(user.email || '')) {
+  if (!ADMIN_EMAILS.includes(user.email?.toLowerCase() || '')) {
     return { error: 'No tienes permisos de admin', status: 403 }
   }
   
@@ -62,6 +62,32 @@ export async function GET(request: Request) {
     }
 
     return NextResponse.json([])
+  } catch (error) {
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
+}
+
+export async function POST(request: Request) {
+  try {
+    const auth = await verifyAdmin(request)
+    if ('error' in auth) {
+      return NextResponse.json({ error: auth.error }, { status: auth.status })
+    }
+    
+    const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
+    const body = await request.json()
+    const { transaction_id, status } = body
+    
+    const { error } = await supabaseAdmin
+      .from('transactions')
+      .update({ status })
+      .eq('id', transaction_id)
+
+    if (error) {
+      return NextResponse.json({ error: error.message }, { status: 400 })
+    }
+
+    return NextResponse.json({ success: true })
   } catch (error) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
