@@ -46,7 +46,8 @@ export default function PaymentPage({ params }: PageProps) {
       setPkg(found || null)
       
       // Check if user is logged in
-      const { data: { user } } = await supabase.auth.getUser()
+      const { data: { session } } = await supabase.auth.getSession()
+      const user = session?.user
       setUser(user)
       
       // If logged in, pre-fill email from auth
@@ -89,8 +90,12 @@ export default function PaymentPage({ params }: PageProps) {
         formData.append('isAccount', 'true')
       }
 
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
+
       const response = await fetch('/api/submit-receipt', {
         method: 'POST',
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {},
         body: formData,
       })
 
