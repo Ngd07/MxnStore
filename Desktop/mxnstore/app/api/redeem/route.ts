@@ -42,9 +42,9 @@ export async function POST(request: Request) {
 
     // Read current balance
     const { data: profile } = await supabase
-      .from('profiles')
+      .from('user_profiles')
       .select('mxn_points')
-      .eq('id', userId)
+      .eq('user_id', userId)
       .single()
 
     const balance = profile?.mxn_points ?? 0
@@ -56,9 +56,9 @@ export async function POST(request: Request) {
 
     // Deduct balance
     const { error: updError } = await supabase
-      .from('profiles')
+      .from('user_profiles')
       .update({ mxn_points: newBalance })
-      .eq('id', userId)
+      .eq('user_id', userId)
     if (updError) throw updError
 
     // Create transaction
