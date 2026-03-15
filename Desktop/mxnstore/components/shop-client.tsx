@@ -102,9 +102,9 @@ export function ShopClient() {
       setUser(user);
       if (user) {
         const { data: profile } = await supabase
-          .from("user_profiles")
+          .from("profiles")
           .select("mxn_points")
-          .eq("user_id", user.id)
+          .eq("id", user.id)
           .single();
         setBalance(profile?.mxn_points ?? 0);
       }
