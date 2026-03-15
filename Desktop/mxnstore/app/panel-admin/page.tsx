@@ -96,6 +96,22 @@ export default function AdminPanelPage() {
     }
   }, [activeTab, isAuthorized])
 
+  // Auto-refresh purchases and recargas every 10 seconds
+  useEffect(() => {
+    if (!isAuthorized) return
+    
+    const interval = setInterval(() => {
+      if (activeTab === 'purchases') {
+        fetchPurchases()
+      }
+      if (activeTab === 'recargas') {
+        fetchRecargas()
+      }
+    }, 10000)
+    
+    return () => clearInterval(interval)
+  }, [activeTab, isAuthorized])
+
   const fetchTransactions = async () => {
     setTxLoading(true)
     const { data, error } = await supabase
