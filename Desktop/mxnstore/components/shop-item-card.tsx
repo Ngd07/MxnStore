@@ -291,7 +291,6 @@ setBalanceLoading(true);
         window.dispatchEvent(new CustomEvent('mxn-balance-updated', { detail: { balance: newBalance } }));
       }
       
-      setRedeemMessage(t("redeem.success") + "!");
       setFortniteUsername("");
       
       // Refresh balance from server after a short delay to ensure consistency
@@ -466,6 +465,9 @@ setBalanceLoading(true);
                   onChange={(e) => setFortniteUsername(e.target.value)}
                   className="bg-secondary"
                 />
+                {!fortniteUsername.trim() && isLoggedIn && (
+                  <p className="text-sm text-red-500 mt-1">Debes colocar tu usuario para continuar</p>
+                )}
               </div>
             ) : (
               <div className="text-center py-4 text-muted-foreground">
@@ -475,11 +477,6 @@ setBalanceLoading(true);
           </div>
 
           <DialogFooter>
-            {redeemMessage && (
-              <p className={`text-sm text-center w-full mb-2 ${redeemMessage.includes("Error") || redeemMessage.includes("No tienes") ? "text-red-500" : "text-green-500"}`}>
-                {redeemMessage}
-              </p>
-            )}
             {isLoggedIn ? (
               <Button
                 onClick={handleRedeem}
