@@ -34,9 +34,9 @@ export async function GET(request: Request) {
     
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
     const { data: profile } = await supabaseAdmin
-      .from('user_profiles')
+      .from('profiles')
       .select('mxn_points')
-      .eq('user_id', requestedUserId)
+      .eq('id', requestedUserId)
       .single()
 
     return NextResponse.json({ balance: profile?.mxn_points ?? 0 })
