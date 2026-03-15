@@ -160,6 +160,12 @@ export function ShopClient() {
       if (data.success) {
         setPurchaseMessage("✓ Canjeado exitosamente!");
         setBalance(data.balance);
+        
+        // Notify other components to refresh balance
+        if (typeof window !== 'undefined') {
+          window.dispatchEvent(new CustomEvent('mxn-balance-updated', { detail: { balance: data.balance } }));
+        }
+        
         setTimeout(() => {
           setSelectedAccount(null);
           setFortniteUsername("");
