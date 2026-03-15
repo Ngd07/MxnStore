@@ -4,6 +4,7 @@ import Image from "next/image";
 import type { ShopEntry } from "@/lib/types";
 import { useState, useEffect } from "react";
 import { useI18n } from "@/lib/i18n";
+import { useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
@@ -184,6 +185,7 @@ function getItemDescription(entry: ShopEntry): string {
 }
 
 export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCardProps) {
+  const router = useRouter()
   const [imageError, setImageError] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [fortniteUsername, setFortniteUsername] = useState("");
@@ -192,6 +194,7 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
   const [user, setUser] = useState<any>(null);
   const [balanceLoading, setBalanceLoading] = useState(false);
   const [justRedeemed, setJustRedeemed] = useState(false);
+  const [redeeming, setRedeeming] = useState(false);
   const { t } = useI18n();
   
   const image = getItemImage(entry);
@@ -258,6 +261,8 @@ setBalanceLoading(true);
       setRedeemMessage(t("redeem.enterUsername"));
       return;
     }
+    
+    setRedeeming(true);
     setRedeemMessage(t("redeem.processing"));
     
     try {
@@ -274,6 +279,7 @@ setBalanceLoading(true);
       const data = await res.json();
       if (!res.ok) {
         setRedeemMessage(data?.error || 'Error canje');
+        setRedeeming(false);
         return;
       }
       const newBalance = data.balance ?? vbucksBalance;
@@ -285,7 +291,7 @@ setBalanceLoading(true);
         window.dispatchEvent(new CustomEvent('mxn-balance-updated', { detail: { balance: newBalance } }));
       }
       
-      setRedeemMessage(t("redeem.success") + "! Te contactaremos en WhatsApp");
+      setRedeemMessage(t("redeem.success") + "!");
       setFortniteUsername("");
       
       // Refresh balance from server after a short delay to ensure consistency
@@ -293,14 +299,18 @@ setBalanceLoading(true);
         fetchBalance();
       }, 500);
       
-      // Close dialog after short delay
+      // Close dialog and redirect to purchases chat
       setTimeout(() => {
         setShowDialog(false);
         setRedeemMessage("");
         setJustRedeemed(false);
-      }, 2000);
+        setRedeeming(false);
+        // Redirect to purchases page with the purchase ID
+        router.push(`/purchases?purchase=${data.purchaseId}`);
+      }, 1500);
     } catch (err) {
       setRedeemMessage("Error al canjear. Intenta de nuevo.");
+      setRedeeming(false);
     }
   };
 
@@ -473,11 +483,11 @@ setBalanceLoading(true);
             {isLoggedIn ? (
               <Button
                 onClick={handleRedeem}
-                disabled={!canAfford}
+                disabled={!canAfford || !fortniteUsername.trim() || redeeming}
                 className="w-full bg-purple-600 hover:bg-purple-700 disabled:opacity-50"
               >
                 <Gift className="mr-2 h-4 w-4" />
-                Canjear {price.toLocaleString()} MxN Points
+                {redeeming ? "Canjeando..." : `Canjear ${price.toLocaleString()} MxN Points`}
               </Button>
             ) : (
               <Button

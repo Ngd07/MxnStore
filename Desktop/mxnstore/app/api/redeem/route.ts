@@ -73,15 +73,24 @@ export async function POST(request: Request) {
     })
 
     // Create purchase record
-    await supabase.from('purchases').insert({
-      user_id: userId,
-      skin_name: itemName,
-      skin_price: price,
-      fortnite_username: fortniteUsername,
-      status: 'pending'
-    })
+    const { data: purchase, error: purchaseError } = await supabase
+      .from('purchases')
+      .insert({
+        user_id: userId,
+        skin_name: itemName,
+        skin_price: price,
+        fortnite_username: fortniteUsername,
+        status: 'pending'
+      })
+      .select()
+      .single()
 
-    return NextResponse.json({ success: true, balance: newBalance, message: 'Redeemed' })
+    return NextResponse.json({ 
+      success: true, 
+      balance: newBalance, 
+      message: 'Redeemed',
+      purchaseId: purchase?.id
+    })
   } catch (err) {
     console.error(err)
     return NextResponse.json({ error: 'Error interno' }, { status: 500 })
