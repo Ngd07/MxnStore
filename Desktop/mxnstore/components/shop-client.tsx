@@ -410,6 +410,9 @@ export function ShopClient() {
       {/* Account Purchase Dialog */}
       <Dialog open={!!selectedAccount} onOpenChange={(open) => !open && setSelectedAccount(null)}>
         <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="sr-only">Canjear cuenta</DialogTitle>
+          </DialogHeader>
           {selectedAccount && (
             <div className="space-y-4">
               <div className="relative w-full aspect-square bg-muted rounded-lg overflow-hidden">
