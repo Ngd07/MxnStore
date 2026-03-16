@@ -94,8 +94,11 @@ export default function AdminChatsPage() {
       .select('*')
       .order('created_at', { ascending: false })
 
-    if (!showArchived) {
-      // Only show non-archived purchases (pending, processing, completed, cancelled)
+    if (showArchived) {
+      // Only show archived purchases
+      query = query.eq('status', 'archived')
+    } else {
+      // Only show non-archived purchases
       query = query.in('status', ['pending', 'processing', 'completed', 'cancelled'])
     }
 
@@ -140,7 +143,10 @@ export default function AdminChatsPage() {
       .select('*')
       .order('created_at', { ascending: false })
 
-    if (!showArchived) {
+    if (showArchived) {
+      // Only show archived recargas
+      query = query.eq('status', 'archived')
+    } else {
       // Only show non-archived recargas
       query = query.in('status', ['pending', 'approved', 'rejected'])
     }
