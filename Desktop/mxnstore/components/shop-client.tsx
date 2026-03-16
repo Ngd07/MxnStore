@@ -317,7 +317,7 @@ export function ShopClient() {
         <div className="mb-3 sm:mb-6 flex flex-col gap-2 sm:gap-4">
           <VbucksBalance />
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div className="w-full sm:max-w-xs">
+            <div className="w-full sm:max-w-xs md:max-w-md">
               <ShopSearch value={searchQuery} onChange={setSearchQuery} />
             </div>
             <p className="text-xs sm:text-sm text-muted-foreground whitespace-nowrap">
