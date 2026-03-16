@@ -82,45 +82,46 @@ const checkSession = async () => {
   }
 
   return (
-    <div className="flex items-center rounded-xl border border-yellow-500/50 bg-yellow-500/10 px-4 py-2">
-      {/* Left: Balance */}
-      <div className="flex items-center gap-3 shrink-0">
-        <Image
-          src="/logomxnpoints.png"
-          alt="MxN Points"
-          width={24}
-          height={24}
-          className="rounded"
-        />
-        <div className="flex flex-col gap-0.5">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-foreground">{t("profile.mxnPoints")}</span>
-            <span className="text-lg font-bold text-yellow-500">{vbucksBalance}</span>
+    <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-4 rounded-xl border border-yellow-500/50 bg-yellow-500/10 px-3 md:px-4 py-2">
+      {/* Top row: Balance + Creator Code on mobile */}
+      <div className="flex items-center justify-between w-full md:flex-1">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <Image
+            src="/logomxnpoints.png"
+            alt="MxN Points"
+            width={20}
+            height={20}
+            className="rounded"
+          />
+          <div className="flex flex-col">
+            <div className="flex items-center gap-1 sm:gap-2">
+              <span className="text-xs sm:text-sm font-medium text-foreground">{t("profile.mxnPoints")}</span>
+              <span className="text-sm sm:text-lg font-bold text-yellow-500">{vbucksBalance}</span>
+            </div>
           </div>
-          <span className="text-xs text-muted-foreground">{t("profile.vbucks")}</span>
         </div>
+        
+        {/* Creator Code - only on desktop */}
+        <span className="hidden md:inline flex-1 text-center text-base font-bold text-white uppercase tracking-widest drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]">
+            {t("profile.creatorCode")} MXNSTORE
+        </span>
       </div>
 
-      {/* Center: Creator Code */}
-      <span className="hidden md:inline flex-1 text-center text-base font-bold text-white uppercase tracking-widest drop-shadow-[0_0_6px_rgba(255,255,255,0.6)]">
-          {t("profile.creatorCode")} MXNSTORE
-      </span>
-
-      {/* Right: Buttons */}
-      <div className="flex items-center gap-2 shrink-0">
+      {/* Buttons - below on mobile, right on desktop */}
+      <div className="flex items-center gap-1.5 sm:gap-2 w-full md:w-auto justify-between md:justify-end">
         <button
           onClick={() => router.push('/add-friend')}
-          className="flex items-center gap-1.5 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-blue-700"
+          className="flex items-center gap-1 rounded-lg bg-blue-600 px-2 sm:px-3 py-1 text-[10px] xs:text-xs font-medium text-white transition-colors hover:bg-blue-700"
         >
-          <UserPlus className="h-3.5 w-3.5" />
-          {t("profile.addFriend")}
+          <UserPlus className="h-3 w-3" />
+          <span className="hidden xs:inline">{t("profile.addFriend")}</span>
         </button>
         <button
           onClick={() => router.push('/buy-vbucks')}
-          className="flex items-center gap-1.5 rounded-lg bg-purple-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:bg-purple-700"
+          className="flex items-center gap-1 rounded-lg bg-purple-600 px-2 sm:px-3 py-1 text-[10px] xs:text-xs font-medium text-white transition-colors hover:bg-purple-700"
         >
-          <RefreshCw className="h-3.5 w-3.5" />
-          {t("profile.recharge")}
+          <RefreshCw className="h-3 w-3" />
+          <span className="hidden xs:inline">{t("profile.recharge")}</span>
         </button>
       </div>
     </div>
