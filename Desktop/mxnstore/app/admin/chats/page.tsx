@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
-import { Loader2, Send, Lock, MessageCircle, Users, ShoppingBag, ArrowLeft } from 'lucide-react'
+import { Loader2, Send, Lock, MessageCircle, Users, ShoppingBag, ArrowLeft, Coins } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -58,7 +58,9 @@ export default function AdminChatsPage() {
   const [adminUser, setAdminUser] = useState<any>(null)
   const [chats, setChats] = useState<Chat[]>([])
   const [purchases, setPurchases] = useState<Purchase[]>([])
+  const [recargas, setRecargas] = useState<any[]>([])
   const [selectedPurchase, setSelectedPurchase] = useState<Purchase | null>(null)
+  const [selectedRecarga, setSelectedRecarga] = useState<any>(null)
   const [purchaseMessages, setPurchaseMessages] = useState<PurchaseMessage[]>([])
   const [newMessage, setNewMessage] = useState('')
   const [sending, setSending] = useState(false)
@@ -72,6 +74,7 @@ export default function AdminChatsPage() {
       if (user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase())) {
         setIsAuthorized(true)
         loadPurchases()
+        loadRecargas()
       }
       setCheckingAuth(false)
     }
@@ -81,6 +84,7 @@ export default function AdminChatsPage() {
   useEffect(() => {
     if (isAuthorized) {
       loadPurchases()
+      loadRecargas()
     }
   }, [showArchived])
 
@@ -126,6 +130,23 @@ export default function AdminChatsPage() {
       }))
       
       setPurchases(purchasesWithEmail)
+    }
+  }
+
+  const loadRecargas = async () => {
+    let query = supabase
+      .from('manual_payments')
+      .select('*')
+      .order('created_at', { ascending: false })
+
+    if (!showArchived) {
+      query = query.or('status.eq.pending,status.eq.approved,status.eq.rejected')
+    }
+
+    const { data: recargasData } = await query
+
+    if (recargasData) {
+      setRecargas(recargasData)
     }
   }
 
@@ -205,6 +226,16 @@ export default function AdminChatsPage() {
     setSelectedPurchase(null)
   }
 
+  const archiveRecarga = async (recargaId: string) => {
+    await supabase
+      .from('manual_payments')
+      .update({ status: 'archived' })
+      .eq('id', recargaId)
+    
+    loadRecargas()
+    setSelectedRecarga(null)
+  }
+
   if (checkingAuth) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -250,11 +281,18 @@ export default function AdminChatsPage() {
         {/* Tabs */}
         <div className="flex gap-2 mb-4">
           <button
-            onClick={() => { setSelectedPurchase(purchases[0] || null); }}
+            onClick={() => { setSelectedPurchase(purchases[0] || null); setSelectedRecarga(null); }}
             className="px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 bg-purple-500 text-white"
           >
             <ShoppingBag className="h-4 w-4" />
-            Chats ({purchases.length})
+            Compras ({purchases.length})
+          </button>
+          <button
+            onClick={() => { setSelectedRecarga(recargas[0] || null); setSelectedPurchase(null); }}
+            className="px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 bg-yellow-500 text-white"
+          >
+            <Coins className="h-4 w-4" />
+            Recargas ({recargas.length})
           </button>
           <button
             onClick={() => setShowArchived(!showArchived)}
@@ -267,16 +305,17 @@ export default function AdminChatsPage() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          {/* Chat List - Purchases */}
+          {/* Chat List */}
           <Card className="lg:col-span-1 flex flex-col">
             <div className="p-3 border-b">
               <h2 className="font-bold text-foreground flex items-center gap-2">
-                <ShoppingBag className="h-4 w-4" />
-                Compras ({purchases.length})
+                {selectedRecarga ? <Coins className="h-4 w-4" /> : <ShoppingBag className="h-4 w-4" />}
+                {selectedRecarga ? `Recargas (${recargas.length})` : `Compras (${purchases.length})`}
               </h2>
             </div>
             <CardContent className="max-h-[70vh] overflow-y-auto p-0">
-              {purchases.length === 0 ? (
+              {/* Purchases List */}
+              {!selectedRecarga && (purchases.length === 0 ? (
                 <p className="text-center text-muted-foreground py-8">No hay compras</p>
               ) : (
                 purchases.map((purchase) => (
@@ -304,9 +343,42 @@ export default function AdminChatsPage() {
                       </div>
                     </button>
                   ))
-                )}
-              </CardContent>
-            </Card>
+                ))
+              }
+
+              {/* Recargas List */}
+              {selectedRecarga && (recargas.length === 0 ? (
+                <p className="text-center text-muted-foreground py-8">No hay recargas</p>
+              ) : (
+                recargas.map((recarga) => (
+                  <button
+                    key={recarga.id}
+                    onClick={() => { setSelectedRecarga(recarga); }}
+                    className={`w-full text-left p-3 border-b hover:bg-secondary/50 ${
+                      selectedRecarga?.id === recarga.id ? 'bg-secondary' : ''
+                    }`}
+                  >
+                      <p className="font-medium text-foreground truncate">{recarga.email}</p>
+                      <p className="text-sm text-yellow-500 truncate font-medium">{recarga.mxn_amount} MxN</p>
+                      <p className="text-sm text-muted-foreground truncate">${recarga.usd_amount} USD</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className={`px-2 py-0.5 rounded-full text-xs ${
+                          recarga.status === 'approved' ? 'bg-green-500/20 text-green-500' :
+                          recarga.status === 'pending' ? 'bg-yellow-500/20 text-yellow-500' :
+                          recarga.status === 'archived' ? 'bg-gray-500/20 text-gray-500' :
+                          'bg-red-500/20 text-red-500'
+                        }`}>
+                          {recarga.status === 'approved' ? 'Aprobado' : 
+                           recarga.status === 'pending' ? 'Pendiente' :
+                           recarga.status === 'archived' ? 'Archivado' : 'Rechazado'}
+                        </span>
+                      </div>
+                    </button>
+                  ))
+                ))
+              }
+            </CardContent>
+          </Card>
 
           <Card className="lg:col-span-2 flex flex-col">
             {selectedPurchase ? (
@@ -429,6 +501,85 @@ export default function AdminChatsPage() {
                     </div>
                   </CardContent>
                 </Card>
+              </>
+            ) : selectedRecarga ? (
+              <>
+                {/* Recarga Details */}
+              <Card className="m-4 mb-0">
+                <CardContent className="pt-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-muted-foreground">Monto</p>
+                      <p className="font-bold text-yellow-500">{selectedRecarga.mxn_amount} MxN</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Precio USD</p>
+                      <p className="font-bold text-foreground">${selectedRecarga.usd_amount}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Usuario Fortnite</p>
+                      <p className="font-medium text-foreground">{selectedRecarga.fortnite_username || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Email</p>
+                      <p className="font-medium text-foreground text-sm">{selectedRecarga.email || '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">Estado</p>
+                      <span className={`inline-block px-2 py-1 rounded-full text-xs ${
+                        selectedRecarga.status === 'approved' ? 'bg-green-500/20 text-green-500' :
+                        selectedRecarga.status === 'pending' ? 'bg-yellow-500/20 text-yellow-500' :
+                        selectedRecarga.status === 'archived' ? 'bg-gray-500/20 text-gray-500' :
+                        'bg-red-500/20 text-red-500'
+                      }`}>
+                        {selectedRecarga.status === 'approved' ? 'Aprobado' : 
+                         selectedRecarga.status === 'pending' ? 'Pendiente' :
+                         selectedRecarga.status === 'archived' ? 'Archivado' : 'Rechazado'}
+                      </span>
+                    </div>
+                    {selectedRecarga.status !== 'archived' && (
+                      <div className="col-span-2 mt-2">
+                        <Button
+                          onClick={() => archiveRecarga(selectedRecarga.id)}
+                          className="bg-gray-500 hover:bg-gray-600 text-white text-xs"
+                          size="sm"
+                        >
+                          Archivar Chat
+                        </Button>
+                      </div>
+                    )}
+                    <div className="col-span-2">
+                      <p className="text-sm text-muted-foreground">Fecha</p>
+                      <p className="font-medium text-foreground">
+                        {new Date(selectedRecarga.created_at).toLocaleString('es-AR', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+                {/* Comprobante */}
+                {selectedRecarga.receipt_url && (
+                  <Card className="m-4 mt-4">
+                    <CardContent className="pt-4">
+                      <p className="text-sm text-muted-foreground mb-2">Comprobante</p>
+                      <a 
+                        href={selectedRecarga.receipt_url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:underline text-sm"
+                      >
+                        Ver comprobante
+                      </a>
+                    </CardContent>
+                  </Card>
+                )}
               </>
             ) : (
               <div className="flex-1 flex items-center justify-center p-8">
