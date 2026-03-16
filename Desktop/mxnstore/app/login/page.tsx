@@ -4,12 +4,10 @@ import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
-import { useI18n } from '@/lib/i18n'
 import Image from 'next/image'
 
 export default function LoginPage() {
   const router = useRouter()
-  const { t } = useI18n()
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -34,7 +32,7 @@ export default function LoginPage() {
     })
     if (error) {
       console.error('OAuth error:', error)
-      alert(t("login.error") + ': ' + error.message)
+      alert('Error: ' + error.message)
     } else {
       console.log('OAuth data:', data)
     }
@@ -65,19 +63,16 @@ export default function LoginPage() {
         <h1 className="text-4xl sm:text-5xl font-bold text-white drop-shadow-lg">
           MxNStore
         </h1>
-        <p className="text-yellow-300 mt-2 text-lg sm:text-xl font-medium">
-          Tu tienda de Fortnite
-        </p>
       </div>
 
       {/* Login Card */}
       <div className="w-full max-w-md">
         <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl p-6 sm:p-8">
           <h2 className="text-2xl font-bold text-white text-center mb-2">
-            {t("login.title")}
+            Welcome back
           </h2>
           <p className="text-white/70 text-center mb-6 text-sm sm:text-base">
-            {t("login.subtitle")}
+            Sign in to continue
           </p>
 
           <Button
@@ -90,13 +85,13 @@ export default function LoginPage() {
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
             </svg>
-            {t("login.google")}
+            Continue with Google
           </Button>
         </div>
 
         {/* Footer */}
         <p className="text-white/50 text-center mt-6 text-xs">
-          Al iniciar sesión aceptas nuestros términos y condiciones
+          By signing in, you accept our terms and conditions
         </p>
       </div>
     </div>
