@@ -225,14 +225,24 @@ export default function AdminChatsPage() {
   }
 
   const archivePurchase = async (purchaseId: string) => {
-    const { error } = await supabase
-      .from('purchases')
-      .update({ status: 'archived' })
-      .eq('id', purchaseId)
+    const { data: { session } } = await supabase.auth.getSession()
+    const token = session?.access_token
     
-    if (error) {
-      console.error('Error archiving purchase:', error)
-      alert('Error al archivar: ' + error.message)
+    const res = await fetch('/api/admin/update-purchase', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+      },
+      body: JSON.stringify({ 
+        purchase_id: purchaseId, 
+        status: 'archived'
+      })
+    })
+    
+    const data = await res.json()
+    if (!res.ok || data.error) {
+      alert('Error al archivar: ' + (data.error || 'Unknown error'))
       return
     }
     
@@ -241,14 +251,25 @@ export default function AdminChatsPage() {
   }
 
   const archiveRecarga = async (recargaId: string) => {
-    const { error } = await supabase
-      .from('manual_payments')
-      .update({ status: 'archived' })
-      .eq('id', recargaId)
+    const { data: { session } } = await supabase.auth.getSession()
+    const token = session?.access_token
     
-    if (error) {
-      console.error('Error archiving recarga:', error)
-      alert('Error al archivar: ' + error.message)
+    const res = await fetch('/api/admin/update-purchase', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+      },
+      body: JSON.stringify({ 
+        purchase_id: recargaId, 
+        status: 'archived',
+        is_payment: true
+      })
+    })
+    
+    const data = await res.json()
+    if (!res.ok || data.error) {
+      alert('Error al archivar: ' + (data.error || 'Unknown error'))
       return
     }
     
