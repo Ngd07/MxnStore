@@ -225,20 +225,32 @@ export default function AdminChatsPage() {
   }
 
   const archivePurchase = async (purchaseId: string) => {
-    await supabase
+    const { error } = await supabase
       .from('purchases')
       .update({ status: 'archived' })
       .eq('id', purchaseId)
+    
+    if (error) {
+      console.error('Error archiving purchase:', error)
+      alert('Error al archivar: ' + error.message)
+      return
+    }
     
     loadPurchases()
     setSelectedPurchase(null)
   }
 
   const archiveRecarga = async (recargaId: string) => {
-    await supabase
+    const { error } = await supabase
       .from('manual_payments')
       .update({ status: 'archived' })
       .eq('id', recargaId)
+    
+    if (error) {
+      console.error('Error archiving recarga:', error)
+      alert('Error al archivar: ' + error.message)
+      return
+    }
     
     loadRecargas()
     setSelectedRecarga(null)
