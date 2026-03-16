@@ -96,7 +96,7 @@ export default function AdminChatsPage() {
 
     if (!showArchived) {
       // Only show non-archived purchases (pending, processing, completed, cancelled)
-      query = query.neq('status', 'archived')
+      query = query.in('status', ['pending', 'processing', 'completed', 'cancelled'])
     }
 
     const { data: purchasesData } = await query
@@ -142,7 +142,7 @@ export default function AdminChatsPage() {
 
     if (!showArchived) {
       // Only show non-archived recargas
-      query = query.neq('status', 'archived')
+      query = query.in('status', ['pending', 'approved', 'rejected'])
     }
 
     const { data: recargasData } = await query
