@@ -110,6 +110,22 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Send Telegram notification
+    try {
+      const telegramMessage = `*Nuevo comprobante de pago!*\n\n👤 Email: ${email}\n💰 Monto: ${mxn.toLocaleString()} MxN\n💵 USD: $${price}\n🎮 Fortnite: ${fortniteUsername || 'No proporcionado'}\n\n🔗 https://mxnstore.vercel.app/admin/chats`;
+
+      await fetch(process.env.NEXT_PUBLIC_APP_URL + '/api/telegram-notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          message: telegramMessage,
+          type: 'recarga'
+        })
+      })
+    } catch (telegramError) {
+      console.error('Telegram notification failed:', telegramError)
+    }
+
     return NextResponse.json({
       success: true,
       payment,

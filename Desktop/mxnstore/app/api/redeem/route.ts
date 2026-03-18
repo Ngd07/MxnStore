@@ -85,6 +85,22 @@ export async function POST(request: Request) {
       .select()
       .single()
 
+    // Send Telegram notification
+    try {
+      const telegramMessage = `*Nueva compra de skin!*\n\n👤 Usuario: ${auth.user.email}\n🎮 Skin: ${itemName}\n💰 Precio: ${price.toLocaleString()} MxN\n🎮 Fortnite: ${fortniteUsername || 'No proporcionado'}\n\n🔗 https://mxnstore.vercel.app/admin/chats`
+
+      await fetch(process.env.NEXT_PUBLIC_APP_URL + '/api/telegram-notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          message: telegramMessage,
+          type: 'purchase'
+        })
+      })
+    } catch (telegramError) {
+      console.error('Telegram notification failed:', telegramError)
+    }
+
     return NextResponse.json({ 
       success: true, 
       balance: newBalance, 
