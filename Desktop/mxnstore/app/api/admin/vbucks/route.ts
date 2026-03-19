@@ -8,14 +8,18 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
 const ADMIN_EMAILS = ['nleonelli0@gmail.com', 'juancruzgc10@gmail.com']
 
-async function checkAdminAuth() {
+async function checkAdminAuth(request: Request) {
+  const authHeader = request.headers.get('authorization')
+  if (!authHeader) return false
+  
+  const token = authHeader.replace('Bearer ', '')
   const supabaseAnon = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   )
-  const { data: { user }, error } = await supabaseAnon.auth.getUser()
-  console.log('Admin check - user:', user?.email, 'error:', error)
-  return user?.email && ADMIN_EMAILS.includes(user.email)
+  
+  const { data: { user }, error } = await supabaseAnon.auth.getUser(token)
+  return user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase())
 }
 
 export async function POST(request: Request) {
@@ -108,7 +112,7 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   try {
-    const isAdmin = await checkAdminAuth()
+    const isAdmin = await checkAdminAuth(request)
     if (!isAdmin) {
       return NextResponse.json(
         { error: 'No autorizado' },
