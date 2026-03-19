@@ -10,17 +10,17 @@ import Image from 'next/image'
 import { useI18n } from '@/lib/i18n'
 
 const PACKAGES: { id: string; mxn: number; price: number; popular: boolean; bestPrice?: boolean }[] = [
-  { id: '53020cef-71b2-42f7-ac76-9bc871d5036c', mxn: 2000, price: 8.00, popular: false },
-  { id: '9e8d117d-2224-41c3-92dc-d96aa42a6f30', mxn: 5000, price: 18.00, popular: false },
-  { id: 'adf34f8c-55c8-4fcc-97ab-5578991b5acd', mxn: 10000, price: 35.00, popular: false },
-  { id: 'ae20b72f-9084-4ef6-a6ee-91864ff19ba6', mxn: 13500, price: 45.00, popular: true, bestPrice: true },
+  { id: 'f28039f8-fae9-406d-9d66-8f7f58b20a60', mxn: 2000, price: 10.00, popular: false },
+  { id: '19afa736-6407-4cf3-badc-623eeb33b9e5', mxn: 5000, price: 20.00, popular: false },
+  { id: 'af8a2da0-0429-49f8-b440-d7da81a8fab5', mxn: 8000, price: 30.00, popular: true, bestPrice: true },
+  { id: '3ee33bdc-3465-4a6f-b246-7d2ef02ed6f4', mxn: 12500, price: 45.00, popular: false },
 ]
 
 const PAYMENT_LINKS: Record<string, string> = {
-  '53020cef-71b2-42f7-ac76-9bc871d5036c': 'https://app.takenos.com/pay/53020cef-71b2-42f7-ac76-9bc871d5036c',
-  '9e8d117d-2224-41c3-92dc-d96aa42a6f30': 'https://app.takenos.com/pay/9e8d117d-2224-41c3-92dc-d96aa42a6f30',
-  'adf34f8c-55c8-4fcc-97ab-5578991b5acd': 'https://app.takenos.com/pay/adf34f8c-55c8-4fcc-97ab-5578991b5acd',
-  'ae20b72f-9084-4ef6-a6ee-91864ff19ba6': 'https://app.takenos.com/pay/ae20b72f-9084-4ef6-a6ee-91864ff19ba6',
+  'f28039f8-fae9-406d-9d66-8f7f58b20a60': 'https://app.takenos.com/pay/f28039f8-fae9-406d-9d66-8f7f58b20a60',
+  '19afa736-6407-4cf3-badc-623eeb33b9e5': 'https://app.takenos.com/pay/19afa736-6407-4cf3-badc-623eeb33b9e5',
+  'af8a2da0-0429-49f8-b440-d7da81a8fab5': 'https://app.takenos.com/pay/af8a2da0-0429-49f8-b440-d7da81a8fab5',
+  '3ee33bdc-3465-4a6f-b246-7d2ef02ed6f4': 'https://app.takenos.com/pay/3ee33bdc-3465-4a6f-b246-7d2ef02ed6f4',
 }
 
 export default function BuyVbucksPage() {
