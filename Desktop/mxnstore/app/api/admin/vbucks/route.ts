@@ -118,6 +118,21 @@ export async function GET(request: Request) {
 
     const { searchParams } = new URL(request.url)
     const email = searchParams.get('email')
+    const type = searchParams.get('type')
+
+    // Return payments/recargas
+    if (type === 'payments') {
+      const { data: payments, error } = await supabase
+        .from('manual_payments')
+        .select('*')
+        .order('created_at', { ascending: false })
+
+      if (error) {
+        return NextResponse.json({ error: error.message }, { status: 400 })
+      }
+
+      return NextResponse.json(payments || [])
+    }
 
     if (!email) {
       return NextResponse.json(

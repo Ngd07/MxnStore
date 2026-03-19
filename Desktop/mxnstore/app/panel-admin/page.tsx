@@ -114,65 +114,60 @@ export default function AdminPanelPage() {
 
   const fetchTransactions = async () => {
     setTxLoading(true)
-    const { data, error } = await supabase
-      .from('transactions')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (!error && data) {
-      const userIds = [...new Set(data.map(t => t.user_id))]
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('id, email')
-        .in('id', userIds)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
       
-      const profileMap = new Map(profiles?.map(p => [p.id, p.email]) || [])
-
-      const transactionsWithEmail = data.map(t => ({
-        ...t,
-        email: profileMap.get(t.user_id) || 'Unknown'
-      }))
+      const res = await fetch('/api/admin/transactions', {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+      })
+      const data = await res.json()
       
-      setTransactions(transactionsWithEmail)
+      if (data && Array.isArray(data)) {
+        setTransactions(data)
+      }
+    } catch (err) {
+      console.error('Error fetching transactions:', err)
     }
     setTxLoading(false)
   }
 
   const fetchPurchases = async () => {
     setPurchasesLoading(true)
-    const { data } = await supabase
-      .from('purchases')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (data) {
-      const userIds = [...new Set(data.map(p => p.user_id))]
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('id, email')
-        .in('id', userIds)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
       
-      const profileMap = new Map(profiles?.map(p => [p.id, p.email]) || [])
-
-      const purchasesWithEmail = data.map(p => ({
-        ...p,
-        email: profileMap.get(p.user_id) || 'Unknown'
-      }))
+      const res = await fetch('/api/admin/purchases', {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+      })
+      const data = await res.json()
       
-      setPurchases(purchasesWithEmail)
+      if (data && Array.isArray(data)) {
+        setPurchases(data)
+      }
+    } catch (err) {
+      console.error('Error fetching purchases:', err)
     }
     setPurchasesLoading(false)
   }
 
   const fetchRecargas = async () => {
     setRecargasLoading(true)
-    const { data } = await supabase
-      .from('manual_payments')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (data) {
-      setRecargas(data)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
+      
+      const res = await fetch('/api/admin/vbucks?type=payments', {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+      })
+      const data = await res.json()
+      
+      if (data && Array.isArray(data)) {
+        setRecargas(data)
+      }
+    } catch (err) {
+      console.error('Error fetching recargas:', err)
     }
     setRecargasLoading(false)
   }
