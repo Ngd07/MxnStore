@@ -687,7 +687,7 @@ export default function AdminPanelPage() {
                           </td>
                           <td className="p-3 text-sm text-foreground">{r.email || '-'}</td>
                           <td className="p-3 text-sm text-foreground">{r.fortnite_username || '-'}</td>
-                          <td className="p-3 text-sm text-foreground">{r.package_id || '-'}</td>
+                          <td className="p-3 text-sm text-foreground">{r.mxn_amount?.toLocaleString() || r.package_id || '-'}</td>
                           <td className="p-3 text-sm font-bold text-yellow-500">{r.mxn_amount}</td>
                           <td className="p-3 text-sm text-foreground">${r.usd_amount}</td>
                           <td className="p-3 text-sm">
