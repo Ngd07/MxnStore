@@ -247,6 +247,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "comprobante.title": "Enviar comprobante",
     "comprobante.completeData": "Completa tus datos",
     "comprobante.sent": "Comprobante enviado!",
+    "buy.epicNotice": "Precios actualizados por los recientes cambios de EPIC GAMES.",
   },
   en: {
     "shop.title": "Fortnite Shop",
@@ -476,6 +477,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "comprobante.title": "Send receipt",
     "comprobante.completeData": "Complete your data",
     "comprobante.sent": "Receipt sent!",
+    "buy.epicNotice": "Prices updated due to recent EPIC GAMES changes.",
   },
   de: {
     "shop.title": "Fortnite Shop",
@@ -695,6 +697,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "comprobante.title": "Beleg senden",
     "comprobante.completeData": "Vervollstaendige deine Daten",
     "comprobante.sent": "Beleg gesendet!",
+    "buy.epicNotice": "Preise aktualisiert wegen der neuen EPIC GAMES Aenderungen.",
   },
   ru: {
     "shop.title": "Maгaзин Fortnite",
@@ -914,6 +917,7 @@ const translations: Record<Locale, Record<string, string>> = {
     "comprobante.title": "Отправить чек",
     "comprobante.completeData": "Заполните свои данные",
     "comprobante.sent": "Чек отправлен!",
+    "buy.epicNotice": "Цены обновлены из-за недавних изменений EPIC GAMES.",
   },
 };
 

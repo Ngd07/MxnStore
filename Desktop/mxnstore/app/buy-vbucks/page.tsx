@@ -83,6 +83,10 @@ export default function BuyVbucksPage() {
       </header>
 
       <main className="mx-auto max-w-4xl px-4 py-8">
+        <div className="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-4 mb-8 text-center">
+          <p className="text-yellow-500 font-medium">{t("buy.epicNotice")}</p>
+        </div>
+
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 mb-4">
             <Image
