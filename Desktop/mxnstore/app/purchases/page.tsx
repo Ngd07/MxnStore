@@ -309,8 +309,14 @@ function PurchasesContent() {
     }
   }
 
-  const getPackageName = (packageId: string) => {
+  const getPackageName = (packageId: string, mxnAmount?: number) => {
+    if (mxnAmount) return mxnAmount
     const packages: Record<string, { mxn: number }> = {
+      'f28039f8-fae9-406d-9d66-8f7f58b20a60': { mxn: 2000 },
+      '19afa736-6407-4cf3-badc-623eeb33b9e5': { mxn: 5000 },
+      'af8a2da0-0429-49f8-b440-d7da81a8fab5': { mxn: 8000 },
+      '3ee33bdc-3465-4a6f-b246-7d2ef02ed6f4': { mxn: 12500 },
+      // old package IDs
       '53020cef-71b2-42f7-ac76-9bc871d5036c': { mxn: 2000 },
       '9e8d117d-2224-41c3-92dc-d96aa42a6f30': { mxn: 5000 },
       'adf34f8c-55c8-4fcc-97ab-5578991b5acd': { mxn: 10000 },
@@ -544,7 +550,7 @@ function PurchasesContent() {
                       }`}
                     >
                       <div className="flex justify-between items-start mb-1">
-                        <span className="font-medium text-foreground">{getPackageName(payment.package_id)} MxN</span>
+                        <span className="font-medium text-foreground">{getPackageName(payment.package_id, payment.mxn_amount)} MxN</span>
                         <span className={`px-2 py-0.5 rounded-full text-xs ${getStatusColor(payment.status)}`}>
                           {getStatusText(payment.status)}
                         </span>
@@ -592,7 +598,7 @@ function PurchasesContent() {
                       <div className="grid grid-cols-2 gap-4">
                         <div>
                           <p className="text-sm text-muted-foreground">{t("purchases.package")}</p>
-                          <p className="font-bold text-foreground">{getPackageName(selectedPayment.package_id)} MxN</p>
+                          <p className="font-bold text-foreground">{getPackageName(selectedPayment.package_id, selectedPayment.mxn_amount)} MxN</p>
                         </div>
                         <div>
                           <p className="text-sm text-muted-foreground">{t("purchases.amount")}</p>
