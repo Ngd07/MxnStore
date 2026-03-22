@@ -89,72 +89,38 @@ export default function AdminChatsPage() {
   }, [showArchived])
 
   const loadPurchases = async () => {
-    let query = supabase
-      .from('purchases')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (showArchived) {
-      // Only show archived purchases
-      query = query.eq('status', 'archived')
-    } else {
-      // Only show non-archived purchases
-      query = query.in('status', ['pending', 'processing', 'completed', 'cancelled'])
-    }
-
-    const { data: purchasesData } = await query
-
-    if (purchasesData) {
-      const userIds = [...new Set(purchasesData.map(p => p.user_id))]
-      const { data: profiles } = await supabase
-        .from('profiles')
-        .select('id, email')
-        .in('id', userIds)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
       
-      const profileMap = new Map(profiles?.map(p => [p.id, p.email]) || [])
-
-      const purchaseIds = purchasesData.map(p => p.id)
-      const { data: lastMessages } = await supabase
-        .from('purchase_messages')
-        .select('purchase_id, content')
-        .in('purchase_id', purchaseIds)
-        .order('created_at', { ascending: false })
-      
-      const lastMsgMap = new Map()
-      lastMessages?.forEach(msg => {
-        if (!lastMsgMap.has(msg.purchase_id)) {
-          lastMsgMap.set(msg.purchase_id, msg.content)
-        }
+      const res = await fetch(`/api/admin/admin-chats?type=purchases&archived=${showArchived}`, {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
       })
-
-      const purchasesWithEmail = purchasesData.map(purchase => ({
-        ...purchase,
-        user_email: profileMap.get(purchase.user_id) || 'Unknown',
-        last_message: lastMsgMap.get(purchase.id) || ''
-      }))
+      const data = await res.json()
       
-      setPurchases(purchasesWithEmail)
+      if (Array.isArray(data)) {
+        setPurchases(data)
+      }
+    } catch (err) {
+      console.error('Error loading purchases:', err)
     }
   }
 
   const loadRecargas = async () => {
-    let query = supabase
-      .from('manual_payments')
-      .select('*')
-      .order('created_at', { ascending: false })
-
-    if (showArchived) {
-      // Only show archived recargas
-      query = query.eq('status', 'archived')
-    } else {
-      // Only show non-archived recargas
-      query = query.in('status', ['pending', 'approved', 'rejected'])
-    }
-
-    const { data: recargasData } = await query
-
-    if (recargasData) {
-      setRecargas(recargasData)
+    try {
+      const { data: { session } } = await supabase.auth.getSession()
+      const token = session?.access_token
+      
+      const res = await fetch(`/api/admin/admin-chats?type=recargas&archived=${showArchived}`, {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+      })
+      const data = await res.json()
+      
+      if (Array.isArray(data)) {
+        setRecargas(data)
+      }
+    } catch (err) {
+      console.error('Error loading recargas:', err)
     }
   }
 
