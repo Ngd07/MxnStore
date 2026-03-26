@@ -20,9 +20,9 @@ const BOT_ACCOUNTS = [
   { id: "69aa1e00bd2753d5f0711526", displayName: "MXNstore6" },
   { id: "69aa1e59c5629f92b071729e", displayName: "MXNstore7" },
   { id: "69aa1ead53c0a4720a29c200", displayName: "MXNstore8" },
+  { id: "69c574c568f43ff2b770531a", displayName: "MXNstore9" },
   { id: "69b7215860f8dfa5f7ccaf62", displayName: "MXNstore10" },
   { id: "69c5753e54e0b42d630db0c3", displayName: "MXNstore11" },
-  { id: "69c574c568f43ff2b770531a", displayName: "MXNstore9" },
 ];
 
 const sendFriendRequest = async (targetEpicId: string): Promise<{ success: boolean; errorCount: number }> => {
