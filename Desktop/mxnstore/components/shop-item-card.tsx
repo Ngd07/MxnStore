@@ -94,16 +94,25 @@ function getItemImage(entry: ShopEntry): string | null {
     }
   }
 
-  // Collect all possible images from different sources
-  const images: string[] = [];
-  
-  // Try brItems images
+  // Try all brItems for featured image (iterate through all items)
   if (entry.brItems && entry.brItems.length > 0) {
-    const item = entry.brItems[0];
-    const img = item.images.featured || item.images.icon || item.images.smallIcon;
-    if (img) {
-      if (img.startsWith('http')) images.push(img);
-      else if (img.startsWith('/')) images.push(`https://fortnite-api.com${img}`);
+    for (const item of entry.brItems) {
+      if (item.images.featured) {
+        const img = item.images.featured;
+        if (img.startsWith('http')) return img;
+        if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
+      }
+    }
+  }
+
+  // Try all brItems for icon image
+  if (entry.brItems && entry.brItems.length > 0) {
+    for (const item of entry.brItems) {
+      if (item.images.icon) {
+        const img = item.images.icon;
+        if (img.startsWith('http')) return img;
+        if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
+      }
     }
   }
 
@@ -111,20 +120,29 @@ function getItemImage(entry: ShopEntry): string | null {
   if (entry.newDisplayAsset?.renderImages && entry.newDisplayAsset.renderImages.length > 0) {
     const img = entry.newDisplayAsset.renderImages[0].image;
     if (img) {
-      if (img.startsWith('http')) images.push(img);
-      else if (img.startsWith('/')) images.push(`https://fortnite-api.com${img}`);
+      if (img.startsWith('http')) return img;
+      if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
     }
   }
 
-  // Try materialInstances images
+  // Try materialInstances featured
   if (entry.newDisplayAsset?.materialInstances) {
     for (const mat of entry.newDisplayAsset.materialInstances) {
-      if (mat.images) {
-        const img = mat.images['featured'] || mat.images['icon'] || mat.images['smallIcon'] || mat.images['Background'] || Object.values(mat.images)[0];
-        if (img) {
-          if (img.startsWith('http')) images.push(img);
-          else if (img.startsWith('/')) images.push(`https://fortnite-api.com${img}`);
-        }
+      if (mat.images?.['featured']) {
+        const img = mat.images['featured'];
+        if (img.startsWith('http')) return img;
+        if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
+      }
+    }
+  }
+
+  // Try materialInstances icon
+  if (entry.newDisplayAsset?.materialInstances) {
+    for (const mat of entry.newDisplayAsset.materialInstances) {
+      if (mat.images?.['icon']) {
+        const img = mat.images['icon'];
+        if (img.startsWith('http')) return img;
+        if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
       }
     }
   }
@@ -133,12 +151,11 @@ function getItemImage(entry: ShopEntry): string | null {
   if (entry.tracks && entry.tracks.length > 0) {
     const track = entry.tracks[0];
     if (track.albumArt) {
-      images.push(track.albumArt);
+      return track.albumArt;
     }
   }
 
-  // Return first valid image
-  return images.length > 0 ? images[0] : null;
+  return null;
 }
 
 function getItemName(entry: ShopEntry): string {
