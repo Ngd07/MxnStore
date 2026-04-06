@@ -10,6 +10,8 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { ProfilePanel } from "@/components/profile-panel";
 import { VbucksBalance } from "@/components/vbucks-balance";
 import { NotificationsBell } from "@/components/notifications-bell";
+import { Footer } from "@/components/footer";
+import { BackToTop } from "@/components/back-to-top";
 import type { ShopData, ShopEntry } from "@/lib/types";
 import { Store, Loader2 } from "lucide-react";
 import Image from "next/image";
@@ -471,13 +473,10 @@ export function ShopClient() {
       </Dialog>
 
       {/* Footer */}
-      <footer className="border-t border-border py-6">
-        <div className="mx-auto max-w-7xl px-4">
-          <p className="text-center text-xs text-muted-foreground">
-            {t("shop.footer")}
-          </p>
-        </div>
-      </footer>
+      <Footer />
+
+      {/* Back to Top */}
+      <BackToTop />
     </div>
   );
 }
