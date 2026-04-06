@@ -408,12 +408,8 @@ setBalanceLoading(true);
             {name}
           </h3>
 
-          {/* Price with premium styling - Both V-Bucks and MxN Points */}
+          {/* Price with premium styling - MxN Points only */}
           <div className="mt-auto flex items-center gap-2 pt-3">
-            {/* V-Bucks price */}
-            <div className="flex items-center gap-1 rounded-full bg-blue-500/20 px-2 py-1 border border-blue-500/30">
-              <span className="text-[10px] font-bold text-blue-400">VBucks: {entry.finalPrice}</span>
-            </div>
             {/* MxN Points price */}
             <div className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 px-3 py-1.5 border border-yellow-500/30">
               <Image
