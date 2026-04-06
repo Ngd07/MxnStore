@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import { ThemeProvider } from 'next-themes'
 import { I18nProvider } from '@/lib/i18n'
 import { LayoutWrapper } from '@/components/layout-wrapper'
 import './globals.css'
@@ -38,11 +39,13 @@ export default function RootLayout({
         />
       </head>
       <body className={`${_geist.className} font-sans antialiased`}>
-        <I18nProvider>
-          <LayoutWrapper>
-            {children}
-          </LayoutWrapper>
-        </I18nProvider>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+          <I18nProvider>
+            <LayoutWrapper>
+              {children}
+            </LayoutWrapper>
+          </I18nProvider>
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>
