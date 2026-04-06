@@ -1,6 +1,6 @@
 "use client";
 
-import { Github, MessageCircle, Mail, Shield, CreditCard, Headphones } from "lucide-react";
+import { MessageCircle, Shield, CreditCard, Headphones } from "lucide-react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
 
@@ -25,8 +25,8 @@ export function Footer() {
             <span className="text-xs text-muted-foreground">Soporte 24/7</span>
           </div>
           <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/30">
-            <MessageCircle className="h-5 w-5 text-yellow-500 flex-shrink-0" />
-            <span className="text-xs text-muted-foreground">Telegram</span>
+            <MessageCircle className="h-5 w-5 text-indigo-500 flex-shrink-0" />
+            <span className="text-xs text-muted-foreground">Discord</span>
           </div>
         </div>
 
@@ -34,26 +34,31 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           {/* Brand */}
           <div>
-            <h3 className="font-bold text-lg mb-3">MxNStore</h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <h3 className="font-bold text-lg mb-2">MxNStore</h3>
+            <p className="text-sm text-muted-foreground mb-3">
               Tu tienda de confianza para skins de Fortnite. 
               Rápido, seguro y con soporte 24/7.
             </p>
-            <div className="flex gap-3">
+            <a
+              href="https://discord.gg/nKs2jM7PNJ"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
+            >
+              Únete a nuestro Discord →
+            </a>
+            <div className="flex gap-3 mt-4">
               <a
-                href="https://t.me/mxnstore"
+                href="https://discord.gg/nKs2jM7PNJ"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors"
               >
-                <MessageCircle className="h-5 w-5 text-blue-500" />
+                <MessageCircle className="h-5 w-5 text-indigo-500" />
               </a>
-              <a
-                href="mailto:soporte@mxnstore.com"
-                className="p-2 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors"
-              >
-                <Mail className="h-5 w-5 text-muted-foreground" />
-              </a>
+              <div className="p-2 rounded-lg bg-secondary/50 cursor-default">
+                <span className="text-sm text-muted-foreground/50">soporte@mxnstore.com</span>
+              </div>
             </div>
           </div>
 
