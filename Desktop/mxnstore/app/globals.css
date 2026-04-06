@@ -5,24 +5,24 @@
 
 :root,
 .dark {
-  --background: linear-gradient(135deg, #0a0a1a 0%, #0f172a 50%, #0a0a1a 100%);
+  --background: oklch(0.13 0.01 260);
   --foreground: oklch(0.97 0 0);
-  --card: oklch(0.12 0.01 260 / 0.8);
+  --card: oklch(0.17 0.015 260);
   --card-foreground: oklch(0.97 0 0);
-  --popover: oklch(0.12 0.01 260 / 0.95);
+  --popover: oklch(0.17 0.015 260);
   --popover-foreground: oklch(0.97 0 0);
   --primary: oklch(0.72 0.19 230);
-  --primary-foreground: oklch(0.97 0 0);
-  --secondary: oklch(0.2 0.02 260 / 0.5);
+  --primary-foreground: oklch(0.13 0.01 260);
+  --secondary: oklch(0.22 0.02 260);
   --secondary-foreground: oklch(0.88 0 0);
-  --muted: oklch(0.2 0.02 260 / 0.5);
+  --muted: oklch(0.22 0.02 260);
   --muted-foreground: oklch(0.65 0 0);
   --accent: oklch(0.82 0.18 85);
   --accent-foreground: oklch(0.13 0.01 260);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.577 0.245 27.325);
-  --border: oklch(0.25 0.02 260 / 0.5);
-  --input: oklch(0.2 0.02 260 / 0.5);
+  --border: oklch(0.28 0.02 260);
+  --input: oklch(0.22 0.02 260);
   --ring: oklch(0.72 0.19 230);
   --chart-1: oklch(0.72 0.19 230);
   --chart-2: oklch(0.82 0.18 85);
@@ -30,13 +30,13 @@
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --radius: 0.75rem;
-  --sidebar: oklch(0.1 0.01 260 / 0.95);
+  --sidebar: oklch(0.15 0.015 260);
   --sidebar-foreground: oklch(0.97 0 0);
   --sidebar-primary: oklch(0.72 0.19 230);
   --sidebar-primary-foreground: oklch(0.97 0 0);
-  --sidebar-accent: oklch(0.2 0.02 260 / 0.5);
+  --sidebar-accent: oklch(0.22 0.02 260);
   --sidebar-accent-foreground: oklch(0.97 0 0);
-  --sidebar-border: oklch(0.25 0.02 260 / 0.5);
+  --sidebar-border: oklch(0.28 0.02 260);
   --sidebar-ring: oklch(0.72 0.19 230);
 }
 
@@ -124,9 +124,10 @@
     @apply bg-background text-foreground;
     background-attachment: fixed;
     background-size: cover;
+    position: relative;
   }
   
-  /* Subtle dot pattern overlay */
+  /* Gradient overlay that adapts to theme */
   body::before {
     content: '';
     position: fixed;
@@ -134,7 +135,21 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0);
+    background: radial-gradient(ellipse at top, rgba(15, 23, 42, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom, rgba(30, 41, 59, 0.2) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  /* Subtle dot pattern overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.02) 1px, transparent 0);
     background-size: 40px 40px;
     pointer-events: none;
     z-index: 0;
