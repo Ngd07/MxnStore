@@ -125,7 +125,7 @@
     position: relative;
   }
   
-  /* Animated gradient background */
+  /* Static subtle gradient background */
   body::before {
     content: '';
     position: fixed;
@@ -134,60 +134,11 @@
     right: 0;
     bottom: 0;
     background: 
-      radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
-    animation: gradientShift 20s ease infinite;
+      radial-gradient(ellipse at top left, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(168, 85, 247, 0.05) 0%, transparent 50%);
     pointer-events: none;
-    z-index: 0;
+    z-index: -1;
   }
-  
-  /* Floating particles effect */
-  body::after {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-      radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.3) 1px, transparent 1px),
-      radial-gradient(circle at 75% 75%, rgba(168, 85, 247, 0.3) 1px, transparent 1px),
-      radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.2) 1px, transparent 1px);
-    background-size: 100px 100px, 80px 80px, 120px 120px;
-    background-position: 0 0, 40px 40px, 20px 60px;
-    animation: floatParticles 30s linear infinite;
-    opacity: 0.5;
-    pointer-events: none;
-    z-index: 0;
-  }
-}
-
-@keyframes gradientShift {
-  0%, 100% {
-    background: 
-      radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
-  }
-  33% {
-    background: 
-      radial-gradient(ellipse at 80% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
-      radial-gradient(ellipse at 20% 80%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 50%, rgba(236, 72, 153, 0.05) 0%, transparent 70%);
-  }
-  66% {
-    background: 
-      radial-gradient(ellipse at 50% 80%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 20%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
-  }
-}
-
-@keyframes floatParticles {
-  0% { transform: translateY(0) translateX(0); }
-  50% { transform: translateY(-20px) translateX(10px); }
-  100% { transform: translateY(0) translateX(0); }
 }
 
 /* Professional Animations */
@@ -379,7 +330,18 @@
 }
 
 /* Ensure content is above animated background */
-main, header, footer, .fixed, .sticky {
+main, header, footer {
   position: relative;
   z-index: 10;
+}
+
+/* Sheet overlay needs higher z-index */
+[data-slot="sheet-portal"],
+[data-slot="sheet-overlay"] {
+  z-index: 50 !important;
+}
+
+/* Dialog overlay */
+[data-slot="dialog-overlay"] {
+  z-index: 50 !important;
 }
