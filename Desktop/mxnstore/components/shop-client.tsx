@@ -10,8 +10,6 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { ProfilePanel } from "@/components/profile-panel";
 import { VbucksBalance } from "@/components/vbucks-balance";
 import { NotificationsBell } from "@/components/notifications-bell";
-import { Footer } from "@/components/footer";
-import { BackToTop } from "@/components/back-to-top";
 import type { ShopData, ShopEntry } from "@/lib/types";
 import { Store, Loader2 } from "lucide-react";
 import Image from "next/image";
@@ -472,11 +470,6 @@ export function ShopClient() {
         </DialogContent>
       </Dialog>
 
-      {/* Footer */}
-      <Footer />
-
-      {/* Back to Top */}
-      <BackToTop />
     </div>
   );
 }
