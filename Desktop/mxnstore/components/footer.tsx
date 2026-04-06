@@ -35,18 +35,10 @@ export function Footer() {
           {/* Brand */}
           <div>
             <h3 className="font-bold text-lg mb-2">MxNStore</h3>
-            <p className="text-sm text-muted-foreground mb-3">
+            <p className="text-sm text-muted-foreground">
               Tu tienda de confianza para skins de Fortnite. 
               Rápido, seguro y con soporte 24/7.
             </p>
-            <a
-              href="https://discord.gg/nKs2jM7PNJ"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-indigo-400 hover:text-indigo-300 transition-colors"
-            >
-              Únete a nuestro Discord →
-            </a>
             <div className="flex gap-3 mt-4">
               <a
                 href="https://discord.gg/nKs2jM7PNJ"
@@ -56,9 +48,6 @@ export function Footer() {
               >
                 <MessageCircle className="h-5 w-5 text-indigo-500" />
               </a>
-              <div className="p-2 rounded-lg bg-secondary/50 cursor-default">
-                <span className="text-sm text-muted-foreground/50">soporte@mxnstore.com</span>
-              </div>
             </div>
           </div>
 
