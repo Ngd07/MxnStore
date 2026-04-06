@@ -82,49 +82,56 @@ const checkSession = async () => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4 rounded-2xl border border-yellow-500/30 bg-gradient-to-r from-yellow-500/10 via-amber-500/5 to-yellow-500/10 backdrop-blur-md px-4 md:px-6 py-3 shadow-lg shadow-yellow-500/10">
-      {/* Balance - always visible */}
-      <div className="flex items-center gap-3 shrink-0">
-        <div className="relative">
-          <Image
-            src="/logomxnpoints.png"
-            alt="MxN Points"
-            width={32}
-            height={32}
-            className="rounded-lg"
-          />
-          <div className="absolute -inset-1 rounded-lg bg-yellow-500/20 blur-md -z-10" />
-        </div>
-        <div className="flex flex-col">
-          <span className="text-xs md:text-sm font-medium text-muted-foreground tracking-wide">{t("profile.mxnPoints")}</span>
-          <div className="flex items-center gap-2">
-            <span className="text-lg md:text-xl font-bold text-yellow-400 tracking-tight">{vbucksBalance.toLocaleString()}</span>
-            <span className="text-xs text-yellow-500/60">MxN</span>
+    <div className="glass-card rounded-2xl border border-yellow-500/20 px-4 md:px-6 py-4">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+        {/* Balance - always visible */}
+        <div className="flex items-center gap-4 shrink-0">
+          <div className="relative group">
+            <div className="absolute -inset-2 rounded-xl bg-gradient-to-r from-yellow-500/30 to-amber-500/30 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <Image
+              src="/logomxnpoints.png"
+              alt="MxN Points"
+              width={40}
+              height={40}
+              className="relative rounded-xl"
+            />
+          </div>
+          <div className="flex flex-col">
+            <span className="text-xs md:text-sm font-medium text-muted-foreground/70 tracking-wider uppercase">{t("profile.mxnPoints")}</span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl md:text-3xl font-bold gradient-text tracking-tight">{vbucksBalance.toLocaleString()}</span>
+              <span className="text-sm text-yellow-500/50 font-medium">MxN</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Creator Code - only on desktop */}
-      <span className="hidden md:inline flex-1 text-center text-base font-bold text-white uppercase tracking-[0.2em] drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]">
-          {t("profile.creatorCode")} MXNSTORE
-      </span>
+        {/* Creator Code - only on desktop */}
+        <div className="hidden md:flex flex-1 justify-center">
+          <div className="relative px-6 py-2">
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-500/10 to-transparent" />
+            <span className="relative text-base font-bold text-white/90 uppercase tracking-[0.15em]">
+              {t("profile.creatorCode")} <span className="gradient-text">MXNSTORE</span>
+            </span>
+          </div>
+        </div>
 
-      {/* Buttons - only on desktop */}
-      <div className="hidden md:flex items-center gap-3 shrink-0">
-        <button
-          onClick={() => router.push('/add-friend')}
-          className="flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-blue-500/30 transition-all hover:from-blue-400 hover:to-blue-500 hover:scale-105"
-        >
-          <UserPlus className="h-4 w-4" />
-          {t("profile.addFriend")}
-        </button>
-        <button
-          onClick={() => router.push('/buy-vbucks')}
-          className="flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-purple-500/30 transition-all hover:from-purple-400 hover:to-pink-400 hover:scale-105"
-        >
-          <RefreshCw className="h-4 w-4" />
-          {t("profile.recharge")}
-        </button>
+        {/* Buttons - only on desktop */}
+        <div className="hidden md:flex items-center gap-3 shrink-0">
+          <button
+            onClick={() => router.push('/add-friend')}
+            className="btn-premium group relative flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white overflow-hidden hover:shadow-lg hover:shadow-blue-500/30 active:scale-95 transition-all duration-300"
+          >
+            <UserPlus className="h-4 w-4 transition-transform group-hover:scale-110" />
+            <span>{t("profile.addFriend")}</span>
+          </button>
+          <button
+            onClick={() => router.push('/buy-vbucks')}
+            className="btn-premium group relative flex items-center gap-2 rounded-xl bg-gradient-to-r from-purple-600 via-pink-500 to-purple-500 px-5 py-2.5 text-sm font-semibold text-white overflow-hidden hover:shadow-lg hover:shadow-purple-500/30 active:scale-95 transition-all duration-300"
+          >
+            <RefreshCw className="h-4 w-4 transition-transform group-hover:rotate-180" />
+            <span>{t("profile.recharge")}</span>
+          </button>
+        </div>
       </div>
     </div>
   );

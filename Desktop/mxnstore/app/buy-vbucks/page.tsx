@@ -68,11 +68,11 @@ export default function BuyVbucksPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 glass-card border-b border-border/50 backdrop-blur-xl">
         <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3">
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
             <ArrowLeft className="h-4 w-4" />
             {t("redeem.cancel")}
@@ -83,18 +83,19 @@ export default function BuyVbucksPage() {
       </header>
 
       <main className="mx-auto max-w-4xl px-4 py-8">
-        <div className="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-4 mb-8 text-center">
+        <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-xl p-4 mb-8 text-center">
           <p className="text-yellow-500 font-medium">{t("buy.epicNotice")}</p>
         </div>
 
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 mb-4">
+          <div className="relative inline-block mb-4">
+            <div className="absolute -inset-4 bg-gradient-to-r from-yellow-500/20 via-amber-500/20 to-yellow-500/20 blur-xl rounded-full" />
             <Image
               src="/logomxnpoints.png"
               alt="MxN Points"
               width={64}
               height={64}
-              className="rounded-lg"
+              className="relative rounded-xl"
             />
           </div>
           <h2 className="text-2xl font-bold text-foreground">{t("buy.selectAmount")}</h2>
@@ -106,62 +107,59 @@ export default function BuyVbucksPage() {
         {/* Packages */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {PACKAGES.map((pkg) => (
-            <Card 
+            <div
               key={pkg.mxn}
-              className={`relative cursor-pointer transition-all hover:scale-105 ${
+              className={`relative group cursor-pointer transition-all duration-300 hover-lift ${
                 selectedPackage?.mxn === pkg.mxn 
-                  ? 'border-yellow-500 ring-2 ring-yellow-500' 
+                  ? 'ring-2 ring-yellow-500 ring-offset-2 ring-offset-background' 
                   : ''
-              } ${pkg.popular ? 'border-yellow-500/50' : ''}`}
+              }`}
               onClick={() => setSelectedPackage(pkg)}
             >
-              {pkg.popular && (
-                <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-yellow-500 text-black text-[10px] font-bold px-3 py-1 rounded-full z-10">
-                  {pkg.bestPrice ? "MEJOR PRECIO" : t("buy.popular").toUpperCase()}
+              <div className="glass-card rounded-2xl overflow-hidden border border-border/30 h-full">
+                {pkg.popular && (
+                  <div className="absolute -top-0 left-1/2 -translate-x-1/2 bg-gradient-to-r from-yellow-500 to-amber-500 text-black text-[10px] font-bold px-4 py-1.5 rounded-b-lg z-10 shadow-lg shadow-yellow-500/30">
+                    {pkg.bestPrice ? "MEJOR PRECIO" : t("buy.popular").toUpperCase()}
+                  </div>
+                )}
+                <div className="pt-8 pb-6 px-4 text-center">
+                  <div className="flex items-center justify-center mb-3">
+                    <Image
+                      src="/logomxnpoints.png"
+                      alt="MxN Points"
+                      width={40}
+                      height={40}
+                      className="rounded-lg"
+                    />
+                  </div>
+                  <div className="text-3xl font-bold gradient-text">{pkg.mxn.toLocaleString()}</div>
+                  <div className="text-sm text-muted-foreground/70">MxN Points</div>
+                  <div className="text-2xl font-bold text-foreground mt-3">${pkg.price}</div>
                 </div>
-              )}
-              <CardContent className="pt-8 text-center">
-                <div className="flex items-center justify-center gap-2 mb-2">
-                  <Image
-                    src="/logomxnpoints.png"
-                    alt="MxN Points"
-                    width={40}
-                    height={40}
-                    className="rounded"
-                  />
-                </div>
-                <div className="text-3xl font-bold text-yellow-500">{pkg.mxn}</div>
-                <div className="text-sm text-muted-foreground">MxN Points</div>
-                <div className="text-2xl font-bold text-foreground mt-2">${pkg.price}</div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
 
         {/* Payment Info */}
         {selectedPackage && (
-          <Card className="max-w-md mx-auto">
-            <CardHeader>
-              <CardTitle>{selectedPackage.mxn} MxN Points</CardTitle>
-              <CardDescription>
-                ${selectedPackage.price} USD
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <a
-                href={`/pagar/${selectedPackage.id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-4 rounded-lg font-medium text-lg"
-              >
-                {t("buy.continueToPayment")}
-              </a>
-
-              <p className="text-xs text-muted-foreground text-center">
-                {t("buy.seAbrira")}
-              </p>
-            </CardContent>
-          </Card>
+          <div className="glass-card rounded-2xl p-6 max-w-md mx-auto">
+            <div className="text-center mb-6">
+              <div className="text-3xl font-bold gradient-text">{selectedPackage.mxn.toLocaleString()} MxN Points</div>
+              <div className="text-lg text-muted-foreground mt-1">${selectedPackage.price} USD</div>
+            </div>
+            <a
+              href={`/pagar/${selectedPackage.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-premium flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-500 hover:to-emerald-400 text-white py-4 rounded-xl font-semibold text-lg shadow-lg shadow-green-500/30 active:scale-95 transition-all"
+            >
+              {t("buy.continueToPayment")}
+            </a>
+            <p className="text-xs text-muted-foreground/60 text-center mt-4">
+              {t("buy.seAbrira")}
+            </p>
+          </div>
         )}
       </main>
     </div>

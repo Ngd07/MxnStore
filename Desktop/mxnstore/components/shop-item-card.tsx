@@ -351,13 +351,13 @@ setBalanceLoading(true);
   return (
     <>
       <div
-        className={`group relative flex flex-col overflow-hidden rounded-2xl border ${borderColor} bg-gradient-to-br from-card via-card to-card transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:${glowEffect} ${glowEffect} cursor-pointer backdrop-blur-sm`}
+        className={`group relative flex flex-col overflow-hidden rounded-2xl border ${borderColor} glass-card hover-lift transition-all duration-300 cursor-pointer`}
         onClick={() => setShowDialog(true)}
       >
         {/* Banner (New, etc.) */}
         {entry.banner && (
-          <div className="absolute top-3 left-3 z-10">
-            <span className="rounded-full bg-gradient-to-r from-yellow-500 to-amber-500 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-black shadow-lg shadow-yellow-500/30">
+          <div className="absolute top-3 left-3 z-20">
+            <span className="relative inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-yellow-500 to-amber-500 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-black shadow-lg shadow-yellow-500/30">
               {entry.banner.value}
             </span>
           </div>
@@ -368,8 +368,10 @@ setBalanceLoading(true);
           className={`relative aspect-square w-full overflow-hidden bg-gradient-to-br ${gradient}`}
         >
           {/* V-Bucks price badge - top left */}
-          <div className="absolute top-3 left-3 z-10 flex items-center gap-1 rounded-full bg-blue-600/80 backdrop-blur-md px-2.5 py-1 border border-blue-500/30 shadow-lg shadow-blue-500/20">
-            <span className="text-[10px] font-bold text-white">V-Bucks: {entry.finalPrice}</span>
+          <div className="absolute top-3 left-3 z-10">
+            <span className="inline-flex items-center gap-1 rounded-full bg-blue-600/90 backdrop-blur-sm px-2.5 py-1 text-[10px] font-bold text-white border border-blue-400/30 shadow-lg">
+              {entry.finalPrice} VBucks
+            </span>
           </div>
 
           {image && !imageError ? (
@@ -378,7 +380,7 @@ setBalanceLoading(true);
               alt={name}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-              className="object-contain p-3 transition-transform duration-500 group-hover:scale-110 group-hover:saturate-[1.1]"
+              className="object-contain p-3 transition-all duration-500 group-hover:scale-110 group-hover:saturate-110"
               onError={() => setImageError(true)}
               priority={priority}
             />
@@ -388,30 +390,29 @@ setBalanceLoading(true);
             </div>
           )}
           
-          {/* Gradient overlay at bottom */}
-          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          {/* Subtle gradient overlay */}
+          <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-card/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           
           {/* Rarity badge in image */}
-          <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <span className="rounded-full bg-black/60 backdrop-blur-md px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-white border border-white/20">
+          <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+            <span className="rounded-full bg-black/70 backdrop-blur-sm px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-white border border-white/10">
               {t(`rarity.${rarity}`) !== `rarity.${rarity}` ? t(`rarity.${rarity}`) : (rarityLabels[rarity] || rarity)}
             </span>
           </div>
         </div>
 
         {/* Info section */}
-        <div className="flex flex-1 flex-col gap-1.5 p-4">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/70">
+        <div className="flex flex-1 flex-col gap-1.5 p-4 bg-card/50">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/60">
             {type}
           </p>
-          <h3 className="text-sm font-bold leading-tight text-foreground line-clamp-2 text-balance tracking-tight">
+          <h3 className="text-sm font-bold leading-tight text-foreground line-clamp-2 text-balance">
             {name}
           </h3>
 
-          {/* Price with premium styling - MxN Points only */}
+          {/* Price - MxN Points */}
           <div className="mt-auto flex items-center gap-2 pt-3">
-            {/* MxN Points price */}
-            <div className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 px-3 py-1.5 border border-yellow-500/30">
+            <div className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-yellow-500/20 to-amber-500/20 px-3 py-1.5 border border-yellow-500/20">
               <Image
                 src="/logomxnpoints.png"
                 alt="MxN Points"
@@ -420,8 +421,8 @@ setBalanceLoading(true);
                 className="flex-shrink-0"
               />
               {isDiscounted ? (
-                <div className="flex items-center gap-1">
-                  <span className="text-[10px] text-muted-foreground/60 line-through">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] text-muted-foreground/50 line-through">
                     {entry.regularPrice.toLocaleString()}
                   </span>
                   <span className="text-sm font-bold text-yellow-400">
