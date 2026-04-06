@@ -124,13 +124,7 @@
     @apply bg-background text-foreground;
   }
   
-  /* Fortnite-style background */
-  .dark body {
-    background: 
-      linear-gradient(180deg, #0f1729 0%, #1a1a2e 50%, #0f1729 100%);
-  }
-  
-  /* Fortnite hexagon grid */
+  /* Constellation background */
   .dark body::before {
     content: '';
     position: fixed;
@@ -138,15 +132,23 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: transparent;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='100' viewBox='0 0 56 100'%3E%3Cpath fill='none' stroke='%23ff6b35' stroke-opacity='0.15' stroke-width='1' d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66Z M28 100L0 84L0 50L28 34L56 50L56 84L28 100Z'/%3E%3Cpath fill='none' stroke='%23ffc107' stroke-opacity='0.1' stroke-width='1' d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66Z M28 100L0 84L0 50L28 34L56 50L56 84L28 100Z'/%3E%3C/svg%3E");
-    background-size: 60px 60px;
-    background-position: 0 0;
+    background: 
+      radial-gradient(circle at 20% 30%, rgba(255,255,255,0.03) 1px, transparent 1px),
+      radial-gradient(circle at 40% 70%, rgba(255,255,255,0.025) 1px, transparent 1px),
+      radial-gradient(circle at 60% 20%, rgba(255,255,255,0.02) 1px, transparent 1px),
+      radial-gradient(circle at 80% 50%, rgba(255,255,255,0.03) 1px, transparent 1px),
+      radial-gradient(circle at 10% 80%, rgba(255,255,255,0.02) 1px, transparent 1px),
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,0.025) 1px, transparent 1px),
+      radial-gradient(circle at 70% 90%, rgba(255,255,255,0.02) 1px, transparent 1px),
+      radial-gradient(circle at 30% 10%, rgba(255,255,255,0.02) 1px, transparent 1px),
+      radial-gradient(circle at 90% 30%, rgba(255,255,255,0.025) 1px, transparent 1px),
+      radial-gradient(circle at 15% 55%, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 200px 200px;
     pointer-events: none;
     z-index: 0;
   }
   
-  /* Fortnite glow effects */
+  /* Subtle connecting lines */
   .dark body::after {
     content: '';
     position: fixed;
@@ -155,9 +157,9 @@
     right: 0;
     bottom: 0;
     background: 
-      radial-gradient(ellipse at 20% 20%, rgba(255, 107, 53, 0.12) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 80%, rgba(255, 193, 7, 0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.02) 0%, transparent 70%);
+      linear-gradient(45deg, transparent 48%, rgba(255,255,255,0.01) 49%, rgba(255,255,255,0.01) 51%, transparent 52%),
+      linear-gradient(-45deg, transparent 48%, rgba(255,255,255,0.008) 49%, rgba(255,255,255,0.008) 51%, transparent 52%);
+    background-size: 300px 300px;
     pointer-events: none;
     z-index: 0;
   }
