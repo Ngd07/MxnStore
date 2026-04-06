@@ -367,6 +367,11 @@ setBalanceLoading(true);
         <div
           className={`relative aspect-square w-full overflow-hidden bg-gradient-to-br ${gradient}`}
         >
+          {/* V-Bucks price badge - top left */}
+          <div className="absolute top-3 left-3 z-10 flex items-center gap-1 rounded-full bg-blue-600/80 backdrop-blur-md px-2.5 py-1 border border-blue-500/30 shadow-lg shadow-blue-500/20">
+            <span className="text-[10px] font-bold text-white">V-Bucks: {entry.finalPrice}</span>
+          </div>
+
           {image && !imageError ? (
             <Image
               src={image}
