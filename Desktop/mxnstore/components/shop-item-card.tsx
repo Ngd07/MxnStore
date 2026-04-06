@@ -26,44 +26,52 @@ interface ShopItemCardProps {
 }
 
 const rarityGradients: Record<string, string> = {
-  legendary:
-    "from-amber-600/40 via-amber-500/20 to-amber-900/40",
-  epic: "from-fuchsia-600/40 via-fuchsia-500/20 to-fuchsia-900/40",
-  rare: "from-sky-600/40 via-sky-500/20 to-sky-900/40",
-  uncommon:
-    "from-emerald-600/40 via-emerald-500/20 to-emerald-900/40",
-  common: "from-zinc-600/40 via-zinc-500/20 to-zinc-900/40",
-  gaminglegends:
-    "from-indigo-600/40 via-indigo-500/20 to-indigo-900/40",
-  marvel: "from-red-600/40 via-red-500/20 to-red-900/40",
-  dc: "from-blue-600/40 via-blue-500/20 to-blue-900/40",
-  icon: "from-teal-600/40 via-teal-500/20 to-teal-900/40",
-  starwars:
-    "from-yellow-600/40 via-yellow-500/20 to-yellow-900/40",
-  shadow:
-    "from-neutral-600/40 via-neutral-500/20 to-neutral-900/40",
-  slurp: "from-cyan-600/40 via-cyan-500/20 to-cyan-900/40",
-  frozen: "from-sky-400/40 via-sky-300/20 to-sky-600/40",
-  lava: "from-orange-600/40 via-orange-500/20 to-orange-900/40",
-  dark: "from-fuchsia-800/40 via-fuchsia-600/20 to-fuchsia-900/40",
+  legendary: "from-amber-500/30 via-amber-400/10 to-orange-600/30",
+  epic: "from-fuchsia-500/30 via-fuchsia-400/10 to-purple-600/30",
+  rare: "from-blue-500/30 via-blue-400/10 to-cyan-600/30",
+  uncommon: "from-green-500/30 via-green-400/10 to-emerald-600/30",
+  common: "from-zinc-500/20 via-zinc-400/5 to-gray-600/20",
+  gaminglegends: "from-indigo-500/30 via-indigo-400/10 to-violet-600/30",
+  marvel: "from-red-500/30 via-red-400/10 to-orange-600/30",
+  dc: "from-blue-500/30 via-blue-400/10 to-indigo-600/30",
+  icon: "from-teal-500/30 via-teal-400/10 to-cyan-600/30",
+  starwars: "from-yellow-500/30 via-yellow-400/10 to-amber-600/30",
+  shadow: "from-gray-600/30 via-gray-500/10 to-neutral-700/30",
+  slurp: "from-cyan-500/30 via-cyan-400/10 to-blue-600/30",
+  frozen: "from-sky-300/30 via-sky-200/10 to-blue-400/30",
+  lava: "from-orange-500/30 via-orange-400/10 to-red-600/30",
+  dark: "from-fuchsia-600/30 via-fuchsia-500/10 to-pink-700/30",
 };
 
 const rarityBorders: Record<string, string> = {
-  legendary: "border-amber-500/50",
-  epic: "border-fuchsia-500/50",
-  rare: "border-sky-500/50",
-  uncommon: "border-emerald-500/50",
-  common: "border-zinc-500/50",
-  gaminglegends: "border-indigo-500/50",
-  marvel: "border-red-500/50",
-  dc: "border-blue-500/50",
-  icon: "border-teal-500/50",
-  starwars: "border-yellow-500/50",
-  shadow: "border-neutral-500/50",
-  slurp: "border-cyan-500/50",
-  frozen: "border-sky-300/50",
-  lava: "border-orange-500/50",
-  dark: "border-fuchsia-700/50",
+  legendary: "border-amber-500/60",
+  epic: "border-fuchsia-500/60",
+  rare: "border-blue-500/60",
+  uncommon: "border-green-500/60",
+  common: "border-zinc-500/40",
+  gaminglegends: "border-indigo-500/60",
+  marvel: "border-red-500/60",
+  dc: "border-blue-500/60",
+  icon: "border-teal-500/60",
+  starwars: "border-yellow-500/60",
+  shadow: "border-gray-500/60",
+  slurp: "border-cyan-500/60",
+  frozen: "border-sky-300/60",
+  lava: "border-orange-500/60",
+  dark: "border-fuchsia-600/60",
+};
+
+const rarityGlow: Record<string, string> = {
+  legendary: "hover:shadow-amber-500/30",
+  epic: "hover:shadow-fuchsia-500/30",
+  rare: "hover:shadow-blue-500/30",
+  uncommon: "hover:shadow-green-500/30",
+  gaminglegends: "hover:shadow-indigo-500/30",
+  marvel: "hover:shadow-red-500/30",
+  dc: "hover:shadow-blue-500/30",
+  icon: "hover:shadow-teal-500/30",
+  starwars: "hover:shadow-yellow-500/30",
+  lava: "hover:shadow-orange-500/30",
 };
 
 const rarityLabels: Record<string, string> = {
@@ -242,8 +250,9 @@ export function ShopItemCard({ entry, vbuckIcon, priority = false }: ShopItemCar
   const price = entry.finalPrice;
   const gradient =
     rarityGradients[rarity] ||
-    "from-zinc-600/40 via-zinc-500/20 to-zinc-900/40";
-  const borderColor = rarityBorders[rarity] || "border-zinc-500/50";
+    "from-zinc-500/20 via-zinc-400/5 to-gray-600/20";
+  const borderColor = rarityBorders[rarity] || "border-zinc-500/40";
+  const glowEffect = rarityGlow[rarity] || "";
   const isDiscounted = entry.finalPrice < entry.regularPrice;
 
   const fetchBalance = async () => {
@@ -342,13 +351,13 @@ setBalanceLoading(true);
   return (
     <>
       <div
-        className={`group relative flex flex-col overflow-hidden rounded-xl border ${borderColor} bg-card transition-all duration-300 hover:scale-[1.03] hover:shadow-xl hover:shadow-black/30 cursor-pointer`}
+        className={`group relative flex flex-col overflow-hidden rounded-2xl border ${borderColor} bg-gradient-to-br from-card via-card to-card transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:${glowEffect} ${glowEffect} cursor-pointer backdrop-blur-sm`}
         onClick={() => setShowDialog(true)}
       >
         {/* Banner (New, etc.) */}
         {entry.banner && (
-          <div className="absolute top-2 left-2 z-10">
-            <span className="rounded-md bg-primary px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-primary-foreground">
+          <div className="absolute top-3 left-3 z-10">
+            <span className="rounded-full bg-gradient-to-r from-yellow-500 to-amber-500 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-black shadow-lg shadow-yellow-500/30">
               {entry.banner.value}
             </span>
           </div>
@@ -364,59 +373,58 @@ setBalanceLoading(true);
               alt={name}
               fill
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-              className="object-contain p-2 transition-transform duration-300 group-hover:scale-110"
+              className="object-contain p-3 transition-transform duration-500 group-hover:scale-110 group-hover:saturate-[1.1]"
               onError={() => setImageError(true)}
               priority={priority}
             />
           ) : (
             <div className="flex h-full items-center justify-center text-muted-foreground">
-              <span className="text-3xl font-bold opacity-30">?</span>
+              <span className="text-4xl font-bold opacity-20">?</span>
             </div>
           )}
           
+          {/* Gradient overlay at bottom */}
+          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           
-          {/* V-Bucks price badge */}
-          <div className="absolute top-2 left-2 flex items-center gap-1 rounded-full bg-blue-600/80 px-2 py-1">
-            <span className="text-[10px] font-bold text-white">V-Bucks: {entry.finalPrice}</span>
+          {/* Rarity badge in image */}
+          <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            <span className="rounded-full bg-black/60 backdrop-blur-md px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-white border border-white/20">
+              {t(`rarity.${rarity}`) !== `rarity.${rarity}` ? t(`rarity.${rarity}`) : (rarityLabels[rarity] || rarity)}
+            </span>
           </div>
         </div>
 
         {/* Info section */}
-        <div className="flex flex-1 flex-col gap-1 p-3">
-          <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+        <div className="flex flex-1 flex-col gap-1.5 p-4">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground/70">
             {type}
           </p>
-          <h3 className="text-sm font-bold leading-tight text-foreground line-clamp-2 text-balance">
+          <h3 className="text-sm font-bold leading-tight text-foreground line-clamp-2 text-balance tracking-tight">
             {name}
           </h3>
 
-          {/* Rarity badge */}
-          <span className="mt-0.5 text-[10px] font-medium capitalize text-muted-foreground">
-            {t(`rarity.${rarity}`) !== `rarity.${rarity}` ? t(`rarity.${rarity}`) : (rarityLabels[rarity] || rarity)}
-          </span>
-
-          {/* Price */}
-          <div className="mt-auto flex flex-col gap-0.5 pt-2">
-            <div className="flex items-center gap-1.5">
+          {/* Price with premium styling */}
+          <div className="mt-auto flex items-center gap-2 pt-3">
+            <div className="flex items-center gap-1.5 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 px-3 py-1.5 border border-yellow-500/30">
               <Image
                 src="/logomxnpoints.png"
                 alt="MxN Points"
-                width={16}
-                height={16}
+                width={14}
+                height={14}
                 className="flex-shrink-0"
               />
               {isDiscounted ? (
                 <div className="flex items-center gap-1.5">
-                  <span className="text-xs text-muted-foreground line-through">
+                  <span className="text-[10px] text-muted-foreground/60 line-through">
                     {entry.regularPrice.toLocaleString()}
                   </span>
-                  <span className="text-sm font-bold text-yellow-500">
+                  <span className="text-sm font-bold text-yellow-400">
                     {entry.finalPrice.toLocaleString()}
                   </span>
                 </div>
               ) : (
-                <span className="text-sm font-bold text-yellow-500">
-                  {entry.finalPrice.toLocaleString()} MxN
+                <span className="text-sm font-bold text-yellow-400">
+                  {entry.finalPrice.toLocaleString()}
                 </span>
               )}
             </div>
