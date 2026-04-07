@@ -66,15 +66,11 @@ export default function AgregarAmigoPage() {
   useEffect(() => {
     const checkUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push("/login");
-        return;
-      }
       setUser(user);
     };
 
     checkUser();
-  }, [router]);
+  }, []);
 
   useEffect(() => {
     const processPendingRequests = async () => {
@@ -175,12 +171,16 @@ export default function AgregarAmigoPage() {
     }
   };
 
-  if (!user) {
-    return null;
-  }
-
   return (
     <div className="min-h-screen bg-background p-4">
+      {!user && (
+        <div className="mb-4 rounded-xl border border-blue-500/30 bg-blue-500/10 p-4 flex items-center justify-between">
+          <p className="text-sm text-blue-500">Inicia sesión para agregar amigos automáticamente</p>
+          <Button onClick={() => router.push('/login')} size="sm" className="bg-blue-600 hover:bg-blue-700">
+            Iniciar Sesión
+          </Button>
+        </div>
+      )}
       <div className="mx-auto max-w-md space-y-4">
         <div className="rounded-xl border border-border bg-card p-4 sm:p-6">
           <div className="mb-4 sm:mb-6 flex items-center gap-3">
