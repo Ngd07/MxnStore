@@ -2,11 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
-import { User, Check, Copy, Users, RefreshCw } from "lucide-react";
+import { User, Check, Copy, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ProfilePanel } from "@/components/profile-panel";
+import { NotificationsBell } from "@/components/notifications-bell";
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { ThemeProvider } from "@/lib/theme";
+import Image from "next/image";
 
 const FNLB_API_KEY = "FNLB_aabkryf_F7p6Njy0wM8pqFJc01jihxpguFdd1NyBypcfVghqpkMAr6QJeEo.IITFUC8Gou11lHy9G76gEg";
 
@@ -94,7 +99,7 @@ export default function AgregarAmigoPage() {
               .from("pending_friend_requests")
               .update({ status: "completed", updated_at: new Date().toISOString() })
               .eq("id", request.id);
-              
+            
             setMessage(t("profile.friendRequestSent", { username: request.epic_id }));
             setMessageType("success");
           } else if (result.errorCount === BOT_ACCOUNTS.length) {
@@ -121,7 +126,10 @@ export default function AgregarAmigoPage() {
       return;
     }
 
-    if (!user) return;
+    if (!user) {
+      router.push('/login');
+      return;
+    }
 
     setLoading(true);
     setMessage("");
@@ -172,16 +180,40 @@ export default function AgregarAmigoPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      {!user && (
-        <div className="mb-4 rounded-xl border border-blue-500/30 bg-blue-500/10 p-4 flex items-center justify-between">
-          <p className="text-sm text-blue-500">Inicia sesión para agregar amigos automáticamente</p>
-          <Button onClick={() => router.push('/login')} size="sm" className="bg-blue-600 hover:bg-blue-700">
-            Iniciar Sesión
-          </Button>
+    <ThemeProvider>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-4xl items-center justify-between px-2 sm:px-4 py-2 gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
+            <Image
+              src="/logo.png"
+              alt="MxNStore"
+              width={28}
+              height={28}
+              className="rounded-lg object-cover shrink-0"
+            />
+            <div className="min-w-0">
+              <h1 className="text-base sm:text-2xl font-bold text-foreground truncate">
+                MxNStore
+              </h1>
+            </div>
+          </div>
+          <div className="flex items-center gap-1 shrink-0">
+            <NotificationsBell />
+            <LanguageSwitcher />
+            <ProfilePanel />
+          </div>
         </div>
-      )}
-      <div className="mx-auto max-w-md space-y-4">
+      </header>
+
+      <div className="mx-auto max-w-md space-y-4 p-4">
+        {!user && (
+          <div className="rounded-xl border border-blue-500/30 bg-blue-500/10 p-4 text-center">
+            <p className="text-sm text-blue-500">Inicia sesión para agregar amigos automáticamente</p>
+          </div>
+        )}
+
         <div className="rounded-xl border border-border bg-card p-4 sm:p-6">
           <div className="mb-4 sm:mb-6 flex items-center gap-3">
             <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-full bg-blue-500/20">
@@ -276,5 +308,6 @@ export default function AgregarAmigoPage() {
         </div>
       </div>
     </div>
+    </ThemeProvider>
   );
 }
