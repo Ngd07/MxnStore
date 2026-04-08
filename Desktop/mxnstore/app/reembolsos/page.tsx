@@ -60,7 +60,7 @@ export default function ReembolsosPage() {
           <section className="mb-8">
             <h2 className="text-xl font-bold text-foreground mb-4">Cómo Solicitar un Reembolso</h2>
             <ol className="list-decimal pl-6 text-muted-foreground space-y-2">
-              <li>Únete a nuestro servidor de Discord</li>
+              <li>Únete a nuestro <a href="https://discord.gg/nKs2jM7PNJ" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">servidor de Discord</a></li>
               <li>Abre un ticket de soporte</li>
               <li>Proporciona tu número de orden (recibido por email)</li>
               <li>Describe el problema brevemente</li>
@@ -88,7 +88,7 @@ export default function ReembolsosPage() {
           <section className="mb-8">
             <h2 className="text-xl font-bold text-foreground mb-4">Contacto</h2>
             <p className="text-muted-foreground">
-              Para solicitudes de reembolso, contáctanos a través de nuestro servidor de Discord. ¡Estamos aquí para ayudar!
+              Para solicitudes de reembolso, contáctanos a través de nuestro <a href="https://discord.gg/nKs2jM7PNJ" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">servidor de Discord</a>. ¡Estamos aquí para ayudar!
             </p>
           </section>
         </main>
