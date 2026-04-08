@@ -341,15 +341,6 @@ setBalanceLoading(true);
         className={`group relative flex flex-col overflow-hidden rounded-2xl border ${borderColor} glass-card hover-lift transition-all duration-300 cursor-pointer`}
         onClick={() => setShowDialog(true)}
       >
-        {/* Banner (New, etc.) */}
-        {entry.banner && (
-          <div className="absolute top-3 left-3 z-20">
-            <span className="relative inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-yellow-500 to-amber-500 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-black shadow-lg shadow-yellow-500/30">
-              {entry.banner.value}
-            </span>
-          </div>
-        )}
-
         {/* Image section */}
         <div
           className={`relative aspect-square w-full overflow-hidden bg-gradient-to-br ${gradient}`}
