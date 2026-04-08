@@ -174,11 +174,13 @@ function getItemImage(entry: ShopEntry): string | null {
 }
 
 function getItemName(entry: ShopEntry): string {
+  // For bundles, use bundle name first
+  if (entry.bundle?.name) {
+    return entry.bundle.name;
+  }
+  // For individual items, use brItems name
   if (entry.brItems && entry.brItems.length > 0) {
     return entry.brItems[0].name;
-  }
-  if (entry.bundle) {
-    return entry.bundle.name;
   }
   return entry.devName.split(" for ")[0].replace("[VIRTUAL]1 x ", "").replace("[VIRTUAL]", "");
 }
