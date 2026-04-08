@@ -62,7 +62,6 @@ export default function ReembolsosPage() {
             <ol className="list-decimal pl-6 text-muted-foreground space-y-2">
               <li>Únete a nuestro <a href="https://discord.gg/nKs2jM7PNJ" target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">servidor de Discord</a></li>
               <li>Abre un ticket de soporte</li>
-              <li>Proporciona tu número de orden (recibido por email)</li>
               <li>Describe el problema brevemente</li>
               <li>Nuestro equipo responderá dentro de 24 horas</li>
             </ol>
