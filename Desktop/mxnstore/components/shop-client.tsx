@@ -224,10 +224,30 @@ export function ShopClient() {
     });
   }, [entries, searchQuery, selectedRarity]);
 
-  // Keep original API order - NO grouping, just render in order from API
+  // Group by layout/section and sort items within each section
   const sections = useMemo(() => {
-    // Return as single section with all items in original API order
-    return [["Todos", filteredEntries] as [string, ShopEntry[]]];
+    const map = new Map<string, ShopEntry[]>();
+    filteredEntries.forEach((entry) => {
+      const sectionName = getSectionName(entry);
+      if (!map.has(sectionName)) {
+        map.set(sectionName, []);
+      }
+      map.get(sectionName)!.push(entry);
+    });
+    
+    // Sort items within each section: bundles first, then individual items
+    const sortedSections = Array.from(map.entries()).map(([name, items]) => {
+      const sortedItems = [...items].sort((a, b) => {
+        const aIsBundle = !!a.bundle;
+        const bIsBundle = !!b.bundle;
+        if (aIsBundle && !bIsBundle) return -1;
+        if (!aIsBundle && bIsBundle) return 1;
+        return 0;
+      });
+      return [name, sortedItems] as [string, ShopEntry[]];
+    });
+    
+    return sortedSections;
   }, [filteredEntries]);
 
   const formattedDate = shopDate
