@@ -93,14 +93,85 @@ const rarityLabels: Record<string, string> = {
 };
 
 function getItemImage(entry: ShopEntry): string | null {
-  // Check if brItems have their own featured images
-  let hasIndividualFeaturedImage = false;
+  // For bundles/packs, use bundle image first
+  if (entry.bundle?.image) {
+    const img = entry.bundle.image;
+    if (img) {
+      if (img.startsWith('http')) return img;
+      if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
+    }
+  }
+  
+  // For regular items, use brItems featured image first
   if (entry.brItems && entry.brItems.length > 0) {
+    // Try featured image first
     for (const item of entry.brItems) {
       if (item.images.featured) {
-        hasIndividualFeaturedImage = true;
-        break;
+        const img = item.images.featured;
+        if (img) {
+          if (img.startsWith('http')) return img;
+          if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
+        }
       }
+    }
+    
+    // Try icon image
+    for (const item of entry.brItems) {
+      if (item.images.icon) {
+        const img = item.images.icon;
+        if (img) {
+          if (img.startsWith('http')) return img;
+          if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
+        }
+      }
+    }
+  }
+
+  // Try newDisplayAsset renderImages
+  if (entry.newDisplayAsset?.renderImages && entry.newDisplayAsset.renderImages.length > 0) {
+    const img = entry.newDisplayAsset.renderImages[0].image;
+    if (img) {
+      if (img.startsWith('http')) return img;
+      if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
+    }
+  }
+
+  // Try materialInstances featured
+  if (entry.newDisplayAsset?.materialInstances) {
+    for (const mat of entry.newDisplayAsset.materialInstances) {
+      if (mat.images?.['featured']) {
+        const img = mat.images['featured'];
+        if (img) {
+          if (img.startsWith('http')) return img;
+          if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
+        }
+      }
+    }
+  }
+
+  // Try materialInstances icon
+  if (entry.newDisplayAsset?.materialInstances) {
+    for (const mat of entry.newDisplayAsset.materialInstances) {
+      if (mat.images?.['icon']) {
+        const img = mat.images['icon'];
+        if (img) {
+          if (img.startsWith('http')) return img;
+          if (img.startsWith('/')) return `https://fortnite-api.com${img}`;
+        }
+      }
+    }
+  }
+
+  // Try tracks (Jam Tracks) - last resort
+  if (entry.tracks && entry.tracks.length > 0) {
+    const track = entry.tracks[0];
+    if (track.albumArt) {
+      return track.albumArt;
+    }
+  }
+
+  return null;
+}
     }
   }
 

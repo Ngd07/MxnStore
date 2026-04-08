@@ -227,7 +227,14 @@ export function ShopClient() {
   // Group by layout/section and sort items within each section
   const sections = useMemo(() => {
     const map = new Map<string, ShopEntry[]>();
+    const musicItems: ShopEntry[] = [];
+    
     filteredEntries.forEach((entry) => {
+      const isTrack = entry.tracks && entry.tracks.length > 0;
+      if (isTrack) {
+        musicItems.push(entry);
+        return;
+      }
       const sectionName = getSectionName(entry);
       if (!map.has(sectionName)) {
         map.set(sectionName, []);
@@ -246,8 +253,13 @@ export function ShopClient() {
       });
       return [name, sortedItems] as [string, ShopEntry[]];
     });
+
+    // Add music section at the end if there are any tracks
+    const allSections = musicItems.length > 0 
+      ? [...sortedSections, ["Music", musicItems] as [string, ShopEntry[]]]
+      : sortedSections;
     
-    return sortedSections;
+    return allSections;
   }, [filteredEntries]);
 
   const formattedDate = shopDate
