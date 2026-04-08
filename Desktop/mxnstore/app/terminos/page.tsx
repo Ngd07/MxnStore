@@ -1,9 +1,7 @@
 import { ThemeProvider } from "@/lib/theme";
-import { Footer } from "@/components/footer";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import Image from "next/image";
+import Link from "next/link";
 
 export const metadata = {
   title: "Términos y Condiciones - MxNStore",
@@ -16,9 +14,15 @@ export default function TerminosPage() {
       <div className="min-h-screen bg-background">
         <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
           <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3">
-            <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-              <ArrowLeft className="h-4 w-4" />
-              Volver
+            <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <Image
+                src="/logo.png"
+                alt="MxNStore"
+                width={32}
+                height={32}
+                className="rounded-lg"
+              />
+              <span className="font-bold text-foreground">MxNStore</span>
             </Link>
             <h1 className="text-lg font-bold text-foreground">Términos y Condiciones</h1>
             <LanguageSwitcher />
@@ -93,8 +97,6 @@ export default function TerminosPage() {
               </p>
             </section>
         </main>
-
-        <Footer />
       </div>
     </ThemeProvider>
   );

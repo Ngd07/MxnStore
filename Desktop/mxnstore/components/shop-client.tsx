@@ -13,6 +13,7 @@ import { NotificationsBell } from "@/components/notifications-bell";
 import type { ShopData, ShopEntry } from "@/lib/types";
 import { Store, Loader2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useI18n } from "@/lib/i18n";
 import { supabase } from "@/lib/supabase";
@@ -279,7 +280,7 @@ export function ShopClient() {
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-2 sm:px-4 py-2 gap-1 sm:gap-2">
-          <div className="flex items-center gap-1.5 sm:gap-3 min-w-0">
+          <Link href="/" className="flex items-center gap-1.5 sm:gap-3 min-w-0 hover:opacity-80 transition-opacity">
             <Image
               src="/logo.png"
               alt="MxNStore"
@@ -292,7 +293,7 @@ export function ShopClient() {
                 MxNStore
               </h1>
             </div>
-          </div>
+          </Link>
           <div className="hidden md:flex items-center gap-2">
             <div className="flex items-center gap-3 bg-gradient-to-r from-yellow-500/20 to-purple-500/20 border border-yellow-500/30 rounded-lg px-4 py-2">
               <span className="text-sm font-bold text-yellow-500 uppercase tracking-wide">{t("shop.countdown")}</span>

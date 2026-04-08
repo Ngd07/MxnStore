@@ -1,8 +1,8 @@
 import { ThemeProvider } from "@/lib/theme";
-import { Footer } from "@/components/footer";
-import { ArrowLeft, RotateCcw, AlertCircle, CheckCircle } from "lucide-react";
-import Link from "next/link";
+import { RotateCcw, AlertCircle, CheckCircle } from "lucide-react";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import Image from "next/image";
+import Link from "next/link";
 
 export const metadata = {
   title: "Política de Reembolsos - MxNStore",
@@ -15,9 +15,15 @@ export default function ReembolsosPage() {
       <div className="min-h-screen bg-background">
         <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
           <div className="mx-auto flex max-w-4xl items-center justify-between px-4 py-3">
-            <Link href="/" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-              <ArrowLeft className="h-4 w-4" />
-              Volver
+            <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <Image
+                src="/logo.png"
+                alt="MxNStore"
+                width={32}
+                height={32}
+                className="rounded-lg"
+              />
+              <span className="font-bold text-foreground">MxNStore</span>
             </Link>
             <h1 className="text-lg font-bold text-foreground">Política de Reembolsos</h1>
             <LanguageSwitcher />
@@ -29,7 +35,7 @@ export default function ReembolsosPage() {
 
           <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 mb-8">
             <p className="text-blue-500 font-medium">
-              En MxNStore strives ofrecer el mejor servicio posible. Lee esta política para entender cuándo y cómo puedes solicitar un reembolso.
+              En MxNStore striveamos ofrecer el mejor servicio posible. Lee esta política para entender cuándo y cómo puedes solicitar un reembolso.
             </p>
           </div>
 
@@ -40,7 +46,7 @@ export default function ReembolsosPage() {
             </h2>
             <ul className="list-disc pl-6 text-muted-foreground space-y-2">
               <li><strong>Producto no entregado:</strong> Si no recibes tu producto dentro de las 24 horas, contáctanos para un reembolso completo</li>
-              <li><strong>Producto defectuoso:</strong> Si el producto no funciona, lo investigaremos y ofereceremos reemplazo o reembolso</li>
+              <li><strong>Producto defectuoso:</strong> Si el producto no funciona, lo investigaremos y ofreceremos reemplazo o reembolso</li>
               <li><strong>Error en el nombre de usuario:</strong> Si proporcionaste el nombre correcto pero no se entregó, reintentaremos la entrega sin costo adicional</li>
             </ul>
           </section>
@@ -105,8 +111,6 @@ export default function ReembolsosPage() {
             </p>
           </section>
         </main>
-
-        <Footer />
       </div>
     </ThemeProvider>
   );
