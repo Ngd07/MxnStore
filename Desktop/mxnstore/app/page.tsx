@@ -5,7 +5,7 @@ import { LanguageSwitcher } from "@/components/language-switcher";
 import { useI18n } from "@/lib/i18n";
 import { useRouter } from "next/navigation";
 import { ThemeProvider } from "@/lib/theme";
-import { ShoppingBag, UserPlus, Coins, Zap, Shield, Clock, ChevronRight } from "lucide-react";
+import { ShoppingBag, UserPlus, Coins, Zap, Shield, Clock, ChevronRight, MessageCircle } from "lucide-react";
 import Image from "next/image";
 
 export default function HomePage() {
@@ -107,6 +107,16 @@ export default function HomePage() {
                 <Coins className="h-5 w-5" />
                 Comprar MxN Points
               </button>
+              
+              <a
+                href="https://discord.gg/nKs2jM7PNJ"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition-colors"
+              >
+                <MessageCircle className="h-5 w-5" />
+                Unirse al Discord
+              </a>
             </div>
 
             {/* Quick Stats */}
