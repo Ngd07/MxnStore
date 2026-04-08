@@ -26,22 +26,21 @@ export default function TerminosPage() {
         </header>
 
         <main className="mx-auto max-w-4xl px-4 py-8">
-          <div className="prose prose-invert max-w-none">
             <p className="text-muted-foreground mb-6">Última actualización: {new Date().toLocaleDateString("es-ES")}</p>
 
             <section className="mb-8">
               <h2 className="text-xl font-bold text-foreground mb-4">1. Aceptación de Términos</h2>
               <p className="text-muted-foreground">
-                Al acceder y utilizar MxNStore, aceptas vincularte por estos Términos y Condiciones. 
+                Al acceder y utilizar MxNStore, aceptas vincularte a estos Términos y Condiciones. 
                 Si no estás de acuerdo con alguno de estos términos, no utilices nuestro servicio.
               </p>
             </section>
 
             <section className="mb-8">
               <h2 className="text-xl font-bold text-foreground mb-4">2. Servicio</h2>
-              <p className="text-muted-foreground">
+<p className="text-muted-foreground">
                 MxNStore ofrece una plataforma para la compra de skins, cuentas y contenido digital relacionado con Fortnite. 
-                Nos reservamos el derecho de modificar, suspender o discontinuar cualquier aspecto del servicio en cualquier momento.
+                Nos reservamos el derecho de modificar, suspender o interrumpir cualquier aspecto del servicio en cualquier momento.
               </p>
             </section>
 
@@ -66,7 +65,7 @@ export default function TerminosPage() {
             <section className="mb-8">
               <h2 className="text-xl font-bold text-foreground mb-4">5. Propiedad Intelectual</h2>
               <p className="text-muted-foreground">
-                Todo el contenido en MxNStore, incluyendo textos, gráficos,logos e imágenes, son propiedad de MxNStore 
+                Todo el contenido en MxNStore, incluyendo textos, gráficos, logotipos e imágenes, son propiedad de MxNStore 
                 o sus proveedores de contenido y están protegidos por leyes de derechos de autor.
               </p>
             </section>
@@ -75,7 +74,7 @@ export default function TerminosPage() {
               <h2 className="text-xl font-bold text-foreground mb-4">6. Uso Prohibido</h2>
               <p className="text-muted-foreground">
                 No puedes utilizar nuestro servicio para cualquier propósito ilegal o no autorizado. 
-                No violarás ninguna ley aplicas en tu jurisdicción.
+                No violarás ninguna ley aplicable en tu jurisdicción.
               </p>
             </section>
 
@@ -93,7 +92,6 @@ export default function TerminosPage() {
                 Si tienes alguna pregunta sobre estos Términos, contáctanos a través de nuestro servidor de Discord.
               </p>
             </section>
-          </div>
         </main>
 
         <Footer />

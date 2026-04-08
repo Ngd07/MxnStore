@@ -25,7 +25,6 @@ export default function PrivacidadPage() {
         </header>
 
         <main className="mx-auto max-w-4xl px-4 py-8">
-          <div className="prose prose-invert max-w-none">
             <p className="text-muted-foreground mb-6">Última actualización: {new Date().toLocaleDateString("es-ES")}</p>
 
             <section className="mb-8">
@@ -88,7 +87,7 @@ export default function PrivacidadPage() {
             <section className="mb-8">
               <h2 className="text-xl font-bold text-foreground mb-4">7. Tus Derechos</h2>
               <p className="text-muted-foreground">
-                Tienes derecho a: accéder a tu información, corregir datos incorrectos, solicitar eliminación, opoerte al procesamiento. 
+                Tienes derecho a: acceder a tu información, corregir datos incorrectos, solicitar eliminación u oposición al procesamiento. 
                 Contáctanos a través de Discord para ejercer estos derechos.
               </p>
             </section>
@@ -96,7 +95,7 @@ export default function PrivacidadPage() {
             <section className="mb-8">
               <h2 className="text-xl font-bold text-foreground mb-4">8. Menores de Edad</h2>
               <p className="text-muted-foreground">
-                Nuestro servicio no está diseñado para menores de 13 años. No recopilamos intentionalmente 
+                Nuestro servicio no está diseñado para menores de 13 años. No recopilamos intencionalmente 
                 información de menores de 13 años.
               </p>
             </section>
@@ -114,8 +113,7 @@ export default function PrivacidadPage() {
                 Si tienes preguntas sobre esta Política de Privacidad, contáctanos a través de nuestro servidor de Discord.
               </p>
             </section>
-          </div>
-        </main>
+          </main>
 
         <Footer />
       </div>
