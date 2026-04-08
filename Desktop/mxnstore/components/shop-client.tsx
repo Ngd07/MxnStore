@@ -224,28 +224,10 @@ export function ShopClient() {
     });
   }, [entries, searchQuery, selectedRarity]);
 
-  // Group by layout/section
+  // Keep original API order - NO grouping, just render in order from API
   const sections = useMemo(() => {
-    const map = new Map<string, ShopEntry[]>();
-    filteredEntries.forEach((entry) => {
-      const sectionName = getSectionName(entry);
-      if (!map.has(sectionName)) {
-        map.set(sectionName, []);
-      }
-      map.get(sectionName)!.push(entry);
-    });
-    const sectionOrder = ['Skins', 'Bundles', 'Packs', 'Otros Items'];
-    const sorted = Array.from(map.entries()).sort((a, b) => {
-      const indexA = sectionOrder.indexOf(a[0]);
-      const indexB = sectionOrder.indexOf(b[0]);
-      if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-      if (indexA !== -1) return -1;
-      if (indexB !== -1) return 1;
-      if (a[0].toLowerCase().includes('jam')) return 1;
-      if (b[0].toLowerCase().includes('jam')) return -1;
-      return a[0].localeCompare(b[0]);
-    });
-    return sorted;
+    // Return as single section with all items in original API order
+    return [["Todos", filteredEntries] as [string, ShopEntry[]]];
   }, [filteredEntries]);
 
   const formattedDate = shopDate
