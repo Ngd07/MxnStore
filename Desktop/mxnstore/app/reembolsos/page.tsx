@@ -71,7 +71,7 @@ export default function ReembolsosPage() {
           <section className="mb-8">
             <h2 className="text-xl font-bold text-foreground mb-4">Tiempo de Procesamiento</h2>
             <p className="text-muted-foreground">
-              Los reembolsos aprobados se procesan en 5-10 días hábiles. El tiempo exacto varía según tu proveedor de pago.
+              Los reembolsos aprobados se procesan en 1-3 días hábiles. El tiempo exacto varía según tu proveedor de pago.
             </p>
           </section>
 
