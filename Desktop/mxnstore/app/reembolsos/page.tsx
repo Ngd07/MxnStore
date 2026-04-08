@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@/lib/theme";
-import { RotateCcw, AlertCircle, CheckCircle } from "lucide-react";
+import { RotateCcw, CheckCircle } from "lucide-react";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import Image from "next/image";
 import Link from "next/link";
@@ -33,33 +33,14 @@ export default function ReembolsosPage() {
         <main className="mx-auto max-w-4xl px-4 py-8">
           <p className="text-muted-foreground mb-6">Última actualización: {new Date().toLocaleDateString("es-ES")}</p>
 
-          <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 mb-8">
-            <p className="text-blue-500 font-medium">
-              En MxNStore striveamos ofrecer el mejor servicio posible. Lee esta política para entender cuándo y cómo puedes solicitar un reembolso.
-            </p>
-          </div>
-
           <section className="mb-8">
             <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-green-500" />
               Reembolsos Garantizados
             </h2>
             <ul className="list-disc pl-6 text-muted-foreground space-y-2">
-              <li><strong>Producto no entregado:</strong> Si no recibes tu producto dentro de las 24 horas, contáctanos para un reembolso completo</li>
-              <li><strong>Producto defectuoso:</strong> Si el producto no funciona, lo investigaremos y ofreceremos reemplazo o reembolso</li>
-              <li><strong>Error en el nombre de usuario:</strong> Si proporcionaste el nombre correcto pero no se entregó, reintentaremos la entrega sin costo adicional</li>
-            </ul>
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-yellow-500" />
-              Reembolsos Case-by-Case
-            </h2>
-            <ul className="list-disc pl-6 text-muted-foreground space-y-2">
-              <li><strong>Cambio de opinión:</strong> No se ofrecen reembolsos por cambio de opinión después de la compra</li>
-              <li><strong>Cuenta no encontrada:</strong> Si el nombre de Epic Games proporcionado no existe, intentaremos contactarte</li>
-              <li><strong>Problemas con el cliente:</strong> Casos excepcionales serán evaluados por nuestro equipo</li>
+              <li><strong>Producto no entregado:</strong> Si el producto que compraste no fue entregado todavía y quieres cambiarlo por otro del mismo valor. O podemos devolverte el monto gastado en ese item para futuras compras.</li>
+              <li><strong>Producto no encontrado:</strong> Si realizaste una compra y el producto dejó de aparecer en la tienda de Fortnite podrás elegir otro item, o reembolsar la orden.</li>
             </ul>
           </section>
 
