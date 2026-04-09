@@ -98,18 +98,23 @@ export default function LoginPage() {
           setConfirmPassword('')
         }
       } else {
+        console.log('Attempting login with:', email)
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
         })
         
+        console.log('Login response:', data, error)
+        
         if (error) {
           setError(error.message)
         } else if (data.user) {
+          console.log('Login success, user:', data.user)
           router.push('/')
         }
       }
     } catch (err: any) {
+      console.error('Catch error:', err)
       setError(err.message || 'Error al procesar la solicitud')
     } finally {
       setSubmitting(false)
