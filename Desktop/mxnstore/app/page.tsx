@@ -80,7 +80,7 @@ export default function HomePage() {
                 {/* Ver Tienda - matches width of 3 buttons below */}
                 <button
                   onClick={() => router.push("/shop")}
-                  className="w-full sm:w-[calc(100%+12px)] inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold hover:from-purple-500 hover:to-pink-500 transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30"
+                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold hover:from-purple-500 hover:to-pink-500 transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30"
                 >
                   <ShoppingBag className="h-4 w-4" />Conseguir Skins
                 </button>
@@ -89,14 +89,14 @@ export default function HomePage() {
                 <div className="flex flex-wrap gap-3">
                   <button
                     onClick={() => router.push("/add-friend")}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-border bg-secondary/50 hover:bg-secondary transition-colors font-semibold whitespace-nowrap"
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-border bg-secondary/50 hover:bg-secondary transition-colors font-semibold"
                   >
                     <UserPlus className="h-4 w-4" />Agregar Bots
                   </button>
                   
                   <button
                     onClick={() => router.push("/buy-vbucks")}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-yellow-500/50 bg-yellow-500/10 hover:bg-yellow-500/20 transition-colors font-semibold text-yellow-400 whitespace-nowrap"
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl border border-yellow-500/50 bg-yellow-500/10 hover:bg-yellow-500/20 transition-colors font-semibold text-yellow-400"
                   >
                     <Coins className="h-4 w-4" />MxN Points
                   </button>
@@ -105,7 +105,7 @@ export default function HomePage() {
                     href="https://discord.gg/nKs2jM7PNJ"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition-colors whitespace-nowrap"
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition-colors"
                   >
                     <MessageCircle className="h-4 w-4" />Discord
                   </a>
