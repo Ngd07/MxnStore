@@ -80,7 +80,7 @@ export default function HomePage() {
                 {/* Ver Tienda - same width as 3 buttons below */}
                 <button
                   onClick={() => router.push("/shop")}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold hover:from-purple-500 hover:to-pink-500 transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 w-full sm:w-auto"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold hover:from-purple-500 hover:to-pink-500 transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 w-full"
                 >
                   <ShoppingBag className="h-4 w-4" />Conseguir Skins
                 </button>
