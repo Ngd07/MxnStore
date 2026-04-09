@@ -41,7 +41,7 @@ export default function HomePage() {
         {/* Header */}
         <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
           <div className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 cursor-pointer" onClick={() => router.push('/')}>
               <Image
                 src="/logo.png"
                 alt="MxNStore"
@@ -52,6 +52,18 @@ export default function HomePage() {
               <span className="font-bold text-lg">MxNStore</span>
             </div>
             <div className="flex items-center gap-2">
+              <button
+                onClick={() => router.push('/login')}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Iniciar Sesión
+              </button>
+              <button
+                onClick={() => router.push('/login')}
+                className="px-4 py-2 rounded-lg bg-purple-600 text-white text-sm font-medium hover:bg-purple-500 transition-colors"
+              >
+                Regístrate
+              </button>
               <LanguageSwitcher />
               <ThemeToggle />
             </div>

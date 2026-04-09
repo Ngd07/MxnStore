@@ -78,19 +78,7 @@ export default function LoginPage() {
         
         if (error) {
           if (error.message.includes('User already registered')) {
-            const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-              email,
-              password,
-            })
-            if (signInError) {
-              if (signInError.message.includes('Invalid login credentials')) {
-                setError('La cuenta existe pero la contraseña es incorrecta. ¿Quieres crear una nueva cuenta con este email?')
-              } else {
-                setError(signInError.message)
-              }
-            } else if (signInData.user) {
-              router.push('/')
-            }
+            setError('Este email ya está registrado. Por favor inicia sesión o usa Google.')
           } else {
             setError(error.message)
           }
