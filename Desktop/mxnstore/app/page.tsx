@@ -63,10 +63,12 @@ export default function HomePage() {
           <div className="mx-auto max-w-6xl flex items-center justify-between gap-8">
             {/* Left side - Text */}
             <div className="flex-1 text-left">
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground">
-                Compra todas las skins de Fortnite con entrega segura y rápida
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight">
+                Compra todas las skins de Fortnite con{' '}
+                <span className="text-yellow-400">entrega segura</span>{' '}
+                y <span className="text-yellow-400">rápida</span>
               </h1>
-              <p className="text-sm md:text-base text-muted-foreground max-w-lg">
+              <p className="text-sm md:text-base text-muted-foreground max-w-lg mt-3">
                 Consigue todas las skins de Fortnite ahorrando más de un 40% con entrega inmediata y proceso 100% seguro.
               </p>
             </div>
