@@ -1,6 +1,5 @@
 "use client";
 
-import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageSwitcher } from "@/components/language-switcher";
 import { ProfilePanel } from "@/components/profile-panel";
 import { useI18n } from "@/lib/i18n";
@@ -55,7 +54,6 @@ export default function HomePage() {
             <div className="flex items-center gap-1 shrink-0">
               <ProfilePanel />
               <LanguageSwitcher />
-              <ThemeToggle />
             </div>
           </div>
         </header>
