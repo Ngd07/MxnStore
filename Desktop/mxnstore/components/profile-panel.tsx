@@ -122,7 +122,7 @@ export function ProfilePanel() {
     return (
       <button
         onClick={handleLogin}
-        className="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+        className="flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 px-3 py-1.5 text-xs font-medium text-white transition-colors hover:from-purple-400 hover:to-purple-500"
       >
         <LogIn className="h-3.5 w-3.5" />
         <span className="hidden sm:inline">{t("profile.login")}</span>
@@ -190,7 +190,7 @@ export function ProfilePanel() {
           {/* Recargar Button */}
           <button
             onClick={() => router.push('/buy-vbucks')}
-            className="flex items-center justify-center gap-2 rounded-xl border border-purple-500/50 bg-purple-500/10 p-4 hover:bg-purple-500/20 transition-colors"
+            className="flex items-center justify-center gap-2 rounded-xl border border-purple-500 bg-purple-500/10 p-4 hover:bg-purple-500/20 transition-colors"
           >
             <RefreshCw className="h-5 w-5 text-purple-500" />
             <span className="text-sm font-medium text-foreground">{t("profile.recharge")}</span>
