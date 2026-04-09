@@ -77,9 +77,21 @@ export default function LoginPage() {
         })
         
         if (error) {
-          setError(error.message)
+          if (error.message.includes('User already registered')) {
+            const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+              email,
+              password,
+            })
+            if (signInError) {
+              setError(signInError.message)
+            } else if (signInData.user) {
+              router.push('/')
+            }
+          } else {
+            setError(error.message)
+          }
         } else if (data.user) {
-          alert('¡Cuenta creada! Por favor revisa tu email para verificar tu cuenta.')
+          alert('¡Cuenta creada correctamente!')
           setIsSignUp(false)
           setEmail('')
           setPassword('')
