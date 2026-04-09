@@ -83,7 +83,11 @@ export default function LoginPage() {
               password,
             })
             if (signInError) {
-              setError(signInError.message)
+              if (signInError.message.includes('Invalid login credentials')) {
+                setError('La cuenta existe pero la contraseña es incorrecta. ¿Quieres crear una nueva cuenta con este email?')
+              } else {
+                setError(signInError.message)
+              }
             } else if (signInData.user) {
               router.push('/')
             }
