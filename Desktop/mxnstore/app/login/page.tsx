@@ -4,11 +4,18 @@ import { supabase } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import Image from 'next/image'
 
 export default function LoginPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
+  const [isSignUp, setIsSignUp] = useState(false)
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     const checkUser = async () => {
@@ -35,6 +42,65 @@ export default function LoginPage() {
       alert('Error: ' + error.message)
     } else {
       console.log('OAuth data:', data)
+    }
+  }
+
+  const handleEmailAuth = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+    
+    if (!email || !password) {
+      setError('Por favor completa todos los campos')
+      return
+    }
+
+    if (isSignUp && password !== confirmPassword) {
+      setError('Las contraseñas no coinciden')
+      return
+    }
+
+    if (password.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres')
+      return
+    }
+
+    setSubmitting(true)
+
+    try {
+      if (isSignUp) {
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/auth/callback`,
+          },
+        })
+        
+        if (error) {
+          setError(error.message)
+        } else if (data.user) {
+          alert('¡Cuenta creada! Por favor revisa tu email para verificar tu cuenta.')
+          setIsSignUp(false)
+          setEmail('')
+          setPassword('')
+          setConfirmPassword('')
+        }
+      } else {
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        })
+        
+        if (error) {
+          setError(error.message)
+        } else if (data.user) {
+          router.push('/')
+        }
+      }
+    } catch (err: any) {
+      setError(err.message || 'Error al procesar la solicitud')
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -69,11 +135,63 @@ export default function LoginPage() {
       <div className="w-full max-w-md px-2">
         <div className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 shadow-2xl p-5 sm:p-8">
           <h2 className="text-xl sm:text-2xl font-bold text-white text-center mb-2">
-            Welcome back
+            {isSignUp ? 'Crear Cuenta' : 'Welcome back'}
           </h2>
           <p className="text-white/70 text-center mb-5 sm:mb-6 text-sm">
-            Sign in to continue
+            {isSignUp ? 'Regístrate para continuar' : 'Sign in to continue'}
           </p>
+
+          {/* Email/Password Form */}
+          <form onSubmit={handleEmailAuth} className="space-y-3 mb-4">
+            <div>
+              <Input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="bg-white/20 border-white/20 text-white placeholder:text-white/50 h-11"
+              />
+            </div>
+            <div>
+              <Input
+                type="password"
+                placeholder="Contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="bg-white/20 border-white/20 text-white placeholder:text-white/50 h-11"
+              />
+            </div>
+            {isSignUp && (
+              <div>
+                <Input
+                  type="password"
+                  placeholder="Confirmar contraseña"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="bg-white/20 border-white/20 text-white placeholder:text-white/50 h-11"
+                />
+              </div>
+            )}
+            
+            {error && (
+              <p className="text-red-400 text-sm text-center">{error}</p>
+            )}
+            
+            <Button
+              type="submit"
+              disabled={submitting}
+              className="w-full bg-purple-600 hover:bg-purple-500 text-white h-11 font-semibold rounded-xl"
+            >
+              {submitting ? 'Procesando...' : isSignUp ? 'Crear Cuenta' : 'Iniciar Sesión'}
+            </Button>
+          </form>
+
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-4">
+            <div className="flex-1 h-px bg-white/20"></div>
+            <span className="text-white/50 text-xs">o</span>
+            <div className="flex-1 h-px bg-white/20"></div>
+          </div>
 
           <Button
             onClick={handleLogin}
@@ -87,6 +205,23 @@ export default function LoginPage() {
             </svg>
             Continue with Google
           </Button>
+
+          {/* Toggle Sign Up / Sign In */}
+          <p className="text-white/70 text-center mt-4 text-sm">
+            {isSignUp ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?'}{' '}
+            <button
+              type="button"
+              onClick={() => {
+                setIsSignUp(!isSignUp)
+                setError('')
+                setPassword('')
+                setConfirmPassword('')
+              }}
+              className="text-yellow-400 hover:underline font-semibold"
+            >
+              {isSignUp ? 'Iniciar Sesión' : 'Regístrate'}
+            </button>
+          </p>
         </div>
 
         {/* Footer */}
