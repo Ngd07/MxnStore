@@ -2,6 +2,7 @@
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { ProfilePanel } from "@/components/profile-panel";
 import { useI18n } from "@/lib/i18n";
 import { useRouter } from "next/navigation";
 import { ThemeProvider } from "@/lib/theme";
@@ -51,19 +52,8 @@ export default function HomePage() {
               />
               <span className="font-bold text-lg">MxNStore</span>
             </div>
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => router.push('/login')}
-                className="px-4 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Iniciar Sesión
-              </button>
-              <button
-                onClick={() => router.push('/login')}
-                className="px-4 py-2 rounded-lg bg-purple-600 text-white text-sm font-medium hover:bg-purple-500 transition-colors"
-              >
-                Regístrate
-              </button>
+            <div className="flex items-center gap-1 shrink-0">
+              <ProfilePanel />
               <LanguageSwitcher />
               <ThemeToggle />
             </div>
