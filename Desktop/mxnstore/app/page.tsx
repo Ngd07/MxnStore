@@ -52,8 +52,8 @@ export default function HomePage() {
               <span className="font-bold text-lg">MxNStore</span>
             </div>
             <div className="flex items-center gap-1 shrink-0">
-              <ProfilePanel />
               <LanguageSwitcher />
+              <ProfilePanel />
             </div>
           </div>
         </header>
