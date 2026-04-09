@@ -62,7 +62,7 @@ export default function HomePage() {
         <section className="pt-32 pb-16 px-4">
           <div className="mx-auto max-w-6xl flex items-center justify-between gap-8">
             {/* Left side - Text */}
-            <div className="flex-1 text-left">
+            <div className="flex-1">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
                 Compra todas las skins<br/>
                 de <span className="bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 bg-clip-text text-transparent">Fortnite</span> con<br/>
@@ -74,6 +74,39 @@ export default function HomePage() {
                 ahorrando más de un 50% con precios<br/>
                 más bajos, entrega inmediata y 100% seguro.
               </p>
+
+              {/* Main CTA Buttons - aligned with text */}
+              <div className="flex flex-wrap gap-3 mt-8">
+                <button
+                  onClick={() => router.push("/shop")}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold hover:from-purple-500 hover:to-pink-500 transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 whitespace-nowrap"
+                >
+                  <ShoppingBag className="h-5 w-5" />Ver Tienda<ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </button>
+                
+                <button
+                  onClick={() => router.push("/add-friend")}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border bg-secondary/50 hover:bg-secondary transition-colors font-semibold whitespace-nowrap"
+                >
+                  <UserPlus className="h-5 w-5" />Agregar Bots
+                </button>
+                
+                <button
+                  onClick={() => router.push("/buy-vbucks")}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-yellow-500/50 bg-yellow-500/10 hover:bg-yellow-500/20 transition-colors font-semibold text-yellow-400 whitespace-nowrap"
+                >
+                  <Coins className="h-5 w-5" />Comprar MxN Points
+                </button>
+                
+                <a
+                  href="https://discord.gg/nKs2jM7PNJ"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition-colors whitespace-nowrap"
+                >
+                  <MessageCircle className="h-5 w-5" />Unirse al Discord
+                </a>
+              </div>
             </div>
 
             {/* Right side - Logo */}
@@ -86,39 +119,6 @@ export default function HomePage() {
                 className="rounded-xl"
               />
             </div>
-          </div>
-
-          {/* Main CTA Buttons */}
-          <div className="flex flex-wrap gap-3 mt-12 max-w-lg">
-            <button
-              onClick={() => router.push("/shop")}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold hover:from-purple-500 hover:to-pink-500 transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 whitespace-nowrap"
-            >
-              <ShoppingBag className="h-5 w-5" />Ver Tienda<ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </button>
-            
-            <button
-              onClick={() => router.push("/add-friend")}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border bg-secondary/50 hover:bg-secondary transition-colors font-semibold whitespace-nowrap"
-            >
-              <UserPlus className="h-5 w-5" />Agregar Bots
-            </button>
-            
-            <button
-              onClick={() => router.push("/buy-vbucks")}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-yellow-500/50 bg-yellow-500/10 hover:bg-yellow-500/20 transition-colors font-semibold text-yellow-400 whitespace-nowrap"
-            >
-              <Coins className="h-5 w-5" />Comprar MxN Points
-            </button>
-            
-            <a
-              href="https://discord.gg/nKs2jM7PNJ"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition-colors whitespace-nowrap"
-            >
-              <MessageCircle className="h-5 w-5" />Unirse al Discord
-            </a>
           </div>
         </section>
 
