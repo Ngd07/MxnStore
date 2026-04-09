@@ -77,10 +77,10 @@ export default function HomePage() {
 
               {/* Main CTA Buttons - aligned with text */}
               <div className="flex flex-col gap-3 mt-8">
-                {/* Ver Tienda - same width as 3 buttons below */}
+                {/* Ver Tienda - matches width of 3 buttons below */}
                 <button
                   onClick={() => router.push("/shop")}
-                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold hover:from-purple-500 hover:to-pink-500 transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 w-full"
+                  className="w-full sm:w-[calc(100%+12px)] inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold hover:from-purple-500 hover:to-pink-500 transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30"
                 >
                   <ShoppingBag className="h-4 w-4" />Conseguir Skins
                 </button>
