@@ -66,10 +66,10 @@ export default function HomePage() {
               <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-foreground leading-tight">
                 Compra todas las skins<br/>
                 de Fortnite con<br/>
-                <span className="text-yellow-400">entrega segura y rápida</span>
+                <span className="text-yellow-400">segura y rápida</span>
               </h1>
               <p className="text-sm md:text-base text-muted-foreground max-w-lg mt-3">
-                Consigue todas las skins de Fortnite ahorrando más de un 40% con entrega inmediata y proceso 100% seguro.
+                Consigue todas las skins de Fortnite ahorrando más de un 50% con los precios más bajos, entrega inmediata y proceso 100% seguro.
               </p>
             </div>
 
