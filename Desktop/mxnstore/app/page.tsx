@@ -77,18 +77,14 @@ export default function HomePage() {
             </div>
 
             {/* Right side - Logo */}
-            <div className="flex flex-col items-center shrink-0">
-              <div className="relative">
-                <div className="absolute -inset-4 bg-gradient-to-r from-purple-600 to-pink-500 rounded-full blur-xl opacity-30" />
-                <Image
-                  src="/logo.png"
-                  alt="MxNStore"
-                  width={100}
-                  height={100}
-                  className="relative rounded-2xl"
-                />
-              </div>
-              <span className="text-2xl font-bold mt-3 text-foreground">MxNStore</span>
+            <div className="flex items-center shrink-0">
+              <Image
+                src="/fotolanding.png"
+                alt="MxNStore"
+                width={300}
+                height={150}
+                className="rounded-xl"
+              />
             </div>
           </div>
 
