@@ -81,15 +81,15 @@ export default function HomePage() {
               <Image
                 src="/fotolanding.png"
                 alt="MxNStore"
-                width={300}
-                height={150}
+                width={400}
+                height={200}
                 className="rounded-xl"
               />
             </div>
           </div>
 
           {/* Main CTA Buttons */}
-          <div className="flex flex-wrap gap-3 justify-center mt-12">
+          <div className="flex flex-wrap gap-3 mt-12 max-w-lg">
             <button
               onClick={() => router.push("/shop")}
               className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold hover:from-purple-500 hover:to-pink-500 transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 whitespace-nowrap"
