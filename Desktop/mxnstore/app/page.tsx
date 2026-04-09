@@ -60,26 +60,32 @@ export default function HomePage() {
 
         {/* Hero Section */}
         <section className="pt-32 pb-16 px-4">
-          <div className="mx-auto max-w-4xl text-center">
-            <div className="relative inline-block mb-6">
-              <div className="absolute -inset-4 bg-gradient-to-r from-purple-600 to-pink-500 rounded-full blur-xl opacity-30" />
-              <Image
-                src="/logo.png"
-                alt="MxNStore"
-                width={100}
-                height={100}
-                className="relative rounded-2xl"
-              />
+          <div className="mx-auto max-w-6xl flex items-center justify-between gap-8">
+            {/* Left side - Text */}
+            <div className="flex-1 text-left">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-foreground">
+                Compra todas las skins de Fortnite con entrega segura y rápida
+              </h1>
+              <p className="text-sm md:text-base text-muted-foreground max-w-lg">
+                Consigue todas las skins de Fortnite ahorrando más de un 40% con entrega inmediata y proceso 100% seguro.
+              </p>
             </div>
-            
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
-              MxNStore
-            </h1>
-            
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Tu tienda de confianza para skins de Fortnite. 
-              Compra rápida, segura y con soporte 24/7.
-            </p>
+
+            {/* Right side - Logo */}
+            <div className="flex flex-col items-center shrink-0">
+              <div className="relative">
+                <div className="absolute -inset-4 bg-gradient-to-r from-purple-600 to-pink-500 rounded-full blur-xl opacity-30" />
+                <Image
+                  src="/logo.png"
+                  alt="MxNStore"
+                  width={100}
+                  height={100}
+                  className="relative rounded-2xl"
+                />
+              </div>
+              <span className="text-2xl font-bold mt-3 text-foreground">MxNStore</span>
+            </div>
+          </div>
 
             {/* Main CTA Buttons */}
             <div className="flex flex-wrap gap-3 justify-center mb-12">
