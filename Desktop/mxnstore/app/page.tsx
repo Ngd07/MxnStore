@@ -76,36 +76,40 @@ export default function HomePage() {
               </p>
 
               {/* Main CTA Buttons - aligned with text */}
-              <div className="flex flex-wrap gap-3 mt-8">
+              <div className="flex flex-col gap-3 mt-8">
+                {/* Ver Tienda - full width */}
                 <button
                   onClick={() => router.push("/shop")}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold hover:from-purple-500 hover:to-pink-500 transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 whitespace-nowrap"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-lg hover:from-purple-500 hover:to-pink-500 transition-all hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 w-fit"
                 >
-                  <ShoppingBag className="h-5 w-5" />Ver Tienda<ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  <ShoppingBag className="h-6 w-6" />Ver Tienda
                 </button>
                 
-                <button
-                  onClick={() => router.push("/add-friend")}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border bg-secondary/50 hover:bg-secondary transition-colors font-semibold whitespace-nowrap"
-                >
-                  <UserPlus className="h-5 w-5" />Agregar Bots
-                </button>
-                
-                <button
-                  onClick={() => router.push("/buy-vbucks")}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-yellow-500/50 bg-yellow-500/10 hover:bg-yellow-500/20 transition-colors font-semibold text-yellow-400 whitespace-nowrap"
-                >
-                  <Coins className="h-5 w-5" />Comprar MxN Points
-                </button>
-                
-                <a
-                  href="https://discord.gg/nKs2jM7PNJ"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition-colors whitespace-nowrap"
-                >
-                  <MessageCircle className="h-5 w-5" />Unirse al Discord
-                </a>
+                {/* Other 3 buttons in one line */}
+                <div className="flex flex-wrap gap-3">
+                  <button
+                    onClick={() => router.push("/add-friend")}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-border bg-secondary/50 hover:bg-secondary transition-colors font-semibold whitespace-nowrap"
+                  >
+                    <UserPlus className="h-4 w-4" />Agregar Bots
+                  </button>
+                  
+                  <button
+                    onClick={() => router.push("/buy-vbucks")}
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl border border-yellow-500/50 bg-yellow-500/10 hover:bg-yellow-500/20 transition-colors font-semibold text-yellow-400 whitespace-nowrap"
+                  >
+                    <Coins className="h-4 w-4" />MxN Points
+                  </button>
+                  
+                  <a
+                    href="https://discord.gg/nKs2jM7PNJ"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold transition-colors whitespace-nowrap"
+                  >
+                    <MessageCircle className="h-4 w-4" />Discord
+                  </a>
+                </div>
               </div>
             </div>
 
@@ -114,8 +118,8 @@ export default function HomePage() {
               <Image
                 src="/fotolanding.png"
                 alt="MxNStore"
-                width={400}
-                height={200}
+                width={500}
+                height={250}
                 className="rounded-xl"
               />
             </div>
