@@ -65,12 +65,12 @@ export default function HomePage() {
             <div className="flex-1 text-left">
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
                 Compra todas las skins<br/>
-                de <span className="bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 bg-clip-text text-transparent">Fortnite</span> con<br/>
+                de <span className="bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 bg-clip-text text-transparent">Fortnite</span> con<br/>
                 entrega<br/>
                 <span className="text-yellow-400">segura</span>{' '}<span className="text-white">y</span>{' '}<span className="text-yellow-400">rápida</span>
               </h1>
               <p className="text-base md:text-lg text-muted-foreground max-w-lg mt-4 leading-relaxed">
-                Consigue todas las skins de <span className="text-purple-400 font-semibold">Fortnite</span><br/>
+                Consigue todas las skins de <span className="text-cyan-400 font-semibold">Fortnite</span><br/>
                 ahorrando más de un 50% con precios<br/>
                 más bajos, entrega inmediata y 100% seguro.
               </p>
