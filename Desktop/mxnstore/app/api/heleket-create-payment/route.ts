@@ -9,23 +9,15 @@ console.log('Using hardcoded credentials')
 async function createHeleketPayment(amount: number, orderId: string, userId: string) {
   const data = {
     amount: amount.toString(),
-    currency: 'USD',
-    network: 'TRON',
+    currency: "USD",
     order_id: orderId,
-    url_callback: `${process.env.NEXT_PUBLIC_APP_URL}/api/heleket-webhook?userId=${userId}`,
-    is_payment_multiple: false,
   }
 
   const body = JSON.stringify(data)
   const base64Body = Buffer.from(body).toString('base64')
   const sign = crypto.createHash('md5').update(base64Body + HELENET_API_KEY).digest('hex')
 
-  console.log('Heleket credentials:', { 
-    merchant: HELENET_MERCHANT_ID,
-    merchantLen: HELENET_MERCHANT_ID.length,
-    apiKeyLen: HELENET_API_KEY.length,
-    sign: sign
-  })
+  console.log('Sign payload:', { data, body, base64Body, sign })
 
   try {
     const response = await fetch('https://api.heleket.com/v1/payment', {
