@@ -1,8 +1,15 @@
 import { NextResponse } from 'next/server'
 import crypto from 'crypto'
 
-const HELENET_API_KEY = process.env.HELEKET_API_KEY!
-const HELENET_MERCHANT_ID = process.env.HELEKET_MERCHANT_ID!
+const HELENET_API_KEY = process.env.HELEKET_API_KEY
+const HELENET_MERCHANT_ID = process.env.HELEKET_MERCHANT_ID
+
+if (!HELENET_API_KEY || !HELENET_MERCHANT_ID) {
+  console.error('Missing Heleket env vars:', { 
+    hasApiKey: !!HELENET_API_KEY, 
+    hasMerchantId: !!HELENET_MERCHANT_ID 
+  })
+}
 
 async function createHeleketPayment(amount: number, orderId: string, userId: string) {
   const data = {
@@ -15,19 +22,34 @@ async function createHeleketPayment(amount: number, orderId: string, userId: str
   }
 
   const body = JSON.stringify(data)
-  const sign = crypto.createHash('md5').update(Buffer.from(body).toString('base64') + HELENET_API_KEY).digest('hex')
+  const base64Body = Buffer.from(body).toString('base64')
+  const sign = crypto.createHash('md5').update(base64Body + HELENET_API_KEY).digest('hex')
 
-  const response = await fetch('https://api.heleket.com/v1/payment/create', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'merchant': HELENET_MERCHANT_ID,
-      'sign': sign,
-    },
-    body: body,
-  })
+  console.log('Heleket request:', { body, base64Body: base64Body.substring(0, 20), sign: sign.substring(0, 10), merchant: HELENET_MERCHANT_ID?.substring(0, 10) })
 
-  return response.json()
+  try {
+    const response = await fetch('https://api.heleket.com/v1/payment/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'merchant': HELENET_MERCHANT_ID!,
+        'sign': sign,
+      },
+      body: body,
+    })
+
+    const text = await response.text()
+    console.log('Heleket response status:', response.status, 'text:', text.substring(0, 200))
+
+    try {
+      return JSON.parse(text)
+    } catch {
+      return { state: 1, message: 'Invalid response from Heleket: ' + text.substring(0, 100) }
+    }
+  } catch (err: any) {
+    console.error('Fetch error:', err)
+    return { state: 1, message: err.message }
+  }
 }
 
 export async function POST(request: Request) {
