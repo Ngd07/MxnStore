@@ -20,21 +20,17 @@ async function createHeleketPayment(amount: number, orderId: string, userId: str
   const base64Body = Buffer.from(body).toString('base64')
   const sign = crypto.createHash('md5').update(base64Body + HELENET_API_KEY).digest('hex')
 
-  console.log('Heleket request:', { 
-      amount, 
-      body, 
-      base64Body: base64Body.substring(0, 30), 
-      sign: sign, 
-      merchantFull: HELENET_MERCHANT_ID,
-      merchantLen: HELENET_MERCHANT_ID?.length 
-    })
+  console.log('Heleket credentials:', { 
+    merchant: HELENET_MERCHANT_ID,
+    sign: sign
+  })
 
   try {
     const response = await fetch('https://api.heleket.com/v1/payment/create', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'merchant': HELENET_MERCHANT_ID!,
+        'merchant': HELENET_MERCHANT_ID,
         'sign': sign,
       },
       body: body,
