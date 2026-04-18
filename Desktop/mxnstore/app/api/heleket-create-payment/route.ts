@@ -1,13 +1,10 @@
 import { NextResponse } from 'next/server'
 import crypto from 'crypto'
 
-const HELENET_API_KEY = process.env.HELEKET_API_KEY
-const HELENET_MERCHANT_ID = process.env.HELEKET_MERCHANT_ID
+const HELENET_API_KEY = '0OZYVsNwF1Qn4hDJyhJy4ER2tgKkxZqADM79GfwkQOPBaUL6JD3teIe4DDy7eyjxm1Lu3HDZqoSpKPK9N7zVz3RTrsPHC3TDStcn3zBTBitTq5ByWOBqJGXj6aw8WFmR'
+const HELENET_MERCHANT_ID = '2b55e311-8cbb-4f6b-b9ae-a1d9585fbb08'
 
-console.log('ENV CHECK:', {
-  apiKey: HELENET_API_KEY ? 'exists' : 'MISSING',
-  merchantId: HELENET_MERCHANT_ID ? 'exists' : 'MISSING'
-})
+console.log('Using hardcoded credentials')
 
 async function createHeleketPayment(amount: number, orderId: string, userId: string) {
   const data = {
