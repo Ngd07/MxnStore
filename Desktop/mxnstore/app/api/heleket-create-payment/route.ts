@@ -7,10 +7,12 @@ const HELENET_MERCHANT_ID = 'ba7a4e30-4ed2-4290-924c-3d6c885fa984'
 console.log('Using hardcoded credentials')
 
 async function createHeleketPayment(amount: number, orderId: string, userId: string) {
+  const simpleOrderId = `mxn_${Date.now()}`
+  
   const data = {
     amount: amount.toString(),
     currency: "USD",
-    order_id: orderId,
+    order_id: simpleOrderId,
   }
 
   const body = JSON.stringify(data)
@@ -20,7 +22,6 @@ async function createHeleketPayment(amount: number, orderId: string, userId: str
   console.log('=== HELENET DEBUG ===')
   console.log('body:', body)
   console.log('base64Body:', base64Body)
-  console.log('apiKey:', HELENET_API_KEY)
   console.log('sign:', sign)
   console.log('===================')
 
