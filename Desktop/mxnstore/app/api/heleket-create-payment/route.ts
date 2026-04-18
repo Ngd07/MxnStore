@@ -68,10 +68,10 @@ export async function POST(request: Request) {
 
     console.log('Heleket result:', result)
 
-    if (result.state === 0 && result.result?.link) {
+    if (result.state === 0 && result.result?.url) {
       return NextResponse.json({
         success: true,
-        paymentLink: result.result.link,
+        paymentLink: result.result.url,
         orderId: orderId,
       })
     } else {
