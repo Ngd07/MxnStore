@@ -143,14 +143,38 @@ export default function BuyVbucksPage() {
               <div className="text-3xl font-bold gradient-text">{selectedPackage.mxn.toLocaleString()} MxN Points</div>
               <div className="text-lg text-muted-foreground mt-1">${selectedPackage.price} USD</div>
             </div>
-            <a
-              href={`/pagar/${selectedPackage.id}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-premium flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-500 hover:to-emerald-400 text-white py-4 rounded-xl font-semibold text-lg shadow-lg shadow-green-500/30 active:scale-95 transition-all"
+            <button
+              onClick={async () => {
+                if (!user) {
+                  router.push('/login')
+                  return
+                }
+                
+                try {
+                  const res = await fetch('/api/heleket-create-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      amount: selectedPackage.price,
+                      mxnAmount: selectedPackage.mxn,
+                      userId: user.id,
+                    }),
+                  })
+                  const data = await res.json()
+                  
+                  if (data.success && data.paymentLink) {
+                    window.open(data.paymentLink, '_blank')
+                  } else {
+                    alert('Error al crear pago: ' + (data.error || 'Unknown error'))
+                  }
+                } catch (err) {
+                  alert('Error al procesar pago')
+                }
+              }}
+              className="btn-premium flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-500 hover:to-emerald-400 text-white py-4 rounded-xl font-semibold text-lg shadow-lg shadow-green-500/30 active:scale-95 transition-all w-full"
             >
               {t("buy.continueToPayment")}
-            </a>
+            </button>
             <p className="text-xs text-muted-foreground/60 text-center mt-4">
               {t("buy.seAbrira")}
             </p>
