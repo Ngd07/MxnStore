@@ -40,7 +40,11 @@ export async function POST(request: Request) {
 
     const orderId = `mxn_${mxnAmount || 0}_${userId}_${Date.now()}`
 
+    console.log('Creating Heleket payment:', { amount, orderId, HELENET_MERCHANT_ID: HELENET_MERCHANT_ID?.substring(0, 10) })
+
     const result = await createHeleketPayment(amount, orderId, userId)
+
+    console.log('Heleket result:', result)
 
     if (result.state === 0 && result.result?.link) {
       return NextResponse.json({
@@ -49,9 +53,10 @@ export async function POST(request: Request) {
         orderId: orderId,
       })
     } else {
-      return NextResponse.json({ error: result.message || 'Failed to create payment' }, { status: 500 })
+      return NextResponse.json({ error: result.message || 'Failed to create payment', details: result }, { status: 500 })
     }
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    console.error('Heleket error:', error)
+    return NextResponse.json({ error: error.message, stack: error.stack }, { status: 500 })
   }
 }
