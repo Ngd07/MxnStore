@@ -28,7 +28,7 @@ async function createHeleketPayment(amount: number, orderId: string, userId: str
   })
 
   try {
-    const response = await fetch('https://api.heleket.com/v1/payment/create', {
+    const response = await fetch('https://api.heleket.com/v1/payment', {
       method: 'POST',
       redirect: 'follow',
       headers: {
