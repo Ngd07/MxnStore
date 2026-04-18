@@ -22,14 +22,18 @@ async function createHeleketPayment(amount: number, orderId: string, userId: str
 
   console.log('Heleket credentials:', { 
     merchant: HELENET_MERCHANT_ID,
+    merchantLen: HELENET_MERCHANT_ID.length,
+    apiKeyLen: HELENET_API_KEY.length,
     sign: sign
   })
 
   try {
     const response = await fetch('https://api.heleket.com/v1/payment/create', {
       method: 'POST',
+      redirect: 'follow',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
         'merchant': HELENET_MERCHANT_ID,
         'sign': sign,
       },
