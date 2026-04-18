@@ -4,12 +4,10 @@ import crypto from 'crypto'
 const HELENET_API_KEY = process.env.HELEKET_API_KEY
 const HELENET_MERCHANT_ID = process.env.HELEKET_MERCHANT_ID
 
-if (!HELENET_API_KEY || !HELENET_MERCHANT_ID) {
-  console.error('Missing Heleket env vars:', { 
-    hasApiKey: !!HELENET_API_KEY, 
-    hasMerchantId: !!HELENET_MERCHANT_ID 
-  })
-}
+console.log('ENV CHECK:', {
+  apiKey: HELENET_API_KEY ? 'exists' : 'MISSING',
+  merchantId: HELENET_MERCHANT_ID ? 'exists' : 'MISSING'
+})
 
 async function createHeleketPayment(amount: number, orderId: string, userId: string) {
   const data = {
